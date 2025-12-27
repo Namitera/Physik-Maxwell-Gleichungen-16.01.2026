@@ -25,6 +25,38 @@ class T(Scene):
         stream.start_animation(warm_up=False, flow_speed=2.5)
         self.wait(5)
 
+
+
+
+
+class Overview(Scene):
+    def construct(self):   
+
+        header = Tex("Maxwell-Gleichungen")
+        maxwell = ImageMobject("maxwell.jpg")
+        first = Tex("1.").shift(UP*2.3).to_edge(LEFT)
+        second = Tex("2.").shift(UP*1).to_edge(LEFT)
+        third = Tex("3.").shift(UP*-1).to_edge(LEFT)
+        forth = Tex("4.").shift(UP*-3).to_edge(LEFT)
+
+        equation1 = MathTex(r" \nabla \cdot \vec{E} = \frac{\rho }{\varepsilon _{0}}").shift(UP*2.3).next_to(first,RIGHT)
+        equation2 = MathTex(r" \nabla \cdot \vec{B} = 0").shift(UP*1).next_to(second,RIGHT)
+        equation3 = MathTex(r" \nabla \times \vec{E}=-\frac{\partial \vec{B}}{\partial t}").shift(UP*-1).next_to(third,RIGHT)
+        equation4 = MathTex(r" \nabla \times \vec{B}=\mu_{0}(\vec{j}+\epsilon _{0}\frac{\partial \vec{E}}{\partial t})").shift(UP*-3).next_to(forth,RIGHT)
+
+
+        self.play(Write(header))
+        self.play(header.animate.to_edge(UP))
+        self.play(FadeIn(maxwell))
+        self.play(maxwell.animate.shift(RIGHT*4))
+        self.play(FadeIn(VGroup(first,equation1)))
+        self.play(FadeIn(VGroup(second,equation2)))
+        self.play(FadeIn(VGroup(third,equation3)))
+        self.play(FadeIn(VGroup(forth,equation4)))
+
+
+
+
 class IngegralIntro(Scene):
     def construct(self):   
 
@@ -581,12 +613,6 @@ class VectorDotProduct(Scene):
 class VectorFieldIntro(Scene):
     def construct(self):
 
-        max_x = 16
-        max_y = 9
-        step = 0.5
-        e = 0.001
-        scalar = 1
-
         def vecField1(point: Dot):
             x = point.get_x()
             y = point.get_y()
@@ -595,53 +621,26 @@ class VectorFieldIntro(Scene):
             field[1] = y
             return field
     
-        def vecField2(point: Dot):
-            x = point.get_x()
-            y = point.get_y()
-            field = [0,0]
-            field[0] = y
-            field[1] = 0
-            return field
 
-        def vecField3(point: Dot):
-            x = point.get_x()
-            y = point.get_y()
-            field = [0,0]
-            field[0] = -y
-            field[1] = x
-            return field
-        
-
-
-        field_equation2 = MathTex(r"\vec{F}(x,y)=y\hat{i} +0\hat{j}").to_corner(UL)
-        field_equation3 = MathTex(r"\vec{F}(x,y)=-y\hat{i} +x\hat{j}").to_corner(UL)
-
-        # field_equation1_example2 = MathTex(r"\vec{F}(-3,-1.5)").next_to(field_equation1,DOWN).to_edge(LEFT)
-
-
-
-
-
-
-        # vecField1Func1 = lambda pos: pos[0]*RIGHT + pos[1]*UP
-        # vecField1Func2 = lambda pos: pos[1]*RIGHT + 0*pos[1]*UP
-        # vecField1Func3 = lambda pos: -pos[1]*RIGHT + pos[0]*UP
-        # colors = [BLUE,GREEN,YELLOW,RED]
-        # vector_field1 = ArrowVectorField(vecField1Func1, x_range=[-max_x, max_x, step], y_range=[-max_y, max_y, step], max_color_scheme_value=6,min_color_scheme_value=1, colors=colors)
-        # vector_field2 = ArrowVectorField(vecField1Func2, x_range=[-max_x, max_x, step], y_range=[-max_y, max_y, step], max_color_scheme_value=3,min_color_scheme_value=0, colors=colors)
-        # vector_field3 = ArrowVectorField(vecField1Func3, x_range=[-max_x, max_x, step], y_range=[-max_y, max_y, step], max_color_scheme_value=6,min_color_scheme_value=1, colors=colors)
-
-        #init
+        #explain formula
         nump = NumberPlane().set_opacity(0.7)
-        field_equation1 = MathTex(r"\vec{F}(x,y)=x\hat{i} +y\hat{j}")
+        field_equation1 = MathTex(r"\vec{F}",r"(x,y)",r"=",r"x\hat{i} +y\hat{j}")
+        point_example = Dot(color=PURE_GREEN).scale(1.6).next_to(field_equation1[1],UP)
+        vector_example = Vector([2,1],color=YELLOW).next_to(field_equation1[3],UP)
 
-        self.play(Write(nump))
         self.play(Write(field_equation1))
-        self.play(field_equation1.animate.to_corner(UL))
+        self.play(Write(point_example))
+        self.play(Circumscribe(field_equation1[1],time_width=5),run_time=4)
+        self.play(Write(vector_example))
+        self.play(Circumscribe(field_equation1[3],time_width=5),run_time=4)
+        self.play(Unwrite(VGroup(point_example,vector_example)))
+
+        self.play(field_equation1.animate.to_corner(UL).shift(UP*0.3))
+        self.play(Write(nump))
 
         #point
         axis = Axes(x_length=12, y_length=7, x_range=[-1,1,10], y_range=[-1,1,10])
-        x_label = MathTex(r"x").next_to(axis,RIGHT)
+        x_label = MathTex(r"x").next_to(axis,RIGHT).shift(UP*0.5 + LEFT*0.6)
         y_label = MathTex(r"y").align_to(axis,UP).shift(RIGHT*0.5)
         labels = VGroup(x_label,y_label)
 
@@ -658,37 +657,552 @@ class VectorFieldIntro(Scene):
         self.play(Write(field_equation1_example1[0:2]))
         self.play(p1.animate.shift(RIGHT*2 + UP))
 
-
         #vector
         ihatvec = Vector(RIGHT,color=RED)
         jhatvec = Vector(UP,color=GREEN)
         ihat = (MathTex(r"\hat{i}")).next_to(ihatvec,DOWN).set_color(RED)
         jhat = (MathTex(r"\hat{j}")).next_to(jhatvec,LEFT).set_color(GREEN)
+        vector1 = Vector([2,1],color=YELLOW).shift(RIGHT*2+UP)
 
-        vector1 = Vector([0,0])
-        vector1.add_updater(lambda mob: mob.become(Vector(vecField1(p1))).move_to(p1).shift(p1.get_center() - vector1.get_start()).set_color(YELLOW))
+        self.play(Write(field_equation1_example1[2]))
 
         self.play(Write(ihatvec),Write(ihat))
         self.play(Write(jhatvec),Write(jhat))
-        self.play(Write(field_equation1_example1[2]))
-        self.play(Write(vector1))
-
-        
+        self.play(GrowArrow(vector1))
 
 
-        # func1 = lambda pos: scalar*((pos[1]-1)*RIGHT + -pos[0]*UP)/(pos[0]**2+(pos[1]-1)**2+e) + scalar*((-(pos[1]+1))*RIGHT + pos[0]*UP)/(pos[0]**2+(-(pos[1]+1))**2+e)
-        # stream = StreamLines(func1, stroke_width=2, max_anchors_per_line=300, virtual_time=50, n_repeats=5)
-        # self.add(NumberPlane())
-        # self.add(stream)
-        # stream.start_animation(warm_up=False, flow_speed=2.5)
-        # self.wait(5)
+        #second position
+        field_equation1_example2 = MathTex(r"\vec{F}",r"(-3,-1.5)",r"=-3\hat{i} -1.5\hat{j}").next_to(field_equation1,DOWN).to_edge(LEFT)
+        field_equation1_example2[1][1:3].set_color(PURE_GREEN)
+        field_equation1_example2[1][4:8].set_color(PURE_GREEN)
+        field_equation1_example2[2][1:3].set_color(YELLOW)
+        field_equation1_example2[2][5:9].set_color(YELLOW)
+
+        vector1.add_updater(lambda mob: mob.become(Vector(vecField1(p1))).move_to(p1).shift(p1.get_center() - vector1.get_start()).set_color(YELLOW))
+
+        self.play(ReplacementTransform(field_equation1_example1,field_equation1_example2))
+        self.play(p1.animate.move_to([2,-1.5,0]))
+        self.play(p1.animate.move_to([-3,-1.5,0]))
+
+        #prepare for full visual
+        vector1.suspend_updating()
+        self.play(Unwrite(field_equation1_example2),Unwrite(p1),Unwrite(vector1))
+        self.play(Unwrite(labels),Unwrite(axis))
+
+        colors1 = [BLUE,GREEN,YELLOW,RED]
+        vecField1Func1 = lambda pos: pos[0]*RIGHT + pos[1]*UP
+        vector_field1 = ArrowVectorField(vecField1Func1, max_color_scheme_value=6,min_color_scheme_value=1, colors=colors1)
+
+        self.play(Write(vector_field1))
+
+        #streamlines
+        stream = StreamLines(vecField1Func1, stroke_width=2, max_anchors_per_line=100, virtual_time=50, n_repeats=5, colors=colors1, min_color_scheme_value=1,  max_color_scheme_value=6)
+
+        self.play(vector_field1.animate.set_opacity(0.3), run_time=0.1)
+        self.add(stream)
+        stream.start_animation(warm_up=True, flow_speed=5)
+        self.wait(5)
 
 
-class GaussLaw(Scene):
+
+
+
+class VectorFieldExamples1(Scene):
     def construct(self):
 
-        gausslaw = MathTex(r"\phi=\frac{q}{\varepsilon_{0}}")
-        integral_form = MathTex(r"\oint_{A}E\cdot d\textbf{A}=\frac{q}{\varepsilon_{0}}")
+        def vecField2(point: Dot):
+            x = point.get_x()
+            y = point.get_y()
+            field = [0,0]
+            field[0] = y
+            field[1] = 0
+            return field
+
+        colors1 = [BLUE,GREEN,YELLOW,RED]
+        
+        #prepare for full visual
+        field_equation2 = MathTex(r"\vec{F}(x,y)=y\hat{i} +0\hat{j}").to_corner(UL).set_z_index(1)
+        b1 = SurroundingRectangle(field_equation2,color=BLACK,fill_opacity=1,fill_color=BLACK).move_to(field_equation2).set_z_index(1)
+        self.play(Write(VGroup(b1,field_equation2)))
+
+        vecField1Func2 = lambda pos: pos[1]*RIGHT + 0*pos[1]*UP
+        vector_field2 = ArrowVectorField(vecField1Func2, max_color_scheme_value=3,min_color_scheme_value=0, colors=colors1).set_z_index(-1)
+        self.play(Write(vector_field2))
+
+        #streamlines
+        stream = StreamLines(vecField1Func2, stroke_width=2, max_anchors_per_line=100, virtual_time=50, n_repeats=5, colors=colors1, min_color_scheme_value=1,  max_color_scheme_value=3).set_z_index(-1)
+
+        self.play(vector_field2.animate.set_opacity(0.3), run_time=0.1)
+        self.add(stream)
+        stream.start_animation(warm_up=True, flow_speed=2)
+        self.wait(5)
+
+
+
+
+
+class VectorFieldExamples2(Scene):
+    def construct(self):
+
+        def vecField3(point: Dot):
+            x = point.get_x()
+            y = point.get_y()
+            field = [0,0]
+            field[0] = -y
+            field[1] = x
+            return field
+
+        colors1 = [BLUE,GREEN,YELLOW,RED]
+        
+        #prepare for full visual
+        field_equation3 = MathTex(r"\vec{F}(x,y)=-y\hat{i} +x\hat{j}").to_corner(UL).set_z_index(1)
+        b1 = SurroundingRectangle(field_equation3,color=BLACK,fill_opacity=1,fill_color=BLACK).move_to(field_equation3).set_z_index(1)
+        self.play(Write(VGroup(b1,field_equation3)))
+
+        vecField1Func3 = lambda pos: -pos[1]*RIGHT + pos[0]*UP
+        vector_field3 = ArrowVectorField(vecField1Func3, max_color_scheme_value=6,min_color_scheme_value=1, colors=colors1).set_z_index(-1)
+        self.play(Write(vector_field3))
+
+        #streamlines
+        stream = StreamLines(vecField1Func3, stroke_width=2, max_anchors_per_line=50, virtual_time=50, n_repeats=1, colors=colors1, min_color_scheme_value=1,  max_color_scheme_value=6).set_z_index(-1)
+
+        self.play(vector_field3.animate.set_opacity(0.3), run_time=0.1)
+        self.add(stream)
+        stream.start_animation(warm_up=True, flow_speed=2)
+        self.wait(5)
+
+
+
+
+
+class Divergence(Scene):
+    def construct(self):
+
+        def vecField1(pos):
+            e = 0.001
+            x = pos[0]
+            y = pos[1]
+            field = [0,0]
+            field[0] = (x+2)/((x+2)**2 + y**2 + e) - (x-2)/((x-2)**2 + y**2 + e)
+            field[1] = y/((x+2)**2 + y**2 + e) - y/((x-2)**2 + y**2 + e)
+            return field[0]*RIGHT + field[1]*UP
+
+        def divFunc1(x,y,eps):
+            xcomp = 1/((x+2)**2 + y**2 + eps)
+            ycomp = 1/((x-2)**2 + y**2 + eps)
+            return 2*eps*(xcomp - ycomp)
+
+
+        core = Circle(radius=0.4,color=RED,fill_opacity=1)
+        corss1 = Rectangle(height=0.02,width=0.4,fill_opacity=1)
+        corss2 = Rectangle(height=0.4,width=0.02,fill_opacity=1)
+        proton = VGroup(core,corss1,corss2).shift(LEFT*2)
+
+        core1 = Circle(radius=0.4,color=PURE_GREEN,fill_color=PURE_GREEN,fill_opacity=1)
+        corss3 = Rectangle(height=0.03,width=0.3,fill_opacity=1)
+        electron = VGroup(core1,corss3).shift(RIGHT*2)
+
+        self.add(proton,electron)
+
+        colors1 = [BLUE,GREEN,YELLOW,RED]
+        vecField1Func1 = lambda pos: vecField1(pos=pos)
+        vector_field1 = ArrowVectorField(vecField1Func1, max_color_scheme_value=1,min_color_scheme_value=0.01, colors=colors1).set_z_index(-1)
+        self.add(vector_field1)
+        
+        p1 = Dot().scale(0.5)
+        c1 = Circle(color=WHITE,radius=0.2)
+        div_tex = MathTex(r"div\vec{F}=")
+        div_tex[0][3:5].set_color(YELLOW)
+        decnum = DecimalNumber(0)
+        s1 = SurroundingRectangle(div_tex,color=BLACK, fill_color=BLACK ,fill_opacity=1, stroke_width=0)
+        s2 = SurroundingRectangle(decnum,color=BLACK, fill_color=BLACK ,fill_opacity=1, stroke_width=0)
+
+        c1.add_updater(lambda mob: mob.move_to(p1))
+        div_tex.add_updater(lambda mob: mob.next_to(p1,UP))
+        s1.add_updater(lambda mob: mob.move_to(div_tex))
+        s2.add_updater(lambda mob: mob.move_to(decnum))
+        decnum.add_updater(lambda mob: mob.set_value(divFunc1(p1.get_x(),p1.get_y(),0.8)).next_to(p1,UP).shift(RIGHT*1.5))
+
+
+        self.add(p1,s1,s2,decnum,c1,div_tex)
+        self.play(p1.animate.move_to([2,0,0]))
+        self.play(p1.animate.move_to([-2,0,0]))
+        self.play(p1.animate.move_to([1,1,0]))
+        self.play(p1.animate.move_to([-1,1,0]))
+        self.play(p1.animate.move_to([-2,1,0]))
+        self.play(p1.animate.move_to([-4,1,0]))
+        self.play(p1.animate.move_to([0,0,0]))
+
+        
+class CurlIntro(Scene):
+    def construct(self):
+
+        def vecField1(pos):
+            e = 0.001
+            x = pos[0]
+            y = pos[1]
+            field = [0,0]
+            field[0] = -y
+            field[1] = x
+            return field[0]*RIGHT + field[1]*UP
+
+        def vecField2(pos):
+            e = 0.001
+            x = pos[0]
+            y = pos[1]
+            field = [0,0]
+            field[0] = y
+            field[1] = -x
+            return field[0]*RIGHT + field[1]*UP
+
+        def vecField3(pos):
+            e = 0.001
+            x = pos[0]
+            y = pos[1]
+            field = [0,0]
+            field[0] = np.sin(0.5*(x+y))
+            field[1] = np.cos(0.5*(x-y))
+            return field[0]*RIGHT + field[1]*UP
+
+        def curlFunc1(x,y):
+            xcomp = np.sin(0.5*x - 0.5*y)
+            ycomp = np.cos(0.5*x + 0.5*y)
+            return -0.5*(xcomp + ycomp)
+
+
+        colors1 = [BLUE,GREEN,YELLOW,RED]
+        vecField1Func1 = lambda pos: vecField1(pos=pos)
+        vector_field1 = ArrowVectorField(vecField1Func1, max_color_scheme_value=8,min_color_scheme_value=1, colors=colors1).set_z_index(-1)
+        vector_field3 = ArrowVectorField(vecField1Func1, max_color_scheme_value=1.25,min_color_scheme_value=0.5, colors=colors1).set_z_index(-1)
+        self.add(vector_field1)
+
+        p1 = Dot().scale(0.5)
+        c1 = Circle(color=WHITE,radius=0.2)
+        div_tex = MathTex(r"rot\vec{F}=")
+        div_tex[0][3:5].set_color(YELLOW)
+        decnum = DecimalNumber(0)
+        s1 = SurroundingRectangle(div_tex,color=BLACK, fill_color=BLACK ,fill_opacity=1, stroke_width=0)
+        s2 = SurroundingRectangle(decnum,color=BLACK, fill_color=BLACK ,fill_opacity=1, stroke_width=0)
+
+        c1.add_updater(lambda mob: mob.move_to(p1))
+        div_tex.add_updater(lambda mob: mob.next_to(p1,UP))
+        s1.add_updater(lambda mob: mob.move_to(div_tex))
+        s2.add_updater(lambda mob: mob.move_to(decnum))
+        decnum.add_updater(lambda mob: mob.set_value(curlFunc1(p1.get_x(),p1.get_y())).next_to(p1,UP).shift(RIGHT*1.5))
+
+
+        self.add(p1,s1,s2,decnum,c1,div_tex)
+        self.play(p1.animate.move_to([-6,4,0]))
+        self.play(p1.animate.move_to([6,4,0]))
+        self.play(p1.animate.move_to([6,3,0]))
+        self.play(p1.animate.move_to([-6,3,0]))
+        self.play(p1.animate.move_to([-6,2,0]))
+        self.play(p1.animate.move_to([6,2,0]))
+        self.play(p1.animate.move_to([6,1,0]))
+        self.play(p1.animate.move_to([-6,1,0]))
+        self.play(p1.animate.move_to([-6,0,0]))
+        self.play(p1.animate.move_to([6,0,0]))
+        self.play(p1.animate.move_to([6,-1,0]))
+        self.play(p1.animate.move_to([-6,-1,0]))
+        self.play(p1.animate.move_to([-6,-2,0]))
+        self.play(p1.animate.move_to([6,-2,0]))
+        self.play(p1.animate.move_to([6,-3,0]))
+        self.play(p1.animate.move_to([-6,-3,0]))
+        self.play(p1.animate.move_to([-6,-4,0]))
+        self.play(p1.animate.move_to([6,-4,0]))
+
+class Curl3D(ThreeDScene):
+    def construct(self):
+
+        def vecField1(pos):
+            e = 0.001
+            x = pos[0]
+            y = pos[1]
+            field = [0,0]
+            field[0] = -y
+            field[1] = x
+            return field[0]*RIGHT + field[1]*UP
+
+        colors1 = [BLUE,GREEN,YELLOW,RED]
+        vecField1Func1 = lambda pos: vecField1(pos=pos)
+        # vector_field1 = ArrowVectorField(vecField1Func1, max_color_scheme_value=6,min_color_scheme_value=1, colors=colors1,
+        #                                  x_range=[-6,6], y_range=[-6,6]).set_z_index(-1)
+        vector_field2 = ArrowVectorField(vecField1Func1, max_color_scheme_value=6,min_color_scheme_value=1, colors=colors1,
+                                         x_range=[-6,6,2], y_range=[-6,6,2]).set_z_index(-1)
+        
+        axis = ThreeDAxes(x_range=[-2,2,1],y_range=[-2,2,1],z_range=[0,0.01,0.01],x_length=12,y_length=12,z_length=0.01,z_axis_config={"include_tip": False})
+
+        ihat = Arrow3D(start=ORIGIN,end=[2,0,0]).set_color(PURE_RED)
+        jhat = Arrow3D(start=ORIGIN,end=[0,2,0]).set_color(PURE_GREEN)
+        khat = Arrow3D(start=ORIGIN,end=[0,0,2]).set_color(PURE_BLUE).set_z_index(99)
+
+        ihat_tex = MathTex(r"\hat{i}").set_color(PURE_RED).move_to([1,-1,0]).rotate(PI/2,axis=OUT)
+        jhat_tex = MathTex(r"\hat{j}").set_color(PURE_GREEN).move_to([1,1,0])
+        khat_tex = MathTex(r"\hat{k}").set_color(PURE_BLUE).move_to([-1,0,1]).rotate(PI/2,axis=RIGHT).rotate(PI/2,axis=OUT)
+
+        # self.add()
+        self.add(axis,khat,ihat,jhat,khat_tex,ihat_tex,jhat_tex)
+        self.move_camera(phi=60*DEGREES, theta=-45*DEGREES)
+        self.move_camera(zoom=2.5,frame_center=[0,0,0.3])
+        # self.play(ReplacementTransform(vector_field1,vector_field2))
+
+
+        #streamlines
+        stream = StreamLines(vecField1Func1, stroke_width=2, max_anchors_per_line=50, virtual_time=50, n_repeats=1, colors=colors1, min_color_scheme_value=1,  max_color_scheme_value=6).set_z_index(-99)
+
+        self.play(vector_field2.animate.set_opacity(0.3), run_time=0.1)
+        self.add(stream)
+        stream.start_animation(warm_up=True, flow_speed=2)
+        self.wait(5)
+
+
+
+
+
+class Circulation(Scene):
+    def construct(self):
+        1
+
+class Flux(Scene):
+    def construct(self):
+
+        positive_plate = Rectangle(height=4,width=0.5,color=RED,fill_opacity=1).shift(LEFT*6)
+        positive_plate2 = Polygon(positive_plate.get_corner(UR),positive_plate.get_corner(DR),positive_plate.get_corner(DR)+[0.2,0.4,0],positive_plate.get_corner(UR)+[0.2,-0.4,0],fill_opacity=1,color=ManimColor.from_rgb((160,30,30, 1)))
+        negativ_plate = Rectangle(height=4,width=0.5,color=GREEN,fill_opacity=1).shift(RIGHT*6)
+        negativ_plate2 = Polygon(negativ_plate.get_corner(UL),negativ_plate.get_corner(DL),negativ_plate.get_corner(DL)+[-0.2,0.4,0],negativ_plate.get_corner(UL)+[-0.2,-0.4,0],fill_opacity=1,color=ManimColor.from_rgb((16,140,16, 1)))
+
+        field_line1 = Arrow([-6,2,0],[6,2,0])
+        field_line2 = Arrow([-6,1,0],[6,1,0])
+        field_line3 = Arrow([-6,0,0],[6,0,0])
+        field_line4 = Arrow([-6,-1,0],[6,-1,0])
+        field_line5 = Arrow([-6,-2,0],[6,-2,0])
+        fieldLines = VGroup(field_line1,field_line2,field_line3,field_line4,field_line5)
+
+        #condensator fieldlines
+        self.play(Write(positive_plate),Write(positive_plate2))
+        self.play(Write(negativ_plate), Write(negativ_plate2))
+        self.play(AnimationGroup(GrowArrow(fieldLines[0]),GrowArrow(fieldLines[1]),GrowArrow(fieldLines[2]),GrowArrow(fieldLines[3]),GrowArrow(fieldLines[4]), lag_ratio=0.7), run_time=1)
+
+        #introduce surface
+        plane_surface = Rectangle(height=4,width=0.25,fill_opacity=1,color=BLUE).set_z_index(1)
+        plane_surface2 = Polygon(plane_surface.get_corner(UR),plane_surface.get_corner(DR),plane_surface.get_corner(DR)+[0.2,0.4,0],plane_surface.get_corner(UR)+[0.2,-0.4,0],fill_opacity=1,color=DARK_BLUE).set_z_index(-1)
+
+        self.play(VGroup(negativ_plate,negativ_plate2).animate.shift(RIGHT*2))
+        self.play(Write(plane_surface),Write(plane_surface2))
+
+        #show flux
+        flux_tex = Tex("Fluss").shift(UP*3).scale(1.5)
+        func1 = lambda pos: RIGHT
+        stream = StreamLines(func1, stroke_width=4, max_anchors_per_line=25, virtual_time=50, n_repeats=15,
+                             x_range=[-5.7,5,7],y_range=[-2,2])
+
+        self.play(Write(flux_tex))
+        self.add(stream)
+        stream.start_animation(warm_up=True, flow_speed=5)
+        self.wait(5)
+
+        #equation
+        forumla = MathTex(r"\phi = E \cdot A").shift(UP*3)
+        forumla[0][2].set_color(GREEN)
+        forumla[0][4].set_color(BLUE)
+
+        self.play(flux_tex.animate.to_edge(LEFT))
+        self.play(Write(forumla))
+        self.play(stream.animate.set_opacity(0), fieldLines.animate.set_opacity(0.2))
+        stream.end_animation()
+        self.remove(stream)
+
+        #vectors e,n
+        normal_vector = Vector([2,0],color=RED)
+        normal_vector_tex = MathTex(r"\hat{n}").set_color(RED).next_to(normal_vector,DOWN).set_z_index(2)
+        e_vector = Vector([2,0],color=GREEN)
+
+        vecE = MathTex(r"\vec{E}").next_to(positive_plate,DR)
+        area = MathTex(r"A").next_to(plane_surface,DOWN).set_color(BLUE)
+
+        self.play(ReplacementTransform(forumla[0][2].copy(),vecE))
+        self.play(ReplacementTransform(forumla[0][4].copy(),area))
+        self.play(Write(normal_vector_tex), GrowArrow(normal_vector))
+
+        self.play(vecE.animate.next_to(e_vector,UP).set_color(GREEN))
+        self.play(GrowArrow(e_vector))
+
+        #new formula
+        forumla2 = MathTex(r"\phi = \vec{E} \cdot \hat{n} \cdot A").shift(UP*3)
+        forumla2[0][2:4].set_color(GREEN)
+        forumla2[0][5:7].set_color(RED)
+        forumla2[0][8].set_color(BLUE)
+        normal_vector_tex.add_updater(lambda mob: mob.next_to(normal_vector,DOWN))
+
+        self.play(normal_vector.animate.rotate_about_origin(PI/4), VGroup(plane_surface,plane_surface2).animate.rotate_about_origin(PI/4))
+        self.play(ReplacementTransform(forumla,forumla2))
+
+        #rotate change
+        forumla3 = MathTex(r"\phi = \vec{E} \cdot \hat{n} \cdot A=").shift(UP*3).align_to(forumla2,LEFT)
+        forumla3[0][2:4].set_color(GREEN)
+        forumla3[0][5:7].set_color(RED)
+        forumla3[0][8].set_color(BLUE)
+
+        angle = ValueTracker(PI/4)
+        value = DecimalNumber(0.707,num_decimal_places=2).next_to(forumla3,RIGHT)
+        value.add_updater(lambda mob: mob.set_value(np.cos(angle.get_value())))
+
+        self.play(TransformMatchingShapes(forumla2,forumla3))
+        self.play(Write(value))
+        self.play(VGroup(plane_surface,plane_surface2,normal_vector).animate.rotate_about_origin(PI/4),angle.animate.set_value(PI/2))
+        self.play(VGroup(plane_surface,plane_surface2,normal_vector).animate.rotate_about_origin(PI/2),angle.animate.set_value(PI))
+        self.play(VGroup(plane_surface,plane_surface2,normal_vector).animate.rotate_about_origin(PI/2),angle.animate.set_value(3*PI/2))
+        self.play(VGroup(plane_surface,plane_surface2,normal_vector).animate.rotate_about_origin(3*PI/8),angle.animate.set_value(15*PI/8))
+
+        #surface element
+        surface_element = MathTex(r"\vec{A}=\hat{n}\cdot A").shift(UP*3).next_to(plane_surface,LEFT)
+        forumla4 = MathTex(r"\phi = \vec{E} \cdot \vec{A}").shift(UP*3).align_to(forumla2,LEFT)
+        forumla4[0][2:4].set_color(GREEN)
+        forumla4[0][5:7].set_color(RED)
+
+        self.play(Write(surface_element))
+        self.play(ReplacementTransform(forumla3,forumla4), FadeOut(value))
+
+
+
+
+
+class FluxIntegral(ThreeDScene):
+    def construct(self):
+        
+        #known setup
+        surface = Rectangle(width=4,height=4,color=BLUE,fill_opacity=1)
+        area = MathTex(r"A").set_color(BLUE).shift(LEFT*3)
+        formula = MathTex(r"\phi=",r"\vec{E}",r"\cdot",r"\vec{A}").shift(UP*3)
+        formula[1].set_color(GREEN)
+        formula[3].set_color(RED)
+
+        self.play(DrawBorderThenFill(surface))
+        self.play(Write(area))
+        self.play(Write(formula))
+
+        #dphi/dA
+        formula2 = MathTex(r"d\phi=",r"\vec{E}",r"\cdot",r"d\vec{A}").shift(UP*3)        
+        formula2[1].set_color(GREEN)
+        formula2[3].set_color(RED)
+        
+        surface_element = MathTex(r"d\vec{A}",r"=\hat{n}\cdot",r"dA").next_to(surface,RIGHT)
+        surface_elementOld = MathTex(r"\vec{A}",r"=\hat{n}\cdot",r"A").next_to(surface_element,UP).align_to(surface_element,LEFT)
+        surface_element[0].set_color(RED)
+        surface_element[2].set_color(YELLOW)
+        surface_elementOld[0].set_color(RED)
+        surface_elementOld[2].set_color(YELLOW)
+
+        rect = Rectangle(width=1,height=1,color=YELLOW)
+        da = MathTex(r"dA").set_color(YELLOW).next_to(rect,RIGHT)
+
+        self.play(DrawBorderThenFill(rect))
+        self.play(GrowFromEdge(da,LEFT))
+        self.play(VGroup(rect,da).animate.scale(0.01))
+        self.play(VGroup(rect,da).animate.scale(100))
+
+        self.play(Write(surface_elementOld))
+        self.play(ReplacementTransform(surface_elementOld.copy(),surface_element))
+
+        self.play(Circumscribe(formula))
+        self.play(ReplacementTransform(formula,formula2))
+
+
+        #integral form
+        formula3 = MathTex(r"\int_{A}^{} d\phi= \int_{A}^{}",r"\vec{E}",r"\cdot",r"d\vec{A}").shift(UP*3)        
+        formula3[1].set_color(GREEN)
+        formula3[3].set_color(RED)
+
+        n = 20
+        dx = surface.width / n
+        dy = surface.height / n
+        dA_tiles = VGroup()
+
+        for i in range(n):
+            for j in range(n):
+                tile = Rectangle(width=dx, height=dy,color=YELLOW)
+                tile.move_to(surface.get_corner(DL) + RIGHT * (i + 0.5) * dx + UP * (j + 0.5) * dy)
+                dA_tiles.add(tile)
+
+        self.play(Circumscribe(formula2[0][0:2]))
+        self.play(ReplacementTransform(formula2,formula3))
+
+        self.play(FadeOut(rect))
+        self.play(da.animate.next_to(surface,DOWN))
+        self.play(LaggedStart( *[FadeIn(tile, scale=0.5) for tile in dA_tiles], lag_ratio=0.02))
+
+        #integral cancel
+        self.play(Circumscribe(formula3[0][0:4]))
+        self.play(FadeOut(formula3[0][0:3]))
+
+        #realise complexity
+        self.play(dA_tiles.animate.set_opacity(0),FadeOut(da))
+        self.move_camera(phi=60*DEGREES,theta=-80*DEGREES)
+        self.begin_ambient_camera_rotation(rate=0.4, about= "theta")
+        self.wait(5)
+
+        #to sphere
+        sphere = Sphere(radius=2,color=BLUE)
+
+        self.play(FadeTransform(surface,sphere), run_time=3)
+        self.wait(5)
+        self.move_camera(phi=0,theta=-PI/2 +2*PI, run_time=3)
+        self.stop_ambient_camera_rotation()
+
+        closed_int = MathTex(r"\oint_{A}^{}").set_color(YELLOW).move_to(formula3[0][5:7])
+        self.play(ReplacementTransform(formula3[0][5:7], closed_int))
+        self.wait()
+
+        self.move_camera(phi=60*DEGREES,theta=-80*DEGREES + 2*PI)
+        self.begin_ambient_camera_rotation(rate=0.4, about= "theta")
+
+        #show matrix
+        matrix1 = [
+            [-1,0,0],
+            [0,-1,0],
+            [0,0,0.4],
+        ]
+        matrix2 = [
+            [1,0.4,-0.7],
+            [0,-1.1,0.6],
+            [0.1,-0.4,0.4],
+        ]
+        matrix3 = [
+            [1.4,-0.4,-1.7],
+            [-0.01,0,0.3],
+            [0.14,-1.4,0.9],
+        ]
+        self.wait(3)
+        self.play(sphere.animate.apply_matrix(matrix=matrix1), run_time=5)
+        self.play(sphere.animate.apply_matrix(matrix=matrix2), run_time=5)
+        self.play(sphere.animate.apply_matrix(matrix=matrix3), run_time=5)
+        self.wait(3)
+
+
+
+
+
+class SurfaceIntegral(Scene):
+    def construct(self):
+        1
+
+class GaussLawIntuition(Scene):
+    def construct(self):
+
+        law_tex = Tex("Gaußsches Gesetz")
+        int_tex = Tex("Integrale Form:").shift(UP*0.5).to_edge(LEFT)
+        dif_tex = Tex("Differentielle Form:").shift(UP*3).to_edge(LEFT)
+        word_tex = Tex("Wortform:").shift(UP*-2).to_edge(LEFT)
+        differential_form = MathTex(r" \nabla \cdot \vec{E} = \frac{\rho }{\varepsilon _{0}}").shift(UP*2).to_edge(LEFT)
+        integral_form = MathTex(r"\oint_{A}\vec{E}\cdot d\vec{A}=\frac{q}{\varepsilon_{0}}").shift(UP*-0.5).to_edge(LEFT)
+        word_form = Tex("Die elektrische Ladung ist Quelle des elektrischen Feldes.").shift(UP*-3).to_edge(LEFT)
+
+        self.add(int_tex,integral_form,dif_tex,differential_form,word_form,word_tex)
+
+
+
+class GaussLawDerivation(Scene):
+    def construct(self):
 
         numberplane = NumberPlane().set_opacity(0.2)
         circle = Circle(radius=3.5, color=BLUE)
@@ -747,23 +1261,3 @@ class GaussLaw(Scene):
         self.play(phi_angle.animate.set_value(-3*PI/4))
         self.play(phi_angle.animate.set_value(-PI/4))
         self.play(Write(dltheta))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
