@@ -16,7 +16,7 @@ class Overview(Scene):
         equation3 = MathTex(r" \nabla \times \vec{E}=-\frac{\partial \vec{B}}{\partial t}").shift(UP*-1).next_to(third,RIGHT)
         equation4 = MathTex(r" \nabla \times \vec{B}=\mu_{0}(\vec{j}+\epsilon _{0}\frac{\partial \vec{E}}{\partial t})").shift(UP*-3).next_to(forth,RIGHT)
 
-
+        #overview
         self.play(Write(header))
         self.play(header.animate.to_edge(UP))
         self.play(FadeIn(maxwell))
@@ -26,7 +26,50 @@ class Overview(Scene):
         self.play(FadeIn(VGroup(third,equation3)))
         self.play(FadeIn(VGroup(forth,equation4)))
 
+        #short look at 1
+        self.play(FadeOut(maxwell))
+        self.play(VGroup(second,third,forth,equation2,equation3,equation4).animate.set_opacity(0.4), VGroup(first,equation1).animate.scale(1.2).to_edge(LEFT))
 
+        func1 = lambda pos: 3*(pos[0]/(pos[0]**2 + pos[1]**2 +0.0001)) * RIGHT + 3*(pos[1]/(pos[0]**2 + pos[1]**2 +0.0001)) * UP
+        vector_field = ArrowVectorField(func1,x_range=[-3,3],y_range=[-2.5,2.5]).move_to([3.5,-0.5,0])
+
+        core = Circle(radius=0.4,color=RED,fill_opacity=1)
+        corss1 = Rectangle(height=0.02,width=0.4,fill_opacity=1)
+        corss2 = Rectangle(height=0.4,width=0.02,fill_opacity=1)
+        proton = VGroup(core,corss1,corss2).scale(0.8).move_to([3.5,-0.5,0])
+
+        b1 = SurroundingRectangle(vector_field,color=WHITE)
+
+        self.play(FadeIn(b1))
+        self.play(FadeIn(proton))
+        self.play(FadeIn(vector_field))
+        self.play(FadeOut(VGroup(proton,vector_field)))
+
+        # short look at 1
+        self.play(VGroup(first,equation1).animate.set_opacity(0.4).scale(1/1.2).to_edge(LEFT), VGroup(second,equation2).animate.scale(1.2).to_edge(LEFT).set_opacity(1))
+        
+        func1 = lambda pos: vecField1(pos=pos)
+        def vecField1(pos):
+            e = 0.001
+            s = 0.2
+            x = pos[0]
+            y = pos[1]
+            normal1 = x**2 + (y-s)**2 + e
+            normal2 = x**2 + (y+s)**2 + e
+            field = [0,0]
+            field[0] = (y-s)/(normal1) - (y+s)/(normal2)
+            field[1] = (-x)/(normal1) + (x)/(normal2)
+            return field[0]*RIGHT + field[1]*UP
+
+        vector_field1 = ArrowVectorField(func=func1,max_color_scheme_value=0.1,min_color_scheme_value=0.01,x_range=[-3,3],y_range=[-2.5,2.5]).move_to([3.5,-0.5,0])
+
+        north_pole = Rectangle(width=1,height=0.5,color=BLUE,fill_opacity=1).shift(LEFT*0.5)
+        south_pole = Rectangle(width=1,height=0.5,color=RED,fill_opacity=1).shift(LEFT*-0.5)
+        north_pole_tex = MathTex(r"N").move_to(north_pole)
+        south_pole_tex = MathTex(r"S").move_to(south_pole)
+        magnet = VGroup(north_pole,south_pole,north_pole_tex,south_pole_tex).move_to([3.5,-0.5,0]).set_z_index(1)
+
+        self.play(FadeIn(VGroup(magnet,vector_field1)))
 
 
 class IngegralIntro(Scene):
@@ -472,11 +515,11 @@ class VectorDotProductLabel(Scene):
         vectorv2[0][4].set_color(YELLOW)
         vectorv2[0][1:3].set_color(RED)
         vectorv2[0][3].set_color(GREEN)
-        vectorw2 = MathTex(r"\begin{bmatrix}-1\\3\end{bmatrix}").shift(2*DOWN+RIGHT)
+        vectorw2 = MathTex(r"\begin{bmatrix}-1\\-3\end{bmatrix}").shift(2*DOWN+RIGHT)
         vectorw2[0][0].set_color(BLUE)
-        vectorw2[0][4].set_color(BLUE)
+        vectorw2[0][5].set_color(BLUE)
         vectorw2[0][1:3].set_color(RED)
-        vectorw2[0][3].set_color(GREEN)
+        vectorw2[0][3:5].set_color(GREEN)
 
         self.play(Unwrite(VGroup(vectorv,vectorw)))
         self.play(Unwrite(equationCopy1),Unwrite(equationCopy2), Unwrite(equation))
@@ -486,7 +529,7 @@ class VectorDotProductLabel(Scene):
         #calc right side
         equationCopy3 = VGroup(vectorv2[0][1:3],vectorw2[0][1:3]).copy()
         equationCopy4 = VGroup(vectorv2[0][3],vectorw2[0][3]).copy()
-        equation2 = MathTex(r"-4\cdot -1",r"+",r"4\cdot3").shift(2*DOWN+RIGHT*4)
+        equation2 = MathTex(r"-4\cdot -1",r"+",r"4\cdot -3").shift(2*DOWN+RIGHT*4)
         equation2[0].set_color(RED)
         equation2[2].set_color(GREEN)
 
@@ -1455,7 +1498,7 @@ class GaussSurfaceIndependence3D(ThreeDScene):
 
 
 
-class MagnetIntro(ThreeDScene):
+class MagnetIntro(Scene):
     def construct(self):
         
         func1 = lambda pos: vecField1(pos=pos)
@@ -1471,7 +1514,6 @@ class MagnetIntro(ThreeDScene):
             field[1] = (-x)/(normal1) + (x)/(normal2)
             return field[0]*RIGHT + field[1]*UP
         
-        vector_field = ArrowVectorField(func=func1,max_color_scheme_value=0.1,min_color_scheme_value=0.01)
         stream = StreamLines(func1, stroke_width=2, max_anchors_per_line=300, virtual_time=50, n_repeats=1).set_z_index(-1)
 
         north_pole = Rectangle(width=1,height=0.5,color=BLUE,fill_opacity=1).shift(LEFT*0.5)
@@ -1480,14 +1522,43 @@ class MagnetIntro(ThreeDScene):
         south_pole_tex = MathTex(r"S").move_to(south_pole)
         magnet = VGroup(north_pole,south_pole,north_pole_tex,south_pole_tex).move_to([0,0,0.1]).set_z_index(1)
 
+        #magnet and fieldlines
         self.play(Write(magnet))
-        # self.add(vector_field)
-        # self.add(stream)
-        # stream.start_animation(warm_up=True, flow_speed=3)
-        # self.wait(3)
-        self.move_camera(frame_center=[0,0,3])
-        # self.wait(3)
-        # stream.end_animation()
+        self.add(stream)
+        stream.start_animation(warm_up=True, flow_speed=3)
+        self.wait(3)
+        self.play(FadeOut(stream))
+        stream.end_animation()
+        self.remove(stream)
+
+        #2small magnets
+        north_pole2 = Rectangle(width=0.5,height=0.5,color=BLUE,fill_opacity=1).shift(LEFT*0.25)
+        south_pole2 = Rectangle(width=0.5,height=0.5,color=RED,fill_opacity=1).shift(LEFT*-0.25)
+        north_pole_tex2 = MathTex(r"N").move_to(north_pole2)
+        south_pole_tex2 = MathTex(r"S").move_to(south_pole2)
+        magnet2 = VGroup(north_pole2,south_pole2,north_pole_tex2,south_pole_tex2).move_to([-0.75,0,0.1]).set_z_index(1)
+        north_pole3 = Rectangle(width=0.5,height=0.5,color=BLUE,fill_opacity=1).shift(LEFT*0.25)
+        south_pole3 = Rectangle(width=0.5,height=0.5,color=RED,fill_opacity=1).shift(LEFT*-0.25)
+        north_pole_tex3 = MathTex(r"N").move_to(north_pole3)
+        south_pole_tex3 = MathTex(r"S").move_to(south_pole3)
+        magnet3 = VGroup(north_pole3,south_pole3,north_pole_tex3,south_pole_tex3).move_to([0.75,0,0.1]).set_z_index(1)
+
+        # self.add(NumberPlane())
+        self.play(ReplacementTransform(magnet,magnet2), ReplacementTransform(magnet.copy(),magnet3))
+        self.wait()
+
+        #keine monos
+        mono = Tex("keine magnetischen Monopole").shift(UP*3)
+        exept = Tex("*soweit wir wissen").shift(UP*2).scale(0.9).align_to(mono,LEFT)
+
+        self.play(Write(mono))
+        self.play(FadeIn(exept))
+        self.play(FadeOut(exept))
+        self.play(FadeOut(magnet3), magnet2.animate.move_to([0,0,0.1]))
 
         stream2 = StreamLines(func1, stroke_width=2, max_anchors_per_line=300, virtual_time=50, n_repeats=1).set_z_index(-1)
-        self.add(stream2)
+        self.play(FadeIn(stream2))
+
+        vector_field = ArrowVectorField(func=func1,max_color_scheme_value=0.1,min_color_scheme_value=0.01)
+        self.play(FadeIn(vector_field), FadeOut(stream2))
+
