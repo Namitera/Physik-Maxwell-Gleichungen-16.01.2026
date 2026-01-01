@@ -432,11 +432,6 @@ class MagnetFieldPicture2(Scene):
 
         self.add(magnet,stream)
 
-# Divergence:
-# 3d aanalog
-# zurück in magnet und beoabcthung0
-
-#!!!!! corection on value outside not siurrounding is always 0
 class DivergenceExample1(Scene):
     def construct(self):
 
@@ -518,10 +513,6 @@ class DivergenceExample2(Scene):
         self.play(FadeIn(p1,s1,c1,div_tex))
         self.wait(5)
 
-# nabla 
-# version div Form
-# 2nd law and end
-
 class MagnetRecap(Scene):
     def construct(self):
         
@@ -602,39 +593,6 @@ class Nabla2ndLaw(Scene):
 
         self.play(Write(equation))
 
-        # # Divergence as dot product
-        # div_intro = Tex("Divergenz:").shift(DOWN*1.5).to_edge(LEFT)
-        # div_formula = MathTex(r"\nabla \cdot \vec{F}").shift(DOWN*1.5).next_to(div_intro, RIGHT)
-        # div_formula[0][0].set_color(YELLOW)
-        # div_formula[0][2:4].set_color(GREEN)
-
-        # self.play(Write(div_intro))
-        # self.play(Write(div_formula))
-        # self.play(Circumscribe(div_formula))
-
-        # # Connection back to magnetic field
-        # self.play(FadeOut(nabla_components, nabla_word))
-        # self.play(nabla_tex.animate.scale(1.4).move_to([0, 0, 0]))
-
-        # gauss_law = MathTex(r"\nabla \cdot \vec{B} = 0").shift(DOWN*3)
-        # gauss_law[0][0].set_color(YELLOW)
-        # gauss_law[0][2:4].set_color(BLUE)
-
-        # self.play(ReplacementTransform(div_formula.copy(), gauss_law))
-        # self.play(Write(gauss_law))
-
-        # # Explain meaning
-        # meaning = Tex("Magnetische Monopole existieren nicht").shift(DOWN*4.5).scale(0.9)
-
-        # self.play(Write(meaning))
-        # self.wait(2)
-
-
-
-# GausOverview
-# div explain
-# desmos die 2 anderen
-# intro int form
 class GaussLawIntuition(Scene):
     def construct(self):
 
@@ -668,25 +626,90 @@ class GaussLawIntuition(Scene):
         self.play(Write(int_tex), Write(integral_form))
         self.play(Write(word_tex), Write(word_form))
 
+class GausDivergence(Scene):
+    def construct(self):
 
+        def vecField1(pos):
+            e = 0.5
+            x = pos[0]
+            y = pos[1]
+            field = [0,0]
+            field[0] = (x+2)/((x+2)**2 + y**2 + e) - (x-2)/((x-2)**2 + y**2 + e)
+            field[1] = y/((x+2)**2 + y**2 + e) - y/((x-2)**2 + y**2 + e)
+            return field[0]*RIGHT + field[1]*UP
 
+        colors1 = [BLUE, YELLOW]
+        vecField1Func1 = lambda pos: vecField1(pos=pos)
+        vector_field1 = ArrowVectorField(vecField1Func1, max_color_scheme_value=2,min_color_scheme_value=0.01, colors=colors1).set_z_index(-1)
+        stream = StreamLines(vecField1Func1, stroke_width=2, max_anchors_per_line=100, virtual_time=5, n_repeats=4, max_color_scheme_value=2, min_color_scheme_value=0.01, color=colors1).set_z_index(-1)
+        
+        p1 = Dot().scale(0.5)
+        c1 = Circle(color=WHITE,radius=0.5)
+        div_tex = MathTex(r"div\vec{F}=")
+        div_tex[0][3:5].set_color(YELLOW)
+        decnum = DecimalNumber(0)
+        s1 = SurroundingRectangle(div_tex,color=BLACK, fill_color=BLACK ,fill_opacity=1, stroke_width=0)
+        s2 = SurroundingRectangle(decnum,color=BLACK, fill_color=BLACK ,fill_opacity=1, stroke_width=0)
 
+        c1.add_updater(lambda mob: mob.move_to(p1))
+        div_tex.add_updater(lambda mob: mob.next_to(c1,UP))
+        s1.add_updater(lambda mob: mob.move_to(div_tex))
+        s2.add_updater(lambda mob: mob.move_to(decnum))
+        decnum.add_updater(lambda mob: mob.next_to(c1,UP).shift(RIGHT*1.5))
 
+        core = Circle(radius=0.4,color=RED,fill_opacity=1)
+        corss1 = Rectangle(height=0.02,width=0.4,fill_opacity=1)
+        corss2 = Rectangle(height=0.4,width=0.02,fill_opacity=1)
+        proton = VGroup(core,corss1,corss2).shift(LEFT*2).scale(0.7)
 
+        core1 = Circle(radius=0.4,color=PURE_GREEN,fill_color=PURE_GREEN,fill_opacity=1)
+        corss3 = Rectangle(height=0.03,width=0.3,fill_opacity=1)
+        electron = VGroup(core1,corss3).shift(RIGHT*2).scale(0.7)
 
+        differential_form = MathTex(r" \nabla \cdot \vec{E} = \frac{\rho }{\varepsilon _{0}}").shift(UP*3)
+        b1 = SurroundingRectangle(differential_form,color=BLACK,fill_color=BLACK,fill_opacity=0.9, stroke_opacity=0).move_to(differential_form)
 
+        #fields
+        self.play(Create(vector_field1), Create(proton), Create(electron))
+        self.play(FadeIn(VGroup(b1,differential_form)))
+        self.add(stream)
+        stream.start_animation(flow_speed=1.4)
 
+        self.play(FadeIn(p1,s1,s2,decnum,c1,div_tex))
+        self.play(p1.animate.move_to([2,0,0]))
+        decnum.set_value(-1)
+        self.wait()
+        decnum.set_value(0)
+        self.play(p1.animate.move_to([-2,0,0]), decnum.animate.set_value(-1))
+        decnum.set_value(1)
+        self.wait()
 
+class GausChargeDensity(ThreeDScene):
+    def construct(self):
 
+        elambda = MathTex(r"[",r"\lambda",r"]",r"=\frac{C}{m}").shift(LEFT*5+ 2*DOWN)
+        esigma = MathTex(r"[",r"\sigma ",r"]",r"=\frac{C}{m^{2}}").shift(LEFT*0+ 2*DOWN)
+        erho = MathTex(r"[",r"\rho",r"]",r"=\frac{C}{m^{3}}").shift(LEFT*-5+ 2*DOWN)
 
+        llam = Line(color=BLUE).shift(LEFT*5+ UP)
+        csig = Circle(radius=1, color=BLUE, fill_opacity=1).shift(LEFT*0+ UP)
+        srho = Sphere(radius=1).shift(LEFT*-5+ UP)
 
+        self.play(Write(esigma[1]))
+        self.play(Write(esigma[0]), Write(esigma[2:]))
+        self.play(Create(csig))
 
+        self.play(Write(elambda[1]))
+        self.play(Write(elambda[0]), Write(elambda[2:]))
+        self.play(Create(llam))
 
+        self.play(Write(erho[1]))
+        self.play(Write(erho[0]), Write(erho[2:]))
+        self.play(Create(srho))
 
+#DesmosElectircField1
 
-
-
-
+#DesmosElectircField1
 
 class Gauss(ThreeDScene):
     def construct(self):
@@ -695,20 +718,16 @@ class Gauss(ThreeDScene):
         charge = Dot3D(color=RED).scale(2)
 
         self.move_camera(phi=60*DEGREES, zoom=3)
-        self.begin_ambient_camera_rotation(rate=0.5)
+        self.begin_ambient_camera_rotation(rate=0.25)
 
-        #vectors
-        a1 = Arrow3D(start=ORIGIN, end=[0,0,1],resolution=5,height=0.01,base_radius=0.04)
-        a2 = Arrow3D(start=ORIGIN, end=[0,0,-1],resolution=5,height=0.01,base_radius=0.04)
-        a3 = Arrow3D(start=ORIGIN, end=[1,0,0],resolution=5,height=0.01,base_radius=0.04)
-        a4 = Arrow3D(start=ORIGIN, end=[-1,0,0],resolution=5,height=0.01,base_radius=0.04)
-        a5 = Arrow3D(start=ORIGIN, end=[0,1,0],resolution=5,height=0.01,base_radius=0.04)
-        a6 = Arrow3D(start=ORIGIN, end=[0,-1,0],resolution=5,height=0.01,base_radius=0.04)
+        #vectors fielfd
+        func1 = lambda pos: 3*(pos[0]/(pos[0]**2 + pos[1]**2 +0.0001)) * RIGHT + 3*(pos[1]/(pos[0]**2 + pos[1]**2 +0.0001)) * UP
+        vector_field1 = ArrowVectorField(func1,x_range=[-8,8],y_range=[-8,8])
+        vector_field2 = ArrowVectorField(func1,x_range=[-8,8],y_range=[-8,8]).rotate(PI/2,axis=RIGHT)
 
-        arrows = VGroup(a1,a2,a3,a4,a5,a6).set_color(RED)
-        self.add(charge)
-        self.add(arrows)
-        self.wait(1)
+        arrows = VGroup(vector_field1,vector_field2)
+        self.play(Create(charge))
+        self.play(FadeIn(arrows))
 
         #surface
         sphere = Sphere(resolution=(24,12))
@@ -717,11 +736,12 @@ class Gauss(ThreeDScene):
         self.play(Create(sphere))
 
         #Law
-        law_tex = MathTex(r"\oint_{A}\vec{E}\cdot d\vec{A}").move_to([0,0,2])
+        law_tex = MathTex(r"\oint_{A}\vec{E}\cdot d\vec{A} = \frac{q}{\varepsilon_{0}}").move_to([0,0,2])
+        b1 = SurroundingRectangle(law_tex,color=BLACK,fill_color=BLACK,fill_opacity=0.7, stroke_opacity=0).move_to(law_tex)
 
-        self.add_fixed_orientation_mobjects(law_tex)
-        self.add_fixed_in_frame_mobjects(law_tex)
-        self.play(Write(law_tex))
+        self.add_fixed_orientation_mobjects(b1,law_tex)
+        self.add_fixed_in_frame_mobjects(b1,law_tex)
+        self.play(Write(law_tex),Write(b1))
         self.wait()
 
 class VectorDotProductLabel(Scene):
@@ -1370,8 +1390,6 @@ class FluxIntegral(ThreeDScene):
         self.play(sphere.animate.apply_matrix(matrix=matrix3), run_time=5)
         self.wait(3)
 
-
-
 class GaussLawDerivation(ThreeDScene):
     def construct(self):
 
@@ -1606,17 +1624,11 @@ class GaussSurfaceIndependence3D(ThreeDScene):
             rate_func=linear
         )
  
-# core = Circle(radius=0.4,color=RED,fill_opacity=1)
-# corss1 = Rectangle(height=0.02,width=0.4,fill_opacity=1)
-# corss2 = Rectangle(height=0.4,width=0.02,fill_opacity=1)
-# proton = VGroup(core,corss1,corss2).shift(LEFT*2)
 
-# core1 = Circle(radius=0.4,color=PURE_GREEN,fill_color=PURE_GREEN,fill_opacity=1)
-# corss3 = Rectangle(height=0.03,width=0.3,fill_opacity=1)
-# electron = VGroup(core1,corss3).shift(RIGHT*2)
 
-# self.add(proton,electron)
 
+
+#???
 class CurlIntro(Scene):
     def construct(self):
 
