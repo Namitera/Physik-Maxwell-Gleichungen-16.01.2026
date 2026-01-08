@@ -1798,6 +1798,18 @@ class CurlComplexExample(Scene):
         self.play(twig.animate.move_to([1.5,1.6,0]),rate_func=linear, run_time=4)
         self.play(twig.animate.move_to([-1.5,1.5,0]),rate_func=linear, run_time=4)
 
+
+#illusion fix?
+# vecField1Func1 = lambda pos: vecField1(pos=4*pos)
+        # def vecField1(pos):
+        #     e = 0.5
+        #     x = pos[0]
+        #     y = pos[1]
+        #     field = [0,0]
+        #     field[0] = -y * np.pow(2.718281, -x**2 -y**2)
+        #     field[1] = x * np.pow(2.718281, -x**2 -y**2)
+        #     return field[0]*RIGHT + field[1]*UP
+
 class Curl3D(ThreeDScene):
     def construct(self):
 
@@ -1828,16 +1840,256 @@ class Curl3D(ThreeDScene):
         #intro khat
         self.play(Write(VGroup(ihat_tex,jhat_tex)), GrowArrow(ihat), GrowArrow(jhat))
         self.move_camera(phi=60*DEGREES, theta=-45*DEGREES)
+        self.begin_ambient_camera_rotation(rate=0.2)
         self.move_camera(zoom=2.5,frame_center=[0,0,0.3])
 
         self.play(Write(khat_tex), GrowArrow(khat), ihat_tex.animate.rotate(PI/2,axis=OUT))
-        # self.play(ReplacementTransform(vector_field1,vector_field2))
 
+        #vector field
+        self.play(FadeIn(axis))
+        self.play(FadeIn(vector_field1))
+        self.move_camera(zoom=1,frame_center=[0,0,0])
+
+        self.play(Rotate(vector_field1, 2*PI), run_time=3)
 
         #streamlines
-        # stream = StreamLines(vecField1Func1, stroke_width=2, max_anchors_per_line=50, virtual_time=50, n_repeats=1, colors=colors1, min_color_scheme_value=1,  max_color_scheme_value=6).set_z_index(-99)
+        stream = StreamLines(vecField1Func1, stroke_width=2, max_anchors_per_line=50, virtual_time=50, n_repeats=1, colors=colors1, min_color_scheme_value=1,  max_color_scheme_value=6).set_z_index(-99)
 
-        # self.play(vector_field1.animate.set_opacity(0.3), run_time=0.1)
-        # self.add(stream)
-        # stream.start_animation(warm_up=True, flow_speed=2)
-        # self.wait(5)
+        self.play(vector_field1.animate.set_opacity(0.2), run_time=1)
+        self.add(stream)
+        stream.start_animation(warm_up=True, flow_speed=2)
+        self.wait(3)
+        self.move_camera(zoom=2)
+        self.wait(3)
+
+class CurlToNabla(ThreeDScene):
+    def construct(self):
+        1
+        
+
+
+
+#???
+class FaradayIntuition(Scene):
+    def construct(self):
+
+        law_tex = Tex("Faradaysches Induktionsgesetz")
+        int_tex = Tex("Integrale Form:").shift(UP*0.5).to_edge(LEFT)
+        dif_tex = Tex("Differentielle Form:").shift(UP*3).to_edge(LEFT)
+        word_tex = Tex("Wortform:").shift(UP*-2).to_edge(LEFT)
+        differential_form = MathTex(r" \nabla \times \vec{E}=-\frac{\partial \vec{B}}{\partial t}").shift(UP*2).to_edge(LEFT)
+        integral_form = MathTex(r"\oint_{\partial A}^{}\vec{E}\cdot d\vec{l}=-\frac{d}{dt}\int_{A}^{}\vec{B}\cdot d\vec{A}").shift(UP*-0.5).to_edge(LEFT)
+        word_form = Tex("Änderungen des magnetischen Feldes führen zu einem elektrischen Wirbelfeld.").shift(UP*-3).scale(0.8).to_edge(LEFT)
+
+        self.play(Write(law_tex))
+        self.play(law_tex.animate.to_corner(UR))
+
+        self.play(Write(dif_tex), Write(differential_form))
+
+        func1 = lambda pos: 3*(pos[0]/(pos[0]**2 + pos[1]**2 +0.0001)) * RIGHT + 3*(pos[1]/(pos[0]**2 + pos[1]**2 +0.0001)) * UP
+        vector_field = ArrowVectorField(func1,x_range=[-3,3],y_range=[-1.5,2.5]).move_to([3.5,0.2,0])
+
+        core = Circle(radius=0.4,color=RED,fill_opacity=1)
+        corss1 = Rectangle(height=0.02,width=0.4,fill_opacity=1)
+        corss2 = Rectangle(height=0.4,width=0.02,fill_opacity=1)
+        proton = VGroup(core,corss1,corss2).scale(0.8).move_to([3.5,-0.2,0])
+
+        b1 = SurroundingRectangle(vector_field,color=WHITE)
+
+        self.play(FadeIn(b1))
+        self.play(FadeIn(proton))
+        self.play(FadeIn(vector_field))
+
+        self.play(Write(int_tex), Write(integral_form))
+        self.play(Write(word_tex), Write(word_form))
+
+
+class FaradayCurl(Scene):
+    def construct(self):
+
+        def vecField1(pos):
+            b = 5
+            e = 0.1
+            x = pos[0]
+            y = pos[1]
+            field = [0,0]
+            field[0] = -b*y/(x**2 + y**2 + e) 
+            field[1] = b*x/(x**2 + y**2 + e)
+            return field[0]*RIGHT + field[1]*UP
+
+        def vecField2(pos):
+            b = 5
+            e = 0.1
+            x = pos[0]
+            y = pos[1]
+            field = [0,0]
+            field[0] = b*y/(x**2 + y**2 + e) 
+            field[1] = -b*x/(x**2 + y**2 + e)
+            return field[0]*RIGHT + field[1]*UP
+
+        def curlField1(x,y):
+            e=0.0001
+            return 2*5*0.1/(x**2 + y**2 + 0.1)
+
+        def curlField2(x,y):
+            e=0.0001
+            return -2*5*0.1/(x**2 + y**2 + 0.1)
+
+
+        p1 = Dot().scale(0.5)
+        c1 = Circle(color=WHITE,radius=0.25)
+        div_tex = MathTex(r" \nabla \times \vec{E}=")
+        div_tex[0][2:4].set_color(YELLOW)
+        decnum = DecimalNumber(0)
+        decnum2 = DecimalNumber(0)
+        s1 = SurroundingRectangle(div_tex,color=BLACK, fill_color=BLACK ,fill_opacity=1, stroke_width=0)
+        s2 = SurroundingRectangle(decnum,color=BLACK, fill_color=BLACK ,fill_opacity=1, stroke_width=0)
+
+        c1.add_updater(lambda mob: mob.move_to(p1))
+        div_tex.add_updater(lambda mob: mob.next_to(c1,UP))
+        s1.add_updater(lambda mob: mob.move_to(div_tex))
+        s2.add_updater(lambda mob: mob.move_to(decnum))
+        decnum.add_updater(lambda mob: mob.next_to(c1,UP).shift(RIGHT*1.5).set_value(curlField1(c1.get_x(),c1.get_y())))
+        decnum2.add_updater(lambda mob: mob.next_to(c1,UP).shift(RIGHT*1.5).set_value(curlField2(c1.get_x(),c1.get_y())))
+
+        #fields
+        colors1 = [BLUE, YELLOW, YELLOW, ORANGE, ORANGE, RED]
+        vecField1Func1 = lambda pos: vecField1(pos=pos)
+        vector_field1 = ArrowVectorField(vecField1Func1, max_color_scheme_value=3.2,min_color_scheme_value=0.8, colors=colors1).set_z_index(-1)
+        stream = StreamLines(vecField1Func1, stroke_width=2, max_anchors_per_line=100, virtual_time=5, n_repeats=1, max_color_scheme_value=3.2, min_color_scheme_value=0.8).set_z_index(-1)
+
+        p2 = Dot().scale(1)
+        c2 = Circle(color=WHITE,radius=0.3)
+        magnetIn = VGroup(p2,c2)
+
+        self.play(Create(vector_field1), Write(magnetIn))
+        self.add(stream)
+        stream.start_animation(flow_speed=0.7)
+
+
+        #show curl change
+        self.add(p1,s1,s2,decnum,c1,div_tex)
+        self.play(p1.animate.move_to([2,0,0]))
+        self.wait()
+        self.play(p1.animate.move_to([0,2.5,0]), decnum.animate.set_value(-1))
+        self.wait(4)
+
+        #reverse curl
+        vecField1Func2 = lambda pos: vecField2(pos=pos)
+        vector_field2 = ArrowVectorField(vecField1Func2, max_color_scheme_value=3.2,min_color_scheme_value=0.8, colors=colors1).set_z_index(-1)
+        stream2 = StreamLines(vecField1Func2, stroke_width=2, max_anchors_per_line=100, virtual_time=5, n_repeats=1, max_color_scheme_value=3.2, min_color_scheme_value=0.8).set_z_index(-1)
+
+        r1 = Rectangle(width=0.52, height=0.02, color=WHITE, fill_opacity=1).rotate(PI/4)
+        r2 = Rectangle(width=0.52, height=0.02, color=WHITE, fill_opacity=1).rotate(-PI/4)
+        c3 = Circle(color=WHITE,radius=0.3)
+        magnetOut = VGroup(r1, r2 ,c3)
+
+        self.play(FadeOut(stream))
+        self.remove(stream)
+        self.play(ReplacementTransform(magnetIn,magnetOut))
+        self.play(vector_field1.animate.become(vector_field2))
+        self.add(stream2)
+        stream2.start_animation(flow_speed=0.7)
+
+        self.remove(decnum)
+        self.add(decnum2)
+
+        self.play(p1.animate.move_to([2,0,0]))
+        self.wait()
+        self.play(p1.animate.move_to([-1,2.5,0]), decnum.animate.set_value(-1))
+
+class ChargesInFields(Scene):
+    def construct(self):
+
+        def vecField1(pos):
+            b = 5
+            e = 0.1
+            x = pos[0]
+            y = pos[1]
+            field = [0,0]
+            field[0] = -b*y/(x**2 + y**2 + e) 
+            field[1] = b*x/(x**2 + y**2 + e)
+            return field[0]*RIGHT + field[1]*UP
+
+        #fields
+        colors1 = [BLUE, YELLOW, YELLOW, ORANGE, ORANGE, RED]
+        vecField1Func1 = lambda pos: vecField1(pos=pos)
+        vector_field1 = ArrowVectorField(vecField1Func1, max_color_scheme_value=3.2,min_color_scheme_value=0.8, colors=colors1).set_z_index(-1)
+
+        p2 = Dot().scale(1)
+        c2 = Circle(color=WHITE,radius=0.3)
+        magnetIn = VGroup(p2,c2)
+
+        self.play(Create(vector_field1))
+        self.play(Write(magnetIn))
+
+        #moving chrages
+        core = Circle(radius=0.4,color=RED,fill_opacity=1)
+        corss1 = Rectangle(height=0.02,width=0.4,fill_opacity=1)
+        corss2 = Rectangle(height=0.4,width=0.02,fill_opacity=1)
+        proton = VGroup(core,corss1,corss2).shift(LEFT*2).scale(0.7)
+
+        core1 = Circle(radius=0.4,color=PURE_GREEN,fill_color=PURE_GREEN,fill_opacity=1)
+        corss3 = Rectangle(height=0.03,width=0.3,fill_opacity=1)
+        electron = VGroup(core1,corss3).shift(RIGHT*2).scale(0.7)
+
+        self.play(Write(proton), Write(electron))
+        self.play(Rotate(proton, PI, about_point=ORIGIN), Rotate(electron, -PI, about_point=ORIGIN))
+
+
+#logic field vs charge direction
+class FaradayInduction(ThreeDScene):
+    def construct(self):
+
+        func1 = lambda pos: vecField1(pos=pos)
+        def vecField1(pos):
+            e = 0.001
+            s = 0.2
+            x = pos[0]
+            y = pos[1]
+            normal1 = x**2 + (y-s)**2 + e
+            normal2 = x**2 + (y+s)**2 + e
+            field = [0,0]
+            field[0] = (y-s)/(normal1) - (y+s)/(normal2)
+            field[1] = (-x)/(normal1) + (x)/(normal2)
+            return field[0]*RIGHT + field[1]*UP
+
+        def currentFlow(x, b=1, c=10):
+            return (c * x) / ((x**2 + b**2)**2)
+
+        #setup
+        north_pole = Prism(dimensions=[2,1,1], fill_color=BLUE, fill_opacity=1).move_to([1,0,0])
+        south_pole = Prism(dimensions=[2,1,1], fill_color=RED, fill_opacity=1).move_to([-1,0,0])
+        stream = StreamLines(func1, stroke_width=1, max_anchors_per_line=300, virtual_time=1, n_repeats=1).set_z_index(-1)
+        magnet = VGroup(north_pole, south_pole, stream).set_z_index(1)
+
+        loop = Circle(radius=2,color=GREEN).rotate(PI/2,UP) 
+
+        self.play(FadeIn(magnet))
+        self.move_camera(phi=60*DEGREES, theta=-45*DEGREES)
+        self.play(Write(loop))
+        
+        self.play(magnet.animate.move_to([-4,0,0]))
+
+        #move magnet
+        vec1 = Cube(side_length=0.15, fill_color=YELLOW, fill_opacity=1).move_to([0,0,2]).rotate(PI/2,OUT)
+        vec2 = Cube(side_length=0.15, fill_color=YELLOW, fill_opacity=1).move_to([0,2,0]).rotate(PI/2,UP)
+        vec3 = Cube(side_length=0.15, fill_color=YELLOW, fill_opacity=1).move_to([0,0,-2]).rotate(-PI/2,OUT)
+        vec4 = Cube(side_length=0.15, fill_color=YELLOW, fill_opacity=1).move_to([0,-2,0]).rotate(-PI/2,UP)
+        l1 = Line(start=[0,0,2], end=[0,0,2], color=YELLOW)
+        l2 = Line(start=[0,2,0], end=[0,2,0], color=YELLOW)
+        l3 = Line(start=[0,0,-2], end=[0,0,-2], color=YELLOW)
+        l4 = Line(start=[0,-2,0], end=[0,-2,0], color=YELLOW)
+        vec1.add_updater(lambda mob: mob.set_y(currentFlow(magnet.get_x())))
+        vec2.add_updater(lambda mob: mob.set_z(-currentFlow(magnet.get_x())))
+        vec3.add_updater(lambda mob: mob.set_y(-currentFlow(magnet.get_x())))
+        vec4.add_updater(lambda mob: mob.set_z(currentFlow(magnet.get_x())))
+        l1.add_updater(lambda mob: mob.become(Line(start=[0,0,2], end=vec1.get_center(), color=YELLOW)))
+        l2.add_updater(lambda mob: mob.become(Line(start=[0,2,0], end=vec2.get_center(), color=YELLOW)))
+        l3.add_updater(lambda mob: mob.become(Line(start=[0,0,-2], end=vec3.get_center(), color=YELLOW)))
+        l4.add_updater(lambda mob: mob.become(Line(start=[0,-2,0], end=vec4.get_center(), color=YELLOW)))
+        vecs = VGroup(vec1,vec2,vec3,vec4, l1,l2,l3,l4)
+
+        self.add(vecs)
+        self.play(magnet.animate.move_to([4,0,0]), rate_func=linear, run_time=3)
+        self.play(magnet.animate.move_to([-4,0,0]), rate_func=linear, run_time=3)
