@@ -349,6 +349,10 @@ class VectorFieldExamples1(Scene):
         stream.start_animation(warm_up=True, flow_speed=2)
         self.wait(5)
 
+#
+###add consevation!
+#
+
 #DesmosField1
 
 #DesmosField2
@@ -1636,7 +1640,6 @@ class GaussSurfaceIndependence3D(ThreeDScene):
 
 
 
-
 class FaradayIntuition(ThreeDScene):
     def construct(self):
 
@@ -2247,8 +2250,295 @@ class FaradayCurl(Scene):
 class FaradayDiffForm(ThreeDScene):
     def construct(self):
 
+        def vecField1(pos):
+            e = 0.001
+            s = 0.2
+            x = pos[0]
+            y = pos[1]
+            normal1 = x**2 + (y-s)**2 + e
+            normal2 = x**2 + (y+s)**2 + e
+            field = [0,0]
+            field[0] = (y-s)/(normal1) - (y+s)/(normal2)
+            field[1] = (-x)/(normal1) + (x)/(normal2)
+            return field[0]*RIGHT + field[1]*UP
+
+        def vecField2(pos):
+            r = 0.6
+            b = 5
+            e = 0.1
+            x = pos[0]
+            y = pos[1]
+            field = [0,0]
+            field[0] = -b*y/(x**2 + y**2 + e) 
+            field[1] = b*x/(x**2 + y**2 + e)
+            if field[0]**2 + field[1]**2 < r:
+                return 0*RIGHT + 0*UP
+            else:
+                return field[0]*RIGHT + field[1]*UP
+
+        def currentFlow(x, b=1, c=10):
+            return -(c * x) / ((x**2 + b**2)**2)
+
+        #setup
         differential_form = MathTex(r" \nabla \times \vec{E}=-\frac{\partial \vec{B}}{\partial t}").to_edge(UP)
+        b1 = SurroundingRectangle(differential_form,color=BLACK,fill_color=BLACK,fill_opacity=0.7, stroke_opacity=0).move_to(differential_form)
+        self.add_fixed_in_frame_mobjects(b1,differential_form)
+        self.play(Write(differential_form))
+
+        north_pole = Prism(dimensions=[2,1,1], fill_color=BLUE, fill_opacity=1).move_to([1,0,0])
+        south_pole = Prism(dimensions=[2,1,1], fill_color=RED, fill_opacity=1).move_to([-1,0,0])
+        func1 = lambda pos: vecField1(pos=pos)
+        stream = StreamLines(func1, stroke_width=1, max_anchors_per_line=300, virtual_time=1, n_repeats=1).set_z_index(-1)
+        magnet = VGroup(north_pole, south_pole, stream).set_z_index(1)
+
+
+        self.move_camera(phi=60*DEGREES, theta=-45*DEGREES)
+        self.play(FadeIn(magnet))
+
+        #efield
+        colors1 = [BLUE, YELLOW, YELLOW, ORANGE, ORANGE, RED]
+        vecField1Func1 = lambda pos: vecField2(pos=pos)
+        vecField1Func2 = lambda pos: vecField2(pos=-pos)
+        vector_field1 = ArrowVectorField(vecField1Func1, max_color_scheme_value=3.2,min_color_scheme_value=0.8, colors=colors1, x_range=[-6,6], y_range=[-6,6]).rotate(PI/2, UP)
+        vector_field2 = ArrowVectorField(vecField1Func2, max_color_scheme_value=3.2,min_color_scheme_value=0.8, colors=colors1, x_range=[-6,6], y_range=[-6,6]).rotate(PI/2, UP)
+
+        #move magnet
+        self.play(magnet.animate.move_to([-4,0,0]))
+        vector_field1.add_updater(lambda mob, dt: mob.rotate(0.3*dt*currentFlow(magnet.get_x()), RIGHT))
+        vector_field2.add_updater(lambda mob, dt: mob.rotate(0.3*dt*currentFlow(magnet.get_x()), RIGHT))
+
+        self.add(vector_field1)
+        self.play(magnet.animate.move_to([0,0,0]), rate_func=linear, run_time=3)
+        self.add(vector_field2)
+        self.remove(vector_field1)
+        self.play(magnet.animate.move_to([4,0,0]), rate_func=linear, run_time=3)
+        self.remove(vector_field2)
+        self.add(vector_field1)
+        self.play(magnet.animate.move_to([0,0,0]), rate_func=linear, run_time=3)
+        self.add(vector_field2)
+        self.remove(vector_field1)
+        self.play(magnet.animate.move_to([4,0,0]), rate_func=linear, run_time=3)
+        self.remove(vector_field2)
+        self.play(magnet.animate.move_to([0,0,0]), rate_func=linear, run_time=3)
+
+        #camera change in B
+        self.move_camera(phi=0, theta=PI/2)
+
+        loop = Circle(radius=2,color=GREEN).rotate(PI/2,UP) 
+        self.play(FadeIn(loop))
+        self.play(magnet.animate.move_to([3,0,0]), rate_func=linear, run_time=3)
+        self.play(magnet.animate.move_to([-3,0,0]), rate_func=linear, run_time=3)
+
+#patital vs full derivative
+#int form
+
+class MagneticFlux(ThreeDScene):
+    def construct(self):
+
+        positive_plate = Rectangle(height=8,width=0.5,color=RED,fill_opacity=1).shift(LEFT*6 +DOWN*2)
+        positive_plate2 = Polygon(positive_plate.get_corner(UR),positive_plate.get_corner(DR),positive_plate.get_corner(DR)+[0.2,0.4,0],positive_plate.get_corner(UR)+[0.2,-0.4,0],fill_opacity=1,color=ManimColor.from_rgb((160,30,30, 1)))
+        negativ_plate = Rectangle(height=8,width=0.5,color=GREEN,fill_opacity=1).shift(RIGHT*6+DOWN*2)
+        negativ_plate2 = Polygon(negativ_plate.get_corner(UL),negativ_plate.get_corner(DL),negativ_plate.get_corner(DL)+[-0.2,0.4,0],negativ_plate.get_corner(UL)+[-0.2,-0.4,0],fill_opacity=1,color=ManimColor.from_rgb((16,140,16, 1)))
+
+        field_line1 = Arrow([-6,2,0],[6,2,0])
+        field_line2 = Arrow([-6,1,0],[6,1,0])
+        field_line3 = Arrow([-6,0,0],[6,0,0])
+        field_line4 = Arrow([-6,-1,0],[6,-1,0])
+        field_line5 = Arrow([-6,-2,0],[6,-2,0])
+        field_line6 = Arrow([-6,-3,0],[6,-3,0])
+        field_line7 = Arrow([-6,-4,0],[6,-4,0])
+        fieldLines = VGroup(field_line1,field_line2,field_line3,field_line4,field_line5,field_line6,field_line7).set_color(YELLOW)
+
+        #condensator fieldlines
+        b_field = MathTex(r"\vec{B}").set_color(YELLOW).next_to(positive_plate,UP)
+
+        self.play(Write(positive_plate),Write(positive_plate2))
+        self.play(Write(negativ_plate), Write(negativ_plate2))
+        self.play(AnimationGroup(GrowArrow(fieldLines[0]),GrowArrow(fieldLines[1]),GrowArrow(fieldLines[2]),GrowArrow(fieldLines[3]),GrowArrow(fieldLines[4]),GrowArrow(fieldLines[5]),GrowArrow(fieldLines[6]), lag_ratio=0.7), run_time=1)
+        self.play(Write(b_field))
+
+        #introduce surface
+        plane_surface = Rectangle(height=4,width=0.25,fill_opacity=1,color=BLUE).set_z_index(1)
+        plane_surface2 = Polygon(plane_surface.get_corner(UR),plane_surface.get_corner(DR),plane_surface.get_corner(DR)+[0.2,0.4,0],plane_surface.get_corner(UR)+[0.2,-0.4,0],fill_opacity=1,color=DARK_BLUE).set_z_index(-1)
+
+        self.play(Write(plane_surface),Write(plane_surface2))
+
+        #show flux
+        flux_tex = Tex("magnetischer Fluss").shift(UP*3).scale(1.5)
+        func1 = lambda pos: RIGHT
+        stream = StreamLines(func1, stroke_width=4, max_anchors_per_line=25, virtual_time=50, n_repeats=15,
+                             x_range=[-5.7,2.3,7],y_range=[-4,2])
+
+        self.play(Write(flux_tex))
+        self.add(stream)
+        stream.start_animation(warm_up=True, flow_speed=5)
+        self.wait(5)
+
+        #equation
+        forumla = MathTex(r"\phi _{B}=\int_{A}^{}\vec{B}\cdot d\vec{A}").shift(UP*3)
+
+        self.play(FadeOut(flux_tex))
+        self.play(Write(forumla))
+        self.play(stream.animate.set_opacity(0), fieldLines.animate.set_opacity(0.2))
+        stream.end_animation()
+        self.remove(stream)
+
+        #different surfaces
+        self.play(FadeOut(VGroup(plane_surface,plane_surface2)))
+        self.move_camera(theta=-140*DEGREES, phi=60*DEGREES)
+        self.begin_ambient_camera_rotation(0.18)
+
+        circ = Circle(radius=2, color=BLUE, fill_opacity=0.5).rotate(PI/2, UP)
+        self.play(Write(circ))
+        self.wait(3)
         
-        self.add(differential_form)
+        loop = Circle(radius=2,color=PURE_GREEN).rotate(PI/2,UP) 
+        self.play(Write(loop))
+        self.wait(3)
 
+#Lenzs Law and d/dt
 
+#volt integralm 
+
+class LineIntegral(ThreeDScene):
+    def construct(self):
+
+        curve = MathTex(r"C",r":\vec{r}(t)=cos(t)",r"\hat{i}",r"+sin(t)",r"\hat{j}",r"+0",r"\hat{k}").to_corner(UL)
+        curve[0].set_color(RED)
+        curve[2].set_color(PURE_RED)
+        curve[4].set_color(PURE_GREEN)
+        curve[6].set_color(PURE_BLUE)
+        b1 = SurroundingRectangle(curve[0:5],color=BLACK,fill_color=BLACK,fill_opacity=0.9, stroke_opacity=0).move_to(curve[0:5])
+        interval = MathTex(r"t \in [0,2\pi]").to_corner(UR)
+
+        def func(t):
+            return (np.cos(t), np.sin(t), 0)
+        def func2(t):
+            return (np.cos(t), np.sin(t), np.sin(t)**2)
+        def func3(u,v):
+            return (np.cos(u), np.sin(u), v*np.sin(u)**2)
+
+        axis = ThreeDAxes(x_range=[-2,2],y_range=[-2,2],z_range=[-2,2], z_length=4)
+        circ = ParametricFunction(func, t_range = (0, 8*PI), fill_opacity=0).set_color(RED)
+
+        #basics
+        self.wait(frozen_frame=False)
+        self.add_fixed_in_frame_mobjects(b1,curve)
+        self.play(Write(VGroup(b1,curve)))
+        self.move_camera(frame_center=[-1,0,0], zoom=2)
+        self.play(Write(axis))
+        self.play(DrawBorderThenFill(circ), run_time=3)
+
+        #hats and parameters
+        ihat_tex = MathTex(r"\hat{i}").set_color(PURE_RED).move_to([1,-1,0])
+        jhat_tex = MathTex(r"\hat{j}").set_color(PURE_GREEN).move_to([1,1,0])
+        ihat = Vector([1,0]).set_color(PURE_RED)
+        jhat = Vector([0,1]).set_color(PURE_GREEN)
+        self.play(Write(VGroup(ihat_tex,jhat_tex)), GrowArrow(ihat), GrowArrow(jhat))
+
+        #boundaries
+        self.add_fixed_in_frame_mobjects(interval)
+        self.play(Write(interval))
+        self.move_camera(frame_center=[0,0,0], zoom=1,phi=60*DEGREES, theta=-45*DEGREES)
+
+        #show basis vector k
+        khat = Vector([0,0,1]).set_color(PURE_BLUE).set_z_index(99)
+        khat_tex = MathTex(r"\hat{k}").set_color(PURE_BLUE).move_to([-0.4,0,0.3]).rotate(PI/2,axis=RIGHT).rotate(PI/2,axis=OUT)
+
+        self.play(FadeOut(curve[5:]), Unwrite(interval))
+        self.move_camera(zoom=4)
+        self.play(Write(khat_tex), GrowArrow(khat))
+
+        #paraboliod
+        paraboloid = ParametricFunction(func2, t_range = (0, 8*PI), fill_opacity=0).set_color(WHITE)
+
+        self.play(FadeOut(VGroup(ihat_tex,jhat_tex,khat,khat_tex, ihat, jhat)))
+        self.play(axis.animate.set_opacity(0.4))
+        self.move_camera(zoom=3, frame_center=[0,0,0.5])
+        self.play(DrawBorderThenFill(paraboloid))
+
+        #function
+        functPara = MathTex(r"f(x,y)=y^{2}").next_to(curve,DOWN).to_edge(LEFT)
+        self.add_fixed_in_frame_mobjects(functPara)
+        self.play(Write(functPara))
+
+        # surface and area
+        surf = Surface(func3, u_range=[0, 2*PI], v_range=[0,1], resolution=[300,1], fill_opacity=1, fill_color=BLUE, checkerboard_colors=[BLUE_D, BLUE_D])
+        area = MathTex(r"A",r"=?").to_edge(LEFT)
+        area[0].set_color(BLUE)
+
+        self.play(Create(surf))
+        self.add_fixed_in_frame_mobjects(area)
+        self.play(Write(area))
+
+        #small rectangles
+        surf2 = Surface(func3, u_range=[0, 2*PI], v_range=[0,1], resolution=[10,1], fill_opacity=1, should_make_jagged=True)
+        self.play(ReplacementTransform(surf,surf2))
+
+        #f and ds
+        dsCurve = ParametricFunction(func, t_range = (7*PI/5, 8*PI/5), fill_opacity=0).set_color(YELLOW)
+        ds_tex = MathTex(r"ds").set_color(YELLOW).to_edge(DOWN).scale(1.41).shift(UP*0.6)
+        fxyLine = Line3D(start=[-0.309,-1.2,0.17], end=[-0.313,-1.2,1.06]).set_color(RED)
+        fxy_tex = MathTex(r"f(x,y)").set_color(RED).to_edge(LEFT).shift(DOWN+ RIGHT*2)
+
+        self.play(FadeOut(VGroup(b1,curve[0:5],functPara,area)))
+        self.move_camera(theta=-PI/2, frame_center=[0,0,0.2])
+        self.play(circ.animate.set_color(GRAY_D))
+
+        self.play(DrawBorderThenFill(dsCurve))
+
+        self.add_fixed_in_frame_mobjects(ds_tex)
+        self.play(Write(ds_tex))
+        self.play(Write(fxyLine))
+
+        self.add_fixed_in_frame_mobjects(fxy_tex)
+        self.play(Write(fxy_tex))
+
+        #integral
+        line_int = MathTex(r"\int_{C}^{}",r"f(x,y)",r"ds").to_corner(UL)
+        line_int[1].set_color(RED)
+        line_int[2].set_color(YELLOW)
+
+        self.add_fixed_in_frame_mobjects(line_int)
+        self.play(Write(line_int))
+
+        #final ?
+        surf3 = Surface(func3, u_range=[0, 2*PI], v_range=[0,1], resolution=[200,1], fill_opacity=1)
+        self.play(FadeOut(dsCurve), ReplacementTransform(surf2,surf3))
+
+class FaradayLineIntegral(ThreeDScene):
+    def construct(self):
+
+        def vecField2(pos):
+            r = 0.6
+            b = 5
+            e = 0.1
+            x = pos[0]
+            y = pos[1]
+            field = [0,0]
+            field[0] = -b*y/(x**2 + y**2 + e) 
+            field[1] = b*x/(x**2 + y**2 + e)
+            if field[0]**2 + field[1]**2 < r:
+                return 0*RIGHT + 0*UP
+            else:
+                return field[0]*RIGHT + field[1]*UP
+
+        #loop
+        loop = Circle(radius=2,color=PURE_GREEN, fill_color=PURE_BLUE, fill_opacity=0.4).rotate(PI/2,UP) 
+        self.play(DrawBorderThenFill(loop))
+        self.move_camera(phi=60*DEGREES, theta=-45*DEGREES)
+
+        #line integral
+        lineInt = MathTex(r"\oint_{\partial A}^{}\vec{E}\cdot d\vec{l}").to_corner(UL)
+        lineInt[0][1].set_color(PURE_GREEN)
+        lineInt[0][2].set_color(PURE_BLUE)
+        self.add_fixed_in_frame_mobjects(lineInt)
+        self.play(Write(lineInt))
+
+        # efield
+        # colors1 = [BLUE, YELLOW, YELLOW, ORANGE, ORANGE, RED]
+        # vecField1Func1 = lambda pos: vecField2(pos=pos)
+        # vector_field1 = ArrowVectorField(vecField1Func1, max_color_scheme_value=3.2,min_color_scheme_value=0.8, colors=colors1, x_range=[-6,6], y_range=[-6,6]).rotate(PI/2, UP)
+        # self.add(vector_field1)
+
+#add T ds = dl, moving vector along circle and small ds arc. then E field, gain losse energy and then flip 90 to see tangential and therefore the dot product.
