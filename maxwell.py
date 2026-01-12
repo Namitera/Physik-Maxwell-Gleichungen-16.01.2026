@@ -1,5 +1,13 @@
 from manim import *
 
+class Opening(ThreeDScene):
+    def construct(self):
+        1
+
+
+
+
+        
 
 class Overview(Scene):
     def construct(self):   
@@ -350,7 +358,7 @@ class VectorFieldExamples1(Scene):
         self.wait(5)
 
 #
-###add consevation!
+###add conservation!
 #
 
 #DesmosField1
@@ -1629,17 +1637,6 @@ class GaussSurfaceIndependence3D(ThreeDScene):
             rate_func=linear
         )
  
-
-
-
-
-
-
-
-
-
-
-
 class FaradayIntuition(ThreeDScene):
     def construct(self):
 
@@ -2330,7 +2327,6 @@ class FaradayDiffForm(ThreeDScene):
         self.play(magnet.animate.move_to([-3,0,0]), rate_func=linear, run_time=3)
 
 #patital vs full derivative
-#int form
 
 class MagneticFlux(ThreeDScene):
     def construct(self):
@@ -2395,10 +2391,6 @@ class MagneticFlux(ThreeDScene):
         loop = Circle(radius=2,color=PURE_GREEN).rotate(PI/2,UP) 
         self.play(Write(loop))
         self.wait(3)
-
-#Lenzs Law and d/dt
-
-#volt integralm 
 
 class LineIntegral(ThreeDScene):
     def construct(self):
@@ -2532,13 +2524,113 @@ class FaradayLineIntegral(ThreeDScene):
         lineInt = MathTex(r"\oint_{\partial A}^{}\vec{E}\cdot d\vec{l}").to_corner(UL)
         lineInt[0][1].set_color(PURE_GREEN)
         lineInt[0][2].set_color(PURE_BLUE)
-        self.add_fixed_in_frame_mobjects(lineInt)
-        self.play(Write(lineInt))
+        b1 = SurroundingRectangle(lineInt,color=BLACK,fill_color=BLACK,fill_opacity=0.9, stroke_opacity=0).move_to(lineInt)
+        self.add_fixed_in_frame_mobjects(b1,lineInt)
+        self.play(Write(VGroup(b1,lineInt)))
+
+        #vec T
+        time = ValueTracker(PI/2)
+        rotate_time = 6
+        t_vec = Vector([0,-1], color=RED).move_to([0,0,2])
+        t_tex = MathTex(r"\vec{T}").set_color(RED)
+        t_tex.add_updater(lambda mob: mob.next_to(t_vec,RIGHT))
+        b2 = SurroundingRectangle(t_tex,color=BLACK,fill_color=BLACK,fill_opacity=0.9, stroke_opacity=0).move_to(t_tex)
+        b2.add_updater(lambda mob: mob.move_to(t_tex,RIGHT))
+
+        self.play(GrowArrow(t_vec))
+        self.add_fixed_orientation_mobjects(b2,t_tex)
+        self.play(Write(VGroup(b2,t_tex)))
+
+        t_vec.add_updater(lambda mob, dt: mob.move_to([0, 2*np.cos(time.get_value()), 2*np.sin(time.get_value())]).rotate(2*PI*dt/rotate_time, RIGHT))
+        
+        self.play(time.animate.set_value(2*PI+PI/2), rate_func=linear, run_time=rotate_time)
+
+        #dl ds T
+        dl_equation = MathTex(r"d \vec{l}",r"=",r"\vec{T}",r"ds").next_to(lineInt,DOWN).to_edge(LEFT)
+        dl_equation[2].set_color(RED)
+        dl_equation[3].set_color(YELLOW)
+        b3 = SurroundingRectangle(dl_equation,color=BLACK,fill_color=BLACK,fill_opacity=0.9, stroke_opacity=0).move_to(dl_equation)
+
+        t_vec.suspend_updating()
+        self.add_fixed_in_frame_mobjects(b3,dl_equation)
+        self.play(Write(VGroup(b3,dl_equation)))
 
         # efield
-        # colors1 = [BLUE, YELLOW, YELLOW, ORANGE, ORANGE, RED]
-        # vecField1Func1 = lambda pos: vecField2(pos=pos)
-        # vector_field1 = ArrowVectorField(vecField1Func1, max_color_scheme_value=3.2,min_color_scheme_value=0.8, colors=colors1, x_range=[-6,6], y_range=[-6,6]).rotate(PI/2, UP)
-        # self.add(vector_field1)
+        colors1 = [BLUE, YELLOW, YELLOW, ORANGE, ORANGE, RED]
+        vecField1Func1 = lambda pos: vecField2(pos=pos)
+        vector_field1 = ArrowVectorField(vecField1Func1, max_color_scheme_value=3.2,min_color_scheme_value=0.8, colors=colors1, x_range=[-6,6], y_range=[-6,6]).rotate(PI/2, UP)
+        self.add(vector_field1)
 
-#add T ds = dl, moving vector along circle and small ds arc. then E field, gain losse energy and then flip 90 to see tangential and therefore the dot product.
+        t_vec.resume_updating()
+        self.play(time.animate.set_value(4*PI+PI/2), rate_func=linear, run_time=rotate_time)
+        self.play(Rotate(vector_field1, 1*PI), time.animate.set_value(6*PI+PI/2), rate_func=linear, run_time=rotate_time)
+        self.play(Rotate(vector_field1, 1*PI), time.animate.set_value(8*PI+PI/2), rate_func=linear, run_time=rotate_time)
+
+class LenzsLaw(ThreeDScene):
+    def construct(self):
+
+        func1 = lambda pos: vecField1(pos=pos)
+        def vecField1(pos):
+            e = 0.001
+            s = 0.2
+            x = pos[0]
+            y = pos[1]
+            normal1 = x**2 + (y-s)**2 + e
+            normal2 = x**2 + (y+s)**2 + e
+            field = [0,0]
+            field[0] = (y-s)/(normal1) - (y+s)/(normal2)
+            field[1] = (-x)/(normal1) + (x)/(normal2)
+            return field[0]*RIGHT + field[1]*UP
+
+        def currentFlow(x, b=1, c=10):
+            return -(c * x) / ((x**2 + b**2)**2)
+
+        #setup
+        north_pole = Prism(dimensions=[2,1,1], fill_color=BLUE, fill_opacity=1).move_to([1,0,0])
+        south_pole = Prism(dimensions=[2,1,1], fill_color=RED, fill_opacity=1).move_to([-1,0,0])
+        stream = StreamLines(func1, stroke_width=1, max_anchors_per_line=300, virtual_time=1, n_repeats=1).set_z_index(-1)
+        magnet = VGroup(north_pole, south_pole, stream).set_z_index(1)
+
+        loop = Circle(radius=2,color=GREEN).rotate(PI/2,UP) 
+        integral_form = MathTex(r"\oint_{\partial A}^{}\vec{E}\cdot d\vec{l}=-\frac{d}{dt}\int_{A}^{}\vec{B}\cdot d\vec{A}").to_corner(UR)
+
+        self.play(FadeIn(magnet))
+        self.move_camera(phi=60*DEGREES, theta=-45*DEGREES)
+        self.play(Write(loop))
+        
+        self.play(magnet.animate.move_to([-4,0,0]))
+        self.add_fixed_in_frame_mobjects(integral_form)
+        self.play(Write(integral_form))
+
+        #move magnet
+        vec1 = Cube(side_length=0.15, fill_color=YELLOW, fill_opacity=1).move_to([0,0,2]).rotate(PI/2,OUT)
+        vec2 = Cube(side_length=0.15, fill_color=YELLOW, fill_opacity=1).move_to([0,2,0]).rotate(PI/2,UP)
+        vec3 = Cube(side_length=0.15, fill_color=YELLOW, fill_opacity=1).move_to([0,0,-2]).rotate(-PI/2,OUT)
+        vec4 = Cube(side_length=0.15, fill_color=YELLOW, fill_opacity=1).move_to([0,-2,0]).rotate(-PI/2,UP)
+        l1 = Line(start=[0,0,2], end=[0,0,2], color=YELLOW)
+        l2 = Line(start=[0,2,0], end=[0,2,0], color=YELLOW)
+        l3 = Line(start=[0,0,-2], end=[0,0,-2], color=YELLOW)
+        l4 = Line(start=[0,-2,0], end=[0,-2,0], color=YELLOW)
+        vec1.add_updater(lambda mob: mob.set_y(currentFlow(magnet.get_x())))
+        vec2.add_updater(lambda mob: mob.set_z(-currentFlow(magnet.get_x())))
+        vec3.add_updater(lambda mob: mob.set_y(-currentFlow(magnet.get_x())))
+        vec4.add_updater(lambda mob: mob.set_z(currentFlow(magnet.get_x())))
+        l1.add_updater(lambda mob: mob.become(Line(start=[0,0,2], end=vec1.get_center(), color=YELLOW)))
+        l2.add_updater(lambda mob: mob.become(Line(start=[0,2,0], end=vec2.get_center(), color=YELLOW)))
+        l3.add_updater(lambda mob: mob.become(Line(start=[0,0,-2], end=vec3.get_center(), color=YELLOW)))
+        l4.add_updater(lambda mob: mob.become(Line(start=[0,-2,0], end=vec4.get_center(), color=YELLOW)))
+        vecs = VGroup(vec1,vec2,vec3,vec4, l1,l2,l3,l4)
+
+        self.add(vecs)
+
+        #show induced magnetic field
+        stream2 = StreamLines(func1, stroke_width=1, max_anchors_per_line=300, virtual_time=1, n_repeats=1).set_z_index(-1).rotate(PI,OUT).rotate(PI/2,RIGHT)
+        stream2.add_updater(lambda mob: mob.scale_to_fit_width(currentFlow(magnet.get_x(), b=1.3, c=100)))
+        self.add(stream2)
+
+        self.play(magnet.animate.move_to([4,0,0]), rate_func=linear, run_time=3)
+        self.play(magnet.animate.move_to([-4,0,0]), rate_func=linear, run_time=3)
+
+
+
+#!!!!!!!!! hufeisnmagnet!
