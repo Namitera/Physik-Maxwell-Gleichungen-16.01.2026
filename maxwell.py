@@ -1,10 +1,96 @@
 from manim import *
 
-class Opening(ThreeDScene):
+class Opening(Scene):
     def construct(self):
-        1
+        
+        gleichung = Tex(".Maxwell-Gleichungen.").scale(2).set_z_index(1)
+        gleichung[0][0].set_opacity(0)
+        gleichung[0][-1].set_opacity(0)
+        b1 = SurroundingRectangle(gleichung,color=BLACK, fill_color=BLACK ,fill_opacity=0.9, stroke_width=0, corner_radius=0.6).set_z_index(1)
 
+        #Bfield
+        stream1 = SVGMobject("Magnetfield.svg").set_fill(opacity=0).scale(8).set_z_index(-1)
+        center = stream1.get_center() 
+        paths = stream1.family_members_with_points()
+        distances = [np.linalg.norm(path.get_center() - center) for path in paths]
+        max_distance = max(distances)
+        for path, dist in zip(paths, distances):
+            t = dist / max_distance  # 0 = center, 1 = farthest
+            color = color_gradient([BLUE, RED, BLACK], 100)[int(t*99)]
+            path.set_stroke(color=color, width=1.5)
+        stream1 = VGroup(*paths)
 
+        stream2 = SVGMobject("Magnetfield.svg").set_fill(opacity=0).scale(8)
+        center = stream2.get_center() 
+        paths = stream2.family_members_with_points()
+        distances = [np.linalg.norm(path.get_center() - center) for path in paths]
+        max_distance = max(distances)
+        for path, dist in zip(paths, distances):
+            t = dist / max_distance  # 0 = center, 1 = farthest
+            color = color_gradient([BLUE, RED, BLACK], 100)[int(t*99)]
+            path.set_stroke(color=color, width=1)
+        stream2 = VGroup(*paths)
+
+        stream3 = SVGMobject("Magnetfield.svg").set_fill(opacity=0).scale(8)
+        center = stream3.get_center() 
+        paths = stream3.family_members_with_points()
+        distances = [np.linalg.norm(path.get_center() - center) for path in paths]
+        max_distance = max(distances)
+        for path, dist in zip(paths, distances):
+            t = dist / max_distance  # 0 = center, 1 = farthest
+            color = color_gradient([BLUE, RED, BLACK], 100)[int(t*99)]
+            path.set_stroke(color=color, width=1)
+        stream3 = VGroup(*paths)
+
+        stream4 = SVGMobject("Magnetfield.svg").set_fill(opacity=0).scale(11.5)
+        center = stream4.get_center() 
+        paths = stream4.family_members_with_points()
+        distances = [np.linalg.norm(path.get_center() - center) for path in paths]
+        max_distance = max(distances)
+        for path, dist in zip(paths, distances):
+            t = dist / max_distance  # 0 = center, 1 = farthest
+            color = color_gradient([BLUE, RED, BLACK], 100)[int(t*99)]
+            path.set_stroke(color=color, width=1)
+        stream4 = VGroup(*paths)
+
+        north_pole1 = Rectangle(width=1,height=0.5,color=BLUE,fill_opacity=1).shift(LEFT*0.5)
+        south_pole1 = Rectangle(width=1,height=0.5,color=RED,fill_opacity=1).shift(LEFT*-0.5)
+        north_pole_tex1 = MathTex(r"N").move_to(north_pole1)
+        south_pole_tex1 = MathTex(r"S").move_to(south_pole1)
+        magnet1 = VGroup(north_pole1,south_pole1,north_pole_tex1,south_pole_tex1, stream2).move_to([-15,0,0]).set_z_index(1)
+
+        north_pole2 = Rectangle(width=1,height=0.5,color=BLUE,fill_opacity=1).shift(LEFT*0.5)
+        south_pole2 = Rectangle(width=1,height=0.5,color=RED,fill_opacity=1).shift(LEFT*-0.5)
+        north_pole_tex2 = MathTex(r"N").move_to(north_pole2)
+        south_pole_tex2 = MathTex(r"S").move_to(south_pole2)
+        magnet2 = VGroup(north_pole2,south_pole2,north_pole_tex2,south_pole_tex2, stream3).move_to([15,0,0]).set_z_index(1)
+
+        self.add(b1,gleichung)
+        self.add(stream1, magnet1, magnet2)
+
+        self.play(magnet1.animate.move_to([-5.6,0,0]), magnet2.animate.move_to([5.6,0,0]))
+        shearIn = [[0, 0], [0, 1]]
+        self.play(magnet1.animate.move_to([-1,0,0]), magnet2.animate.move_to([1,0,0]), gleichung.animate.apply_matrix(shearIn), stream1.animate.apply_matrix(shearIn))
+
+        self.remove(gleichung,stream1,b1)
+        magnet1[1].set_color(BLUE)
+        magnet2[0].set_color(RED)
+        self.remove(magnet1[3],magnet2[2])
+
+        #particles
+        class Electron(VGroup):
+            def __init__(self, **kwargs):
+                super().__init__(**kwargs)
+                core = Circle(radius=0.4,color=PURE_GREEN,fill_color=PURE_GREEN,fill_opacity=1)
+                corss = Rectangle(height=0.03,width=0.3,fill_opacity=1)
+                self.core = core
+                self.cross = corss
+                self.add(core, corss)
+
+        electron = Electron().shift(DOWN*2)
+        self.add(electron)
+
+        self.play(FadeOut(VGroup(stream2,stream3)), FadeIn(stream4))
 
 
         
@@ -22,7 +108,7 @@ class Overview(Scene):
         equation1 = MathTex(r" \nabla \cdot \vec{E} = \frac{\rho }{\varepsilon _{0}}").shift(UP*2.3).next_to(first,RIGHT)
         equation2 = MathTex(r" \nabla \cdot \vec{B} = 0").shift(UP*1).next_to(second,RIGHT)
         equation3 = MathTex(r" \nabla \times \vec{E}=-\frac{\partial \vec{B}}{\partial t}").shift(UP*-1).next_to(third,RIGHT)
-        equation4 = MathTex(r" \nabla \times \vec{B}=\mu_{0}(\vec{j}+\epsilon _{0}\frac{\partial \vec{E}}{\partial t})").shift(UP*-3).next_to(forth,RIGHT)
+        equation4 = MathTex(r" \nabla \times \vec{B}=\mu_{0}(\vec{J}+\varepsilon _{0}\frac{\partial \vec{E}}{\partial t})").shift(UP*-3).next_to(forth,RIGHT)
 
         #overview
         self.play(Write(header))
@@ -78,6 +164,188 @@ class Overview(Scene):
         magnet = VGroup(north_pole,south_pole,north_pole_tex,south_pole_tex).move_to([3.5,-0.5,0]).set_z_index(1)
 
         self.play(FadeIn(VGroup(magnet,vector_field1)))
+
+class Preview(ThreeDScene):
+    def construct(self):   
+
+        #first law demo
+        def vecField1(pos):
+            e = 0.5
+            x = pos[0]
+            y = pos[1]
+            field = [0,0]
+            field[0] = (x+2)/((x+2)**2 + y**2 + e) - (x-2)/((x-2)**2 + y**2 + e)
+            field[1] = y/((x+2)**2 + y**2 + e) - y/((x-2)**2 + y**2 + e)
+            return field[0]*RIGHT + field[1]*UP
+
+        colors1 = [BLUE, YELLOW]
+        vecField1Func1 = lambda pos: vecField1(pos=pos)
+        stream = StreamLines(vecField1Func1, stroke_width=2, max_anchors_per_line=100, virtual_time=5, n_repeats=4, max_color_scheme_value=2, min_color_scheme_value=0.01, color=colors1).set_z_index(-1)
+        
+        core = Circle(radius=0.4,color=RED,fill_opacity=1)
+        corss1 = Rectangle(height=0.02,width=0.4,fill_opacity=1)
+        corss2 = Rectangle(height=0.4,width=0.02,fill_opacity=1)
+        proton = VGroup(core,corss1,corss2).shift(LEFT*2).scale(0.7)
+
+        core1 = Circle(radius=0.4,color=PURE_GREEN,fill_color=PURE_GREEN,fill_opacity=1)
+        corss3 = Rectangle(height=0.03,width=0.3,fill_opacity=1)
+        electron = VGroup(core1,corss3).shift(RIGHT*2).scale(0.7)
+
+        #start
+        self.wait()
+        self.add(stream, proton, electron)
+        stream.start_animation(flow_speed=1.4, warm_up=False)
+        self.wait()
+        self.remove(stream,proton,electron)
+
+
+        #forth law demo
+        def vecField2(pos):
+            r = 0.03
+            b = 1
+            e = 0.01
+            x = pos[0]
+            y = pos[1]
+            norm = x**2 + y**2 + e
+            field = [0,0]
+            field[0] = -b*y/norm
+            field[1] = b*x/norm
+            if field[0]**2 + field[1]**2 < r:
+                return 0*RIGHT + 0*UP
+            else:
+                return field[0]*RIGHT + field[1]*UP
+
+        pipe2 = Cylinder(radius=0.5, height=6, resolution=[1,10], v_range=[0,PI])
+        func2 = lambda pos: RIGHT
+        stream2 = StreamLines(func2, stroke_width=4, max_anchors_per_line=25, virtual_time=1, n_repeats=1,
+                             y_range=[-0.2,0.2], x_range=[-2.2,2.2]).rotate(PI/2,OUT).rotate(PI/2,RIGHT).move_to(pipe2)
+        colors2 = [BLUE, YELLOW, YELLOW, ORANGE, ORANGE, RED]
+        vecField1Func2 = lambda pos: vecField2(pos=pos)
+        vector_field2 = ArrowVectorField(vecField1Func2, max_color_scheme_value=0.8, min_color_scheme_value=0.2, colors=colors2, x_range=[-6,6], y_range=[-6,6])
+
+        #start
+        self.move_camera(phi=60*DEGREES, run_time=0.01)
+        self.begin_ambient_camera_rotation(0.1)
+        self.add(pipe2,stream2, vector_field2)
+        stream2.start_animation(warm_up=False, flow_speed=1)
+        self.wait(4)
+        self.stop_ambient_camera_rotation()
+        self.remove(stream2,pipe2,vector_field2)
+        self.move_camera(phi=0, theta=-PI/2, run_time=0.01)
+
+
+        #second law demo
+        def vecField3(pos):
+            e = 0.001
+            s = 0.2
+            x = pos[0]
+            y = pos[1]
+            normal1 = x**2 + (y-s)**2 + e
+            normal2 = x**2 + (y+s)**2 + e
+            field = [0,0]
+            field[0] = (y-s)/(normal1) - (y+s)/(normal2)
+            field[1] = (-x)/(normal1) + (x)/(normal2)
+            return 3*field[0]*RIGHT + 3*field[1]*UP
+
+        north_pole3 = Rectangle(width=1,height=0.5,color=BLUE,fill_opacity=1).shift(LEFT*0.5)
+        south_pole3 = Rectangle(width=1,height=0.5,color=RED,fill_opacity=1).shift(LEFT*-0.5)
+        north_pole_tex3 = MathTex(r"N").move_to(north_pole3)
+        south_pole_tex3 = MathTex(r"S").move_to(south_pole3)
+        magnet3 = VGroup(north_pole3,south_pole3,north_pole_tex3,south_pole_tex3).move_to([0,0,0.1]).set_z_index(1)
+
+        func3 = lambda pos: vecField3(pos=pos)
+        stream3 = StreamLines(func3, stroke_width=2, max_anchors_per_line=600, virtual_time=50, n_repeats=5).set_z_index(-1)
+
+        self.add(magnet3,stream3)
+        stream3.start_animation(warm_up=False, flow_speed=3)
+        self.wait(3)
+        self.remove(magnet3,stream3)
+
+        #third law demo
+        func4 = lambda pos: vecField4(pos=pos)
+        def vecField4(pos):
+            e = 0.001
+            s = 0.2
+            x = pos[0]
+            y = pos[1]
+            normal1 = x**2 + (y-s)**2 + e
+            normal2 = x**2 + (y+s)**2 + e
+            field = [0,0]
+            field[0] = (y-s)/(normal1) - (y+s)/(normal2)
+            field[1] = (-x)/(normal1) + (x)/(normal2)
+            return field[0]*RIGHT + field[1]*UP
+
+        def currentFlow4(x, b=1, c=10):
+            return -(c * x) / ((x**2 + b**2)**2)
+
+        #setup
+        north_pole4 = Prism(dimensions=[2,1,1], fill_color=BLUE, fill_opacity=1).move_to([1,0,0])
+        south_pole4 = Prism(dimensions=[2,1,1], fill_color=RED, fill_opacity=1).move_to([-1,0,0])
+
+        #Bfield
+        stream4 = SVGMobject("Magnetfield.svg").set_fill(opacity=0).set_stroke(PURE_GREEN, width=0.5, opacity=0.9).scale(8)
+        center = stream4.get_center() 
+        paths = stream4.family_members_with_points()
+        distances = [np.linalg.norm(path.get_center() - center) for path in paths]
+        max_distance = max(distances)
+        for path, dist in zip(paths, distances):
+            t = dist / max_distance  # 0 = center, 1 = farthest
+            color = color_gradient([BLUE, RED, BLACK], 100)[int(t*99)]
+            path.set_stroke(color=color, width=0.5)
+        stream4 = VGroup(*paths)
+
+
+
+        magnet4 = VGroup(stream4, south_pole4, north_pole4)
+
+
+        loop = Circle(radius=2,color=GREEN).rotate(PI/2,UP) 
+        #move magnet
+        vec1 = Cube(side_length=0.15, fill_color=YELLOW, fill_opacity=1).move_to([0,0,2]).rotate(PI/2,OUT)
+        vec2 = Cube(side_length=0.15, fill_color=YELLOW, fill_opacity=1).move_to([0,2,0]).rotate(PI/2,UP)
+        vec3 = Cube(side_length=0.15, fill_color=YELLOW, fill_opacity=1).move_to([0,0,-2]).rotate(-PI/2,OUT)
+        vec4 = Cube(side_length=0.15, fill_color=YELLOW, fill_opacity=1).move_to([0,-2,0]).rotate(-PI/2,UP)
+        l1 = Line(start=[0,0,2], end=[0,0,2], color=YELLOW)
+        l2 = Line(start=[0,2,0], end=[0,2,0], color=YELLOW)
+        l3 = Line(start=[0,0,-2], end=[0,0,-2], color=YELLOW)
+        l4 = Line(start=[0,-2,0], end=[0,-2,0], color=YELLOW)
+        vec1.add_updater(lambda mob: mob.set_y(currentFlow4(magnet4.get_x())))
+        vec2.add_updater(lambda mob: mob.set_z(-currentFlow4(magnet4.get_x())))
+        vec3.add_updater(lambda mob: mob.set_y(-currentFlow4(magnet4.get_x())))
+        vec4.add_updater(lambda mob: mob.set_z(currentFlow4(magnet4.get_x())))
+        l1.add_updater(lambda mob: mob.become(Line(start=[0,0,2], end=vec1.get_center(), color=YELLOW)))
+        l2.add_updater(lambda mob: mob.become(Line(start=[0,2,0], end=vec2.get_center(), color=YELLOW)))
+        l3.add_updater(lambda mob: mob.become(Line(start=[0,0,-2], end=vec3.get_center(), color=YELLOW)))
+        l4.add_updater(lambda mob: mob.become(Line(start=[0,-2,0], end=vec4.get_center(), color=YELLOW)))
+        vecs = VGroup(vec1,vec2,vec3,vec4, l1,l2,l3,l4)
+
+        magnet4.move_to([-4,0,0])
+        self.add(stream4)
+
+        self.add(magnet4,vecs, loop)
+        self.move_camera(phi=60*DEGREES, theta=-45*DEGREES, run_time=1)
+        self.play(magnet4.animate.move_to([4,0,0]), rate_func=linear, run_time=3)
+        self.play(magnet4.animate.move_to([-4,0,0]), rate_func=linear, run_time=3)
+        self.remove(magnet4,vecs, loop)
+
+class A(Scene):
+    def construct(self):
+
+        func4 = lambda pos: vecField4(pos=pos)
+        def vecField4(pos):
+            e = 0.001
+            s = 0.2
+            x = pos[0]
+            y = pos[1]
+            normal1 = x**2 + (y-s)**2 + e
+            normal2 = x**2 + (y+s)**2 + e
+            field = [0,0]
+            field[0] = (y-s)/(normal1) - (y+s)/(normal2)
+            field[1] = (-x)/(normal1) + (x)/(normal2)
+            return 3*field[0]*RIGHT + 3*field[1]*UP
+        stream4 = StreamLines(func4, stroke_width=2, max_anchors_per_line=600, virtual_time=50, n_repeats=1, max_color_scheme_value=1.1, x_range=[-16,16], y_range=[-8,8]).set_z_index(-1).scale(0.5)
+
+        self.add(stream4)
 
 class MagnetIntro(Scene):
     def construct(self):
@@ -357,10 +625,6 @@ class VectorFieldExamples1(Scene):
         stream.start_animation(warm_up=True, flow_speed=2)
         self.wait(5)
 
-#
-###add conservation!
-#
-
 #DesmosField1
 
 #DesmosField2
@@ -567,6 +831,7 @@ class MagnetRecap(Scene):
         self.play(p1.animate.move_to([2,0,0]))
         self.play(p1.animate.move_to([-2,3,0]))
 
+#change dot product
 class Nabla2ndLaw(Scene):
     def construct(self):
         
@@ -658,7 +923,7 @@ class GausDivergence(Scene):
         
         p1 = Dot().scale(0.5)
         c1 = Circle(color=WHITE,radius=0.5)
-        div_tex = MathTex(r"div\vec{F}=")
+        div_tex = MathTex(r"div\vec{E}=")
         div_tex[0][3:5].set_color(YELLOW)
         decnum = DecimalNumber(0)
         s1 = SurroundingRectangle(div_tex,color=BLACK, fill_color=BLACK ,fill_opacity=1, stroke_width=0)
@@ -1464,7 +1729,7 @@ class GaussLawDerivation(ThreeDScene):
 
         self.play(ReplacementTransform(VGroup(formula[1:3],da2[1]), e_con))
         self.play(e_con.animate.shift(UP*2))
-        self.play(e_con.animate.shift(LEFT*1), FadeOut(VGroup(formula,da2)), FadeIn(formula2))
+        self.play(e_con.animate.shift(LEFT*1), FadeOut(VGroup(formula[0],da2[2])), FadeIn(formula2))
 
         #back to sphere
         self.play(sphere.animate.move_to([0,-0.7,0]))
@@ -1481,7 +1746,7 @@ class GaussLawDerivation(ThreeDScene):
         coulomb = MathTex(r"E=\frac{1}{4\pi \varepsilon_{0}} \cdot \frac{q}{r^{2}}").to_corner(UR)
         solution = MathTex(r"\phi=\frac{q}{\varepsilon_{0}}").shift(UP*3)
 
-        self.play(FadeOut(VGroup(formula2,area2, e_con, area)), FadeIn(formula3))
+        self.play(FadeOut(VGroup(area2, e_con, area)), FadeIn(formula3))
         self.play(Write(coulomb))
         self.play(ReplacementTransform(formula3,solution))
 
@@ -1493,7 +1758,7 @@ class GaussLawDerivation(ThreeDScene):
         self.play(FadeOut(coulomb))
         self.add(stream)
         stream.start_animation(warm_up=True, flow_speed=2)
-        self.wait(5)
+        self.wait(2)
 
         #open sphere
         sphere2 = Sphere(u_range=[0,PI], v_range=[PI/2,PI]).rotate(PI/4,axis=RIGHT).scale(2.5).move_to([0,-0.1,0])
@@ -1508,13 +1773,14 @@ class GaussLawDerivation(ThreeDScene):
         self.play(FadeOut(proton), FadeIn(electron))
 
         stream.end_animation()
+        self.remove(stream)
 
         vecField1Func2 = lambda pos: -pos[0]*RIGHT + -pos[1]*UP
         colors2 = [GREEN,PURE_GREEN]
         stream2 = StreamLines(vecField1Func2, stroke_width=2, max_anchors_per_line=50, virtual_time=50, n_repeats=1, colors=colors2, min_color_scheme_value=1,  max_color_scheme_value=6).set_z_index(-99)
+        self.add(stream2)
         stream2.start_animation(warm_up=True, flow_speed=2)
-
-        self.wait(5)
+        self.wait(2)
 
 class GaussSurfaceIndependence(Scene):
     def construct(self):
@@ -1825,57 +2091,59 @@ class ChargesInFields(Scene):
                 self.circle = circle
                 self.add(point,circle)
 
-        magnetIn1 = MagnetIn().shift(LEFT*1)
+        magnetIn1 = MagnetIn()
+        # magnetIn1 = MagnetIn().shift(LEFT*1)
         magnetIn2 = MagnetIn().scale(2).shift(LEFT*2)
         magnetIn3 = MagnetIn().scale(4).shift(LEFT*4)
         magnetIn4 = MagnetIn().scale(4).shift(LEFT*-4)
 
-        allMagnets = VGroup(magnetIn1,magnetIn2,magnetIn3,magnetIn4)
+        allMagnets = VGroup(magnetIn1)
+        # allMagnets = VGroup(magnetIn1,magnetIn2,magnetIn3,magnetIn4)
 
-        # self.play(Create(vector_field1))
+        self.play(Create(vector_field1))
         self.add(allMagnets)
 
-        magnetIn3.set_color(BLACK)
-        self.play(magnetIn1.animate.shift(RIGHT*0.5).scale(0.5).set_color(BLACK),
-                  magnetIn2.animate.shift(RIGHT*1).scale(0.5),
-                  magnetIn3.animate.shift(RIGHT*2).scale(0.5).set_color(WHITE))
-        magnetIn3.set_color(BLACK).shift(LEFT*2).scale(2)
-        magnetIn2.shift(LEFT*1).scale(2)
-        magnetIn1.shift(LEFT*0.5).scale(2).set_color(WHITE)
+        # magnetIn3.set_color(BLACK)
+        # self.play(magnetIn1.animate.shift(RIGHT*0.5).scale(0.5).set_color(BLACK),
+        #           magnetIn2.animate.shift(RIGHT*1).scale(0.5),
+        #           magnetIn3.animate.shift(RIGHT*2).scale(0.5).set_color(WHITE))
+        # magnetIn3.set_color(BLACK).shift(LEFT*2).scale(2)
+        # magnetIn2.shift(LEFT*1).scale(2)
+        # magnetIn1.shift(LEFT*0.5).scale(2).set_color(WHITE)
 
-        self.play(magnetIn1.animate.shift(RIGHT*0.5).scale(0.5).set_color(BLACK),
-                  magnetIn2.animate.shift(RIGHT*1).scale(0.5),
-                  magnetIn3.animate.shift(RIGHT*2).scale(0.5).set_color(WHITE))
-        magnetIn3.set_color(BLACK).shift(LEFT*2).scale(2)
-        magnetIn2.shift(LEFT*1).scale(2)
-        magnetIn1.shift(LEFT*0.5).scale(2).set_color(WHITE)
+        # self.play(magnetIn1.animate.shift(RIGHT*0.5).scale(0.5).set_color(BLACK),
+        #           magnetIn2.animate.shift(RIGHT*1).scale(0.5),
+        #           magnetIn3.animate.shift(RIGHT*2).scale(0.5).set_color(WHITE))
+        # magnetIn3.set_color(BLACK).shift(LEFT*2).scale(2)
+        # magnetIn2.shift(LEFT*1).scale(2)
+        # magnetIn1.shift(LEFT*0.5).scale(2).set_color(WHITE)
 
-        self.play(magnetIn1.animate.shift(RIGHT*0.5).scale(0.5).set_color(BLACK),
-                  magnetIn2.animate.shift(RIGHT*1).scale(0.5),
-                  magnetIn3.animate.shift(RIGHT*2).scale(0.5).set_color(WHITE))
-        magnetIn3.set_color(BLACK).shift(LEFT*2).scale(2)
-        magnetIn2.shift(LEFT*1).scale(2)
-        magnetIn1.shift(LEFT*0.5).scale(2).set_color(WHITE)
+        # self.play(magnetIn1.animate.shift(RIGHT*0.5).scale(0.5).set_color(BLACK),
+        #           magnetIn2.animate.shift(RIGHT*1).scale(0.5),
+        #           magnetIn3.animate.shift(RIGHT*2).scale(0.5).set_color(WHITE))
+        # magnetIn3.set_color(BLACK).shift(LEFT*2).scale(2)
+        # magnetIn2.shift(LEFT*1).scale(2)
+        # magnetIn1.shift(LEFT*0.5).scale(2).set_color(WHITE)
 
-        self.play(magnetIn1.animate.shift(RIGHT*0.5).scale(0.5).set_color(BLACK),
-                  magnetIn2.animate.shift(RIGHT*1).scale(0.5),
-                  magnetIn3.animate.shift(RIGHT*2).scale(0.5).set_color(WHITE))
-        magnetIn3.set_color(BLACK).shift(LEFT*2).scale(2)
-        magnetIn2.shift(LEFT*1).scale(2)
-        magnetIn1.shift(LEFT*0.5).scale(2).set_color(WHITE)
+        # self.play(magnetIn1.animate.shift(RIGHT*0.5).scale(0.5).set_color(BLACK),
+        #           magnetIn2.animate.shift(RIGHT*1).scale(0.5),
+        #           magnetIn3.animate.shift(RIGHT*2).scale(0.5).set_color(WHITE))
+        # magnetIn3.set_color(BLACK).shift(LEFT*2).scale(2)
+        # magnetIn2.shift(LEFT*1).scale(2)
+        # magnetIn1.shift(LEFT*0.5).scale(2).set_color(WHITE)
 
-        # #moving chrages
-        # core = Circle(radius=0.4,color=RED,fill_opacity=1)
-        # corss1 = Rectangle(height=0.02,width=0.4,fill_opacity=1)
-        # corss2 = Rectangle(height=0.4,width=0.02,fill_opacity=1)
-        # proton = VGroup(core,corss1,corss2).shift(LEFT*2).scale(0.7)
+        #moving chrages
+        core = Circle(radius=0.4,color=RED,fill_opacity=1)
+        corss1 = Rectangle(height=0.02,width=0.4,fill_opacity=1)
+        corss2 = Rectangle(height=0.4,width=0.02,fill_opacity=1)
+        proton = VGroup(core,corss1,corss2).shift(LEFT*2).scale(0.7)
 
-        # core1 = Circle(radius=0.4,color=PURE_GREEN,fill_color=PURE_GREEN,fill_opacity=1)
-        # corss3 = Rectangle(height=0.03,width=0.3,fill_opacity=1)
-        # electron = VGroup(core1,corss3).shift(RIGHT*2).scale(0.7)
+        core1 = Circle(radius=0.4,color=PURE_GREEN,fill_color=PURE_GREEN,fill_opacity=1)
+        corss3 = Rectangle(height=0.03,width=0.3,fill_opacity=1)
+        electron = VGroup(core1,corss3).shift(RIGHT*2).scale(0.7)
 
-        # self.play(Write(proton), Write(electron))
-        # self.play(Rotate(proton, PI, about_point=ORIGIN), Rotate(electron, -PI, about_point=ORIGIN))
+        self.play(Write(proton), Write(electron))
+        self.play(Rotate(proton, PI, about_point=ORIGIN), Rotate(electron, -PI, about_point=ORIGIN))
 
 class FaradayInductionCharges(ThreeDScene):
     def construct(self):
@@ -2367,8 +2635,6 @@ class FaradayDiffForm(ThreeDScene):
         self.play(magnet.animate.move_to([3,0,0]), rate_func=linear, run_time=3)
         self.play(magnet.animate.move_to([-3,0,0]), rate_func=linear, run_time=3)
 
-#patital vs full derivative
-
 class MagneticFlux(ThreeDScene):
     def construct(self):
 
@@ -2717,7 +2983,7 @@ class AmpereIntro(ThreeDScene):
         stream.start_animation(warm_up=True, flow_speed=1)
         self.wait(1)
 
-        # efield
+        # bfield
         colors1 = [BLUE, YELLOW, YELLOW, ORANGE, ORANGE, RED]
         vecField1Func1 = lambda pos: vecField1(pos=pos)
         vector_field1 = ArrowVectorField(vecField1Func1, max_color_scheme_value=0.8, min_color_scheme_value=0.2, colors=colors1, x_range=[-6,6], y_range=[-6,6])
@@ -2730,16 +2996,8 @@ class AmpereIntro(ThreeDScene):
         self.add_fixed_in_frame_mobjects(equation)
         self.play(Write(equation))
 
-
-
-
-
 class CurrentDensityVector(ThreeDScene):
     def construct(self):
-
-        MathTex(r"\vec{J}= \frac{dI}{d \vec{A}}")
-        MathTex(r"dI= \vec{J} \cdot d \vec{A}")
-        MathTex(r"I= \int \vec{J} \cdot d \vec{A}")
 
         #setup
         surface = Circle(radius=3, color=BLUE, fill_opacity=0.5)
@@ -2747,17 +3005,40 @@ class CurrentDensityVector(ThreeDScene):
         self.play(DrawBorderThenFill(surface))
         self.move_camera(phi=60*DEGREES)
 
-
         #current
         func1 = lambda pos: RIGHT
         stream = StreamLines(func1, stroke_width=4, max_anchors_per_line=25, virtual_time=1, n_repeats=1,
-                             y_range=[-0.2,0.2], x_range=[-2.2,2.2]).rotate(PI/2,OUT).rotate(PI/2,RIGHT).move_to(surface)
+                             y_range=[-2,2], x_range=[-2.2,2.2], color=PURE_GREEN).rotate(PI/2,OUT).rotate(PI/2,RIGHT).move_to(surface)
         self.add(stream)
         stream.start_animation(warm_up=True, flow_speed=1)
         self.wait(1)
 
+        #intro J
+        formula1 = MathTex(r"\vec{J}= \frac{dI}{d \vec{A}}").to_corner(UL)
+        self.add_fixed_in_frame_mobjects(formula1)
+        self.play(Write(formula1))
 
+        dsurface = Circle(radius=2, color=YELLOW, fill_opacity=0.5)
+        dA = MathTex(r"dA").next_to(surface,RIGHT).set_color(YELLOW)
 
+        self.play(DrawBorderThenFill(dsurface))
+        self.add_fixed_orientation_mobjects(dA)
+        self.play(Write(dA))
+        self.play(dsurface.animate.scale(0.1))
+
+        #nomal
+        normal_vec = Vector([0,1], color=RED).rotate(PI/2, RIGHT)
+
+        self.play(GrowArrow(normal_vec))
+
+        #I correlation
+        formula2 = MathTex(r"dI= \vec{J} \cdot d \vec{A}").to_corner(UL).shift(DOWN*2)
+        formula3 = MathTex(r"I= \int \vec{J} \cdot d \vec{A}").to_corner(UL).shift(DOWN*4)
+
+        self.add_fixed_in_frame_mobjects(formula2)
+        self.play(ReplacementTransform(formula1.copy(),formula2))
+        self.add_fixed_in_frame_mobjects(formula3)
+        self.play(ReplacementTransform(formula2.copy(),formula3))
 
 class Mu0vsEpsilon0(Scene):
     def construct(self):
@@ -2823,7 +3104,7 @@ class Mu0vsEpsilon0(Scene):
         self.play(Write(iTo))
         self.play(Write(bField))
 
-class AmpereDivRecap(ThreeDScene):
+class AmpereDiffRecap(ThreeDScene):
     def construct(self):
 
         def vecField1(pos):
@@ -2873,9 +3154,63 @@ class AmpereDivRecap(ThreeDScene):
         self.add_fixed_in_frame_mobjects(equation)
         self.play(Write(equation))
 
+class AmpereIntegralForm(ThreeDScene):
+    def construct(self):
 
+        formula = MathTex(r"\oint_{C}^{}\vec{B}\cdot d\vec{l}")
 
+        def vector_field(pos,q=1):
+            x, y, _ = pos
+            return np.array([
+                np.sin(q*(x+4.3)+q*(y+12.8)),
+                np.cos(q*(x+4.3)-q*(y+12.8)),
+                0
+            ])
+        
+        dt = 4
+        def flow_function(p):
+            return p + dt * vector_field(8*p,0.18)
 
+        def vecField1(pos):
+            r = 0.03
+            b = 1
+            e = 0.01
+            x = pos[0]
+            y = pos[1]
+            norm = x**2 + y**2 + e
+            field = [0,0]
+            field[0] = -b*y/norm
+            field[1] = b*x/norm
+            if field[0]**2 + field[1]**2 < r:
+                return 0*RIGHT + 0*UP
+            else:
+                return field[0]*RIGHT + field[1]*UP
+
+        square = Circle(color=BLUE, radius=1).set_z_index(-1)
+        square.set_fill(BLUE, opacity=0.4)
+
+        #pipe
+        pipe = Cylinder(radius=0.25, height=6, resolution=[1,20], checkerboard_colors=[GREEN_D, GREEN_E], fill_color=GREEN)
+
+        self.move_camera(phi=60*DEGREES)
+        self.begin_ambient_camera_rotation(0.1)
+
+        self.play(Create(pipe))
+
+        #init
+        colors1 = [BLUE, YELLOW, YELLOW, ORANGE, ORANGE, RED]
+        vecField1Func1 = lambda pos: vecField1(pos=pos)
+        vector_field1 = ArrowVectorField(vecField1Func1, max_color_scheme_value=0.8, min_color_scheme_value=0.2, colors=colors1, x_range=[-6,6], y_range=[-6,6])
+
+        self.play(Write(square))
+        self.play(FadeIn(vector_field1))
+
+        #field stretch
+        self.play(
+            square.animate.apply_function(flow_function),
+            run_time=7,
+            rate_func=linear
+        )
 
 
 
