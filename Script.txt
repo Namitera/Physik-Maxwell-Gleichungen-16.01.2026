@@ -1,47 +1,101 @@
 MagnetIntro:
-Wenn wir einen Stabmagneten haben wird dieser von einem Magnetfeld umgeben. Dieses fließt aus dem Nordpol heraus und in den Südpol hinein. Eine wichtige Experimentelle Beobachtung ist, dass wenn wir den Magneten teilen, 2 neue kleinere Magnete entstehen. Es gibt also keine magnetischen Monopole. Zumindest nicht von denen wir wissen. Theoretisch sind diese denkbar, aber in der Realität wurden noch keine beobachtet. Was das bedeutet ist, dass die Feldlinien in einer geschlossener Linie verlaufen. Sie beginnen und enden nirgends und sie kreuzen sich nicht. Dieses Feld lässt sich auch so darstellen. Das ist ein sogenanntes Vektorfeld. Damit lässt sich diese Aussage mathematisch beschreiben. Um zu verstehen wie wir damit Magnetfelder und auch alle anderen Eigenschaften beschreiben können, müssen wir uns zunächst angucken, wie genau Vektoren und Vektorfelder funktionieren.
+Wenn wir einen Stabmagneten haben wird dieser von einem Magnetfeld umgeben. Dieses fließt aus dem Nordpol heraus und in den Südpol hinein.
+ Eine wichtige Experimentelle Beobachtung ist, dass wenn wir den Magneten teilen, 2 neue kleinere Magnete entstehen. Es gibt also keine
+ magnetischen Monopole. Zumindest nicht von denen wir wissen. Theoretisch sind diese denkbar, aber in der Realität wurden noch keine
+ beobachtet. Was das bedeutet ist, dass die Feldlinien in einer geschlossener Linie verlaufen. Sie beginnen und enden nirgends und
+ sie kreuzen sich nicht. Dieses Feld lässt sich auch so darstellen. Das ist ein sogenanntes Vektorfeld. Damit lässt sich diese Aussage
+ mathematisch beschreiben. Um zu verstehen wie wir damit Magnetfelder und auch alle anderen Eigenschaften beschreiben können, müssen
+ wir uns zunächst angucken, wie genau Vektoren und Vektorfelder funktionieren.
 
 VectorIntro:
-Das ist ein Koordinatensystem. Es gibt eine x Achse und eine y Achse. Wenn wir jetzt einen beliebigen Punkt haben, können wir die Position mit hilfe der Achsen beschreiben. Diese Hilfslinien machen es einfacher Punkte abzulesen. Wir sehen also, dass der Punkt bei (3,2) liegt. Diese Schreibweise macht Sinn, da wir das so gelernt haben. Es lassen sich allerdings auch andere Schreibweisen wählen, die das selbe sagen nur anders dargestellt. So kann ich auch sagen, der Punkt hat die Koordinaten 3x+2y. Um zu verstehen warum das Sinn ergibt, nehme ich kurz die Linien weg. Die x Achse kann ich jetzt auch einfach schrumpfen genauso wie die y Achse. Somit erhalten wie nur noch 2 Pfeile mit der Länge 1. Um das zu kennzeichnen, schreiben wir über x und y jeweils auch einen Pfeil. Um nun zu dem Punkt zu kommen, kann ich einfach mehrere dieser pfeile aneinander hängen. Einmal in x Richtung und dann in y Richtung. Da wir nun eine Position im Koordinatensystem mit Pfeilen beschrieben haben sprechen wir nicht mehr von einen Punkt, sondern von einem Vektor. Hier habe ich ihn v genannt. Auch x und y sind Vektoren. Somit wissen wir also warum wir sagen können v=3x+2y. Eine weitere Sache die üblich ist wenn man mit Vektoren arbeitet, ist dass man anstatt x und y, i und j verwendet. Diese werden auch Basisvektoren genannt, da sie das Grundgerüst für alle anderen Vektoren bilden. Wir schrieben also v=3i+2j.
+Das ist ein Koordinatensystem. Es gibt eine x Achse und eine y Achse. Wenn wir jetzt einen beliebigen Punkt haben, können wir die
+ Position mit hilfe der Achsen beschreiben. Diese Hilfslinien machen es einfacher Punkte abzulesen. Wir sehen also, dass der Punkt
+ bei (3,2) liegt. Diese Schreibweise macht Sinn, da wir das so gelernt haben. Es lassen sich allerdings auch andere Schreibweisen
+ wählen, die das selbe sagen nur anders dargestellt. So kann ich auch sagen, der Punkt hat die Koordinaten 3x+2y. Um zu verstehen
+ warum das Sinn ergibt, nehme ich kurz die Linien weg. Die x Achse kann ich jetzt auch einfach schrumpfen genauso wie die y Achse.
+ Somit erhalten wie nur noch 2 Pfeile mit der Länge 1. Um das zu kennzeichnen, schreiben wir über x und y jeweils auch einen Pfeil.
+ Um nun zu dem Punkt zu kommen, kann ich einfach mehrere dieser pfeile aneinander hängen. Einmal in x Richtung und dann in y
+ Richtung. Da wir nun eine Position im Koordinatensystem mit Pfeilen beschrieben haben sprechen wir nicht mehr von einen Punkt,
+ sondern von einem Vektor. Hier habe ich ihn v genannt. Auch x und y sind Vektoren. Somit wissen wir also warum wir sagen können
+ v=3x+2y. Eine weitere Sache die üblich ist wenn man mit Vektoren arbeitet, ist dass man anstatt x und y, i und j verwendet.
+ Diese werden auch Basisvektoren genannt, da sie das Grundgerüst für alle anderen Vektoren bilden. Wir schrieben also v=3i+2j.
 
 VectorFieldIntro:
-Ein Vektorfeld lässt sich auch durch eine Funktion F beschreiben. Diese nimmt einen Punkt als Input auf der linken Seite und gibt als Output einen entsprechenden Vektor aus, der auf den Koordinaten des Punktes basiert. Hier sieht man schon warum es Sinn macht mit i und j zu arbeiten, da man jetzt sowohl Punkte als auch Vektoren zusammen betrachten wird. Wie kann man jetzt Mithilfe dieser Gleichung das Vektorfeld zeichnen? Nehmen wir zunächst unsere Achsen. Wir wollen als erstes den Punkt (2,1) betrachten. Wir schreiben also F(2,1). Das bedeutet wir bewegen den Punkt zu dieser Stelle. Als nächstes setzen wir diese Koordinaten in die rechte Seite ein. 2 in x und 1 in y. Somit erhalten wir den entsprechenden Vektor, der mit diesem Punkt verbunden ist. Zeichnen wir also nochmal die Basisvektoren i und j ein. Von unserem Punkt aus gehen wir also nun 2 in i und 1 in j. Das selbe lässt sich auch für den Punkt (-3,-1.5) machen. Wir bewegen den Punkt an die entsprechende Stelle und zeichnen dann den dazugehörigen Vektor ein. Wenn wir das für alle Punkte machen, erhalten wir unser entsprechendes Vektorfeld. Eine Sache zu wie ich Vektorfelder hier zeichne. Wir haben gesehen dass die Vektoren besonders am Rand sehr lang werden können. Würden wir also alles in echter Länge zeichnen, würden die längeren Vektoren alles verdecken. Deshalb kürzen wir die längeren Vektoren und zeigen durch Farbe welche Länge diese haben würden. Diese Felder können nun verschiedene Sachen darstellen, wie zum Beispiel der Fluss einer Flüssigkeit aus einer Quelle den Hang hinunter.
+Ein Vektorfeld lässt sich auch durch eine Funktion F beschreiben. Diese nimmt einen Punkt als Input auf der linken Seite und gibt
+ als Output einen entsprechenden Vektor aus, der auf den Koordinaten des Punktes basiert. Hier sieht man schon warum es Sinn macht
+ mit i und j zu arbeiten, da man jetzt sowohl Punkte als auch Vektoren zusammen betrachten wird. Wie kann man jetzt Mithilfe
+ dieser Gleichung das Vektorfeld zeichnen? Nehmen wir zunächst unsere Achsen. Wir wollen als erstes den Punkt (2,1) betrachten.
+ Wir schreiben also F(2,1). Das bedeutet wir bewegen den Punkt zu dieser Stelle. Als nächstes setzen wir diese Koordinaten in
+ die rechte Seite ein. 2 in x und 1 in y. Somit erhalten wir den entsprechenden Vektor, der mit diesem Punkt verbunden ist.
+ Zeichnen wir also nochmal die Basisvektoren i und j ein. Von unserem Punkt aus gehen wir also nun 2 in i und 1 in j. Das selbe
+ lässt sich auch für den Punkt (-3,-1.5) machen. Wir bewegen den Punkt an die entsprechende Stelle und zeichnen dann den
+ dazugehörigen Vektor ein. Wenn wir das für alle Punkte machen, erhalten wir unser entsprechendes Vektorfeld. Eine Sache zu wie
+ ich Vektorfelder hier zeichne. Wir haben gesehen dass die Vektoren besonders am Rand sehr lang werden können. Würden wir
+ also alles in echter Länge zeichnen, würden die längeren Vektoren alles verdecken. Deshalb kürzen wir die längeren Vektoren
+ und zeigen durch Farbe welche Länge diese haben würden. Diese Felder können nun verschiedene Sachen darstellen, wie zum Beispiel
+ der Fluss einer Flüssigkeit aus einer Quelle den Hang hinunter.
 
 VectorFieldExamples1:
-Gucken wir uns noch ein Beispiel an. F(x,y)=yi+0j. Hier sehen wir das die x Koordinate auf den Vektor keinen Einfluss nimmt. Wir sehen deshalb keine Veränderung entlang der parallele zur x Achse. Für größere y Werte bewegen sich die Vektoren immer weiter in i Richtung. Somit entsteht dieses entsprechende Vektorfeld.
+Gucken wir uns noch ein Beispiel an. F(x,y)=yi+0j. Hier sehen wir das die x Koordinate auf den Vektor keinen Einfluss nimmt.
+ Wir sehen deshalb keine Veränderung entlang der parallele zur x Achse. Für größere y Werte bewegen sich die Vektoren immer
+ weiter in i Richtung. Somit entsteht dieses entsprechende Vektorfeld.
 
 DesmosField1/2:
-Wir haben bisher nur statische Vektorfelder gesehen, die sich ändernde Dinge darstellen. In Wirklichkeit können sie sich aber auch selbst verändern. Hier ändert sich die Richtung und Länge über die Zeit so, das das gesamte Feld sich nach oben und rechts verschiebt. Hier zum Beispiel erhöht sich die Frequenz, also wie stark gewellt in diesem fall das Feld ist. Diese Felder können zum Beispiel die Geschwindigkeit des Wassers bei Wellen über einen Zeitraum darstellen. Wir werden aber nur mit statischen Vektorfeldern arbeiten.
+Wir haben bisher nur statische Vektorfelder gesehen, die sich ändernde Dinge darstellen. In Wirklichkeit können sie sich
+ aber auch selbst verändern. Hier ändert sich die Richtung und Länge über die Zeit so, das das gesamte Feld sich nach oben
+ und rechts verschiebt. Hier zum Beispiel erhöht sich die Frequenz, also wie stark gewellt in diesem fall das Feld ist. Diese
+ Felder können zum Beispiel die Geschwindigkeit des Wassers bei Wellen über einen Zeitraum darstellen. Wir werden aber
+ nur mit statischen Vektorfeldern arbeiten.
 
 VectorFieldExamples2:
-Sehen wir uns noch ein letztes Beispiel an. Diese Art von Feld werden wir noch häufiger sehen. Es ist genau so konstruiert, dass der Vektor im 90 grad Winkel zum Positionensvektors des Punktes steht. Man nennt diese Art von Feld auch Wirbelfeld.
+Sehen wir uns noch ein letztes Beispiel an. Diese Art von Feld werden wir noch häufiger sehen. Es ist genau so konstruiert,
+ dass der Vektor im 90 grad Winkel zum Positionensvektors des Punktes steht. Man nennt diese Art von Feld auch Wirbelfeld.
 
 MagnetFieldPicture1:
-Hier sehen wir dann entsprechend nocheinmal wie das Vektorfeld entsprechend aussieht für das Magnetfeld. Es sind hier schon bereits die Ringe zu erkennen.
+Hier sehen wir dann entsprechend nocheinmal wie das Vektorfeld entsprechend aussieht für das Magnetfeld. Es sind hier
+ schon bereits die Ringe zu erkennen.
 
 MagnetFieldPicture2:
-Mit diesem Feldlinien lässt sich das ganze noch besser darstellen. Wir wissen also wie man jetzt entsprechend Magnetfelder darstellt, aber wie kann man das Konzept auch mathematisch darstellen?
+Mit diesem Feldlinien lässt sich das ganze noch besser darstellen. Wir wissen also wie man jetzt entsprechend Magnetfelder
+ darstellt, aber wie kann man das Konzept auch mathematisch darstellen?
 
 DivergenceExample1:
-Schauen wir uns davor beispielhaft dieses Vektorfeld an. Wir erkennen bereits, dass an einer Stelle das Feld eine Art Quelle darstellt und an der anderen Stelle eine Senke ist. Man sagt auch das Feld divergiert. Die Divergence ist ein Maß dafür wie sehr ein Punkt im Vektorfeld als Quelle oder Senke sich verhält. Dieses Feld kann zb den Fluss von Wasser darstellen. Auf der einen Seite kommt das Wasser aus dem Wasserhahn und auf der anderen fließt es in den Abfluss. Quellen haben dabei eine positive Divergence und Senken eine negative.
+Schauen wir uns davor beispielhaft dieses Vektorfeld an. Wir erkennen bereits, dass an einer Stelle das Feld eine Art
+ Quelle darstellt und an der anderen Stelle eine Senke ist. Man sagt auch das Feld divergiert. Die Divergence ist ein Maß
+ dafür wie sehr ein Punkt im Vektorfeld als Quelle oder Senke sich verhält. Dieses Feld kann zb den Fluss von Wasser
+ darstellen. Auf der einen Seite kommt das Wasser aus dem Wasserhahn und auf der anderen fließt es in den Abfluss. Quellen
+ haben dabei eine positive Divergence und Senken eine negative.
 
 DivergenceExample2:
-Auch dieses Feld hat eine Positive Divergenz, da auf der einen Seite mehr Feld heraus kommt als auf der anderen Seite hinein geht. Die Divergence des Feldes F ist somit positiv.
+Auch dieses Feld hat eine Positive Divergenz, da auf der einen Seite mehr Feld heraus kommt als auf der anderen Seite
+ hinein geht. Die Divergence des Feldes F ist somit positiv.
 
 MagnetRecap:
-Dementsprechend haben wir jetzt eine mathematische Formulierung für diese Beobachtung. Die Divergence von Magnetfeldern ist 0 an jeder Stelle. Das ist das zweite Maxwell Gesetz in der differentielle Form
+Dementsprechend haben wir jetzt eine mathematische Formulierung für diese Beobachtung. Die Divergence von Magnetfeldern 
+ist 0 an jeder Stelle. Das ist das zweite Maxwell Gesetz in der differentielle Form
 
 Nabla2ndLaw:
-Die gängige Schreibweise jedoch ist diese hier. Dieses symbol ist der nabla operator. Dieser ist ein Vektor welcher die partiellen Ableitungen x, y und z enthält. Das ist das Vektorfeld von einem Magnetfeld. Beim Anwenden dieses Operators führt man dann entsprechende Berechnung durch und kommt dann auf das Ergebnis divB=0. Dieser Operator noch etwas häufiger vorkommen. Wenn er mit einem Punkt verbunden ist wird damit die Divergence.
+Die gängige Schreibweise jedoch ist diese hier. Dieses symbol ist der nabla operator. Dieser ist ein Vektor welcher die
+ partiellen Ableitungen x, y und z enthält. Das ist das Vektorfeld von einem Magnetfeld. Beim Anwenden dieses Operators
+ führt man dann entsprechende Berechnung durch und kommt dann auf das Ergebnis divB=0. Dieser Operator noch etwas häufiger
+ vorkommen. Wenn er mit einem Punkt verbunden ist wird damit die Divergence.
 
 GaussLawIntuition:
-Die erste Maxwell Gleichung ist das Gaußsche Gesetz. Es gibt einmal die differentielle Form und die Integrale Form. Die Aussage des Gesetzes ist Die elektrische Ladung ist quelle des elektrischen Feldes. Der Unterschied zwischen den Formen ist, dass die differentielle sich auf das Verhalten in einem Punkt konzentriert, entsprechend die Divergence und die Integrale Form beschreibt das Verhalten von Ladungen über einen bestimmten Raum.
+Die erste Maxwell Gleichung ist das Gaußsche Gesetz. Es gibt einmal die differentielle Form und die Integrale Form. Die
+ Aussage des Gesetzes ist Die elektrische Ladung ist quelle des elektrischen Feldes. Der Unterschied zwischen den Formen
+ ist, dass die differentielle sich auf das Verhalten in einem Punkt konzentriert, entsprechend die Divergence und die
+ Integrale Form beschreibt das Verhalten von Ladungen über einen bestimmten Raum.
 
 GaussDivergence:
-Nehmen wir uns zwei Ladungen und betrachten das elektrische Feld. Wir erkennen bereits das die Feldlinien von plus nach minus verlaufen. Dabei erkennen wir wenn wir die Divergence betrachten, dass positive Ladungen Quellen sind und negative Ladungen Senken. Die Divergence ist an diesen Stellen entsprechend positiv und negativ. Die Divergence hängt also von der Ladungsdichte im Punkt ab.
+Nehmen wir uns zwei Ladungen und betrachten das elektrische Feld. Wir erkennen bereits das die Feldlinien von plus nach
+ minus verlaufen. Dabei erkennen wir wenn wir die Divergence betrachten, dass positive Ladungen Quellen sind und negative
+ Ladungen Senken. Die Divergence ist an diesen Stellen entsprechend positiv und negativ. Die Divergence hängt also von
+ der Ladungsdichte im Punkt ab.
 
 GausChargeDensity:
-Aber was genau ist die Ladungsdichte? Wir kennen bereits die FlächenLadungsdichte Sigma welche die Ladung pro m² beschreibt. So gibt es auch die Linienladungsdichte lambda in C/m. Rho ist dann die Volumen Ladungsdichte auf einer Kugel. Auch wenn die Zeichnung nur 2d ist betrachtet man Ladungen in 3d.
+Aber was genau ist die Ladungsdichte? Wir kennen bereits die FlächenLadungsdichte Sigma welche die Ladung pro m²
+ beschreibt. So gibt es auch die Linienladungsdichte lambda in C/m. Rho ist dann die Volumen Ladungsdichte auf einer
+ Kugel. Auch wenn die Zeichnung nur 2d ist betrachtet man Ladungen in 3d.
 
 DesmosElectricField1:
 Wir können jetzt also mal die Ladung im Raum bewegen und gucken wie sich das Feld verhält.
@@ -50,88 +104,175 @@ DesmosElectricField1:
 Hier sind Ladungen die an Wänden prallen.
 
 Gauss:
-So sieht das ganze dann in 3d aus. Da wir jetzt wissen wie es in einem Punkt funktioniert Schauen wir uns an wie sich die Ladung auf ein Volumen ausenrum auswirkt bspw auf eine Kugel. Dafür ist diese Integralform. Um diese zu verstehen müssen wir erstmal verstehen was dieser Punkt macht, denn wir soll man denn 2 Vektoren multiplizieren?
+So sieht das ganze dann in 3d aus. Da wir jetzt wissen wie es in einem Punkt funktioniert Schauen wir uns an wie 
+sich die Ladung auf ein Volumen ausenrum auswirkt bspw auf eine Kugel. Dafür ist diese Integralform. Um diese zu 
+verstehen müssen wir erstmal verstehen was dieser Punkt macht, denn wir soll man denn 2 Vektoren multiplizieren?
 
 VectorDotProductLabel:
-Nehmen wir uns 2 Vektoren v und w. Dieses symbol heißt Skalarprodukt. Im Koordinatensystem haben wir entsprechend unsere zwei Vektoren liegen. Diese haben die entsprechenden Koordinaten. Um das Skalarprodukt nun also zu berechnen, multipliziert man zuerst die x Werte und addiert dann das Produkt der y Werte. Man erhält also ein Skalar, eine Zahl, die aus Produkten der Komponenten entstanden ist. Das ist die Bedeutung des Namens Skalarprodukt. Wir können auch entsprechend andere Vektoren verwenden. Wir machen das selbe. Zunächst schreiben wie die Vektoren auf. Danach bilden wir das Produkt der x Werte und addieren das Produkt der y Werte.
+Nehmen wir uns 2 Vektoren v und w. Dieses symbol heißt Skalarprodukt. Im Koordinatensystem haben wir entsprechend
+ unsere zwei Vektoren liegen. Diese haben die entsprechenden Koordinaten. Um das Skalarprodukt nun also zu berechnen, multipliziert man zuerst die x Werte und addiert dann das Produkt der y Werte. Man erhält also ein Skalar, eine Zahl, die aus Produkten der Komponenten entstanden ist. Das ist die Bedeutung
+ des Namens Skalarprodukt. Wir können auch entsprechend andere Vektoren verwenden. Wir machen das selbe. Zunächst
+ schreiben wie die Vektoren auf. Danach bilden wir das Produkt der x Werte und addieren das Produkt der y Werte.
 
 VectorDotProduct:
 Das Ganze ist noch sehr abstrakt, also schauen wir uns die Geometrie und deren Bedeutung an.
-In unserem Koordinatensystem haben wir einen Vektor v und einen Vektor w. Wir wollen also uns nun das Skalarprodukt zwischen diesen Vektoren angucken. Dazu nehmen wir uns unseren Vektor v und ziehen eine gerade durch diesen Vektor hindurch. Der Vektor w wird jetzt auf diese Gerade projeziert oder auch abgelichtet, sein Schatten wird abgebildet. Diese Projektion ist immer im rechten Winkel zur Geraden. Wir erhalten damit unseren neuen grünen Vektor. Seine Länge mit der Richtung gibt dabei an welchen Wert das Skalarprodukt hat. In Wirklichkeit müsste man diesen Vektor noch um den Betrag von v skalieren, aber diesen Schritt lasse ich hier raus, da er für das Verständnis der anderen Dinge die das Skalarprodukt verwenden nicht zu wichtig ist. Zeigt der Vektor in die selbe Richtung wie v ist das Skalarprodukt positiv. Zeigt er entgegengesetzt von v ist es negativ. Sollte w im rechten Winkel zu v stehen ist die Projektion der Nullvektor, weshalb das Skalarprodukt 0 ist. Man sieht also, das Skalarprodukt ist ein Maß dafür zu welchem Grad die Vektoren in die gleiche Richtung zeigen. Gleiche Richtung ist positiv, entgegengesetzte Richtung ist negativ und im rechten Winkel ist 0.
+In unserem Koordinatensystem haben wir einen Vektor v und einen Vektor w. Wir wollen also uns nun das Skalarprodukt
+ zwischen diesen Vektoren angucken. Dazu nehmen wir uns unseren Vektor v und ziehen eine gerade durch diesen Vektor
+ hindurch. Der Vektor w wird jetzt auf diese Gerade projeziert oder auch abgelichtet, sein Schatten wird abgebildet.
+ Diese Projektion ist immer im rechten Winkel zur Geraden. Wir erhalten damit unseren neuen grünen Vektor. Seine 
+Länge mit der Richtung gibt dabei an welchen Wert das Skalarprodukt hat. In Wirklichkeit müsste man diesen Vektor noch
+ um den Betrag von v skalieren, aber diesen Schritt lasse ich hier raus, da er für das Verständnis der anderen Dinge
+ die das Skalarprodukt verwenden nicht zu wichtig ist. Zeigt der Vektor in die selbe Richtung wie v ist das Skalarprodukt
+ positiv. Zeigt er entgegengesetzt von v ist es negativ. Sollte w im rechten Winkel zu v stehen ist die Projektion
+ der Nullvektor, weshalb das Skalarprodukt 0 ist. Man sieht also, das Skalarprodukt ist ein Maß dafür zu welchem Grad
+ die Vektoren in die gleiche Richtung zeigen. Gleiche Richtung ist positiv, entgegengesetzte Richtung ist negativ
+ und im rechten Winkel ist 0.
 
 Flux:
 Mithilfe des Skalarprodukts können wir nun uns das elektrische Feld und eine Oberfläche angucken.
-Nehmen wir und eine positive Platte und eine negative Platte parallel zueinander. So erhalten wir einen Plattenkondensator. Die elektrischen Feldlinen fließen im Kondensator parallel und homogen. Schieben wir erstmal die negative Platte etwas weiter weg. Stattdessen schieben wir eine Oberfläche in das Feld hinein. Die Feldlinien fließen durch diese Oberfläche hindurch. Das nennen wir Fluss. Da dieser durch das elektrische Feld entsteht sagt man auch elektrischer Fluss. Das Formelzeichen für den Fluss ist phi und wird beschrieben durch die Größe der Fläche A und die Stärke des elektrischen Feldes E. E lässt sich als Vektor darstellen. Die Feldlinien stellen hier auch ein Vektorfeld da. Die Fläche A zeigt in eine bestimmte Richtung. Diese kann durch den normal Vektor n beschrieben werden. Er steht dabei senkrecht auf der Fläche und hat die Länge 1, angezeigt durch das Dach. Der Vektor E wirkt auf die Fläche und zeigt in die Richtung der Feldlinen. Wenn wir nun die Oberfläche rotieren fällt uns auf, das nicht mehr alle Feldlinien durch die Oberfläche fließen. Der Fluss ist also nicht nur abhängig von der Fläche, sondern auch von der Orientierung zum E Feld. Die Menge die durch die Oberfläche fließt wird also nun durch das Skalarprodukt zwischen E und n beschrieben. Ist die Oberfläche flach, so fließt kein E mehr durch und das Skalarprodukt ist entsprechend 0. Je mehr die Vektoren also in die gleiche Richtung zeigen, desto größer ist der Fluss durch Oberfläche.
-nA nennen wir auch Oberflächen Element. Es ist der Vektor der in die Richtung der Fläche zeigt mit dem Betrag des Flächeninhaltes. Der Fluss ist damit EA.
+Nehmen wir und eine positive Platte und eine negative Platte parallel zueinander. So erhalten wir einen Plattenkondensator.
+ Die elektrischen Feldlinen fließen im Kondensator parallel und homogen. Schieben wir erstmal die negative Platte etwas
+ weiter weg. Stattdessen schieben wir eine Oberfläche in das Feld hinein. Die Feldlinien fließen durch diese Oberfläche
+ hindurch. Das nennen wir Fluss. Da dieser durch das elektrische Feld entsteht sagt man auch elektrischer Fluss.
+ Das Formelzeichen für den Fluss ist phi und wird beschrieben durch die Größe der Fläche A und die Stärke des elektrischen
+ Feldes E. E lässt sich als Vektor darstellen. Die Feldlinien stellen hier auch ein Vektorfeld da. Die Fläche A
+ zeigt in eine bestimmte Richtung. Diese kann durch den normal Vektor n beschrieben werden. Er steht dabei senkrecht
+ auf der Fläche und hat die Länge 1, angezeigt durch das Dach. Der Vektor E wirkt auf die Fläche und zeigt in die
+ Richtung der Feldlinen. Wenn wir nun die Oberfläche rotieren fällt uns auf, das nicht mehr alle Feldlinien durch die
+ Oberfläche fließen. Der Fluss ist also nicht nur abhängig von der Fläche, sondern auch von der Orientierung zum E
+ Feld. Die Menge die durch die Oberfläche fließt wird also nun durch das Skalarprodukt zwischen E und n beschrieben.
+ Ist die Oberfläche flach, so fließt kein E mehr durch und das Skalarprodukt ist entsprechend 0. Je mehr die 
+Vektoren also in die gleiche Richtung zeigen, desto größer ist der Fluss durch Oberfläche.
+nA nennen wir auch Oberflächen Element. Es ist der Vektor der in die Richtung der Fläche zeigt mit dem Betrag
+ des Flächeninhaltes. Der Fluss ist damit EA.
 
 IngegralIntro:
-Betrachten wir einen Graphen, welcher ein Auto beschreibt. Die Geschwindigkeit v ist dabei in m/s und die Zeit t in s angegeben. Unsere Geschwindigkeit ist dabei konstant. Die Frage ist nun, wie weit ist das Auto gefahren, also welchen Weg s hat es zurückgelegt? 
+Betrachten wir einen Graphen, welcher ein Auto beschreibt. Die Geschwindigkeit v ist dabei in m/s und die Zeit
+ t in s angegeben. Unsere Geschwindigkeit ist dabei konstant. Die Frage ist nun, wie weit ist das Auto gefahren,
+ also welchen Weg s hat es zurückgelegt? 
 (Auto animieren)
-Wir wissen das s=vt gilt. Unsere Geschwindigkeit ist konstant 2m/s und unsere Zeitspanne sind 5 Sekunden. Die zurückgelegte Strecke ist also 10m. Die Fläche die durch die Geschwindigkeit und Zeit eingeschlossen wird A hat ebenfalls die Einheit m. Auch die Größe der Fläche ist 10m. Wir können also sagen das die Strecke s die Fläche A ist. Das ist die Aufgabe des Integrals. Es berechnet die Fläche die durch den Graphen v und der Achse t eingeschlossen ist.
+Wir wissen das s=vt gilt. Unsere Geschwindigkeit ist konstant 2m/s und unsere Zeitspanne sind 5 Sekunden. Die
+ zurückgelegte Strecke ist also 10m. Die Fläche die durch die Geschwindigkeit und Zeit eingeschlossen wird A hat
+ ebenfalls die Einheit m. Auch die Größe der Fläche ist 10m. Wir können also sagen das die Strecke s die Fläche A
+ ist. Das ist die Aufgabe des Integrals. Es berechnet die Fläche die durch den Graphen v und der Achse t eingeschlossen ist.
 
 IngegralTriangle:
-Integrale berechnen also Flächen. Wenn wir ein Rechteck haben können wir die Fläche ganz einfach ausrechnen. Haben wir ein Dreieck als Graph ist das auch noch machbar, aber was ist, wenn der Graph nicht mehr so einfach ist, wie zum Beispiel eine Parabel? Wie soll man die Fläche davon berechnen?
+Integrale berechnen also Flächen. Wenn wir ein Rechteck haben können wir die Fläche ganz einfach ausrechnen. Haben wir ein
+ Dreieck als Graph ist das auch noch machbar, aber was ist, wenn der Graph nicht mehr so einfach ist, wie zum Beispiel eine
+ Parabel? Wie soll man die Fläche davon berechnen?
 
 IngegralFineRectangles:
-Nehmen wir uns einen beliebigen Graph. In diesen Graph zeichnen wir zunächst vier Rechtecke ein. Diese sollen die Fläche des Graph ungefähr abdecken. Ein Teil der Fläche ist schon gut abgedeckt, aber an vielen Stellen stehen noch Teile über. Die Idee ist nun diese Rechtecke immer dünner zu machen, wodurch immer kleinere Teile überstehen. Die Fläche wird somit immer genauer durch die Rechtecke beschrieben. Wir müssen also jetzt nur die Fläche dieser Rechtecke berechnen.
+Nehmen wir uns einen beliebigen Graph. In diesen Graph zeichnen wir zunächst vier Rechtecke ein. Diese sollen die Fläche
+ des Graph ungefähr abdecken. Ein Teil der Fläche ist schon gut abgedeckt, aber an vielen Stellen stehen noch Teile über.
+ Die Idee ist nun diese Rechtecke immer dünner zu machen, wodurch immer kleinere Teile überstehen. Die Fläche wird somit
+ immer genauer durch die Rechtecke beschrieben. Wir müssen also jetzt nur die Fläche dieser Rechtecke berechnen.
 
 IngegralExplanation:
-Nehmen wir uns nochmal den Graph und ein paar Rechtecke. Die Dicke dieser Rechtecke nennen wir dx und die Höhe ist beschrieben durch die Funktion f(x). Das d in dx kann man sich als Differenz denken, zwischen Anfang und Ende des Rechtecks. Zudem enthält das d bereits die Idee, dass dx gegen 0 laufen wird. dx ist ein Teil der gesamten Strecke x, also des Definitionsbereiches. Die Fläche eines Rechtseckes nennen wir entsprechend dA, da sie ein kleiner Teil der gesamten Fläche A ist. dA berechnet sich dabei mit f(x)dx. Wir betrachten alle Flächen dA. Um auf die gesamte Fläche A zu kommen, summieren wir alle Teilflächen dA. Das ist das Integralzeichen. Es sieht schon aus wie das S aus Summe, und das ist auch was es macht. Es summiert alle Teilflächen dA. Wir können also die fläche schreiben als A=∫ dA, wobei dA einfach nur f(x)dx ist. Dabei ist auch hier im Integral enthalten, dass es die Summe ist, wenn dx gegen 0 läuft. Zusätzlich können wir jetzt noch sagen das die Fläche von 1 bis 5 berechnet werden soll. Das sieht man im Integral dann hier. Unten steht die linke Grenze und oben die rechte Grenze.
+Nehmen wir uns nochmal den Graph und ein paar Rechtecke. Die Dicke dieser Rechtecke nennen wir dx und die Höhe ist beschrieben
+ durch die Funktion f(x). Das d in dx kann man sich als Differenz denken, zwischen Anfang und Ende des Rechtecks. Zudem enthält
+ das d bereits die Idee, dass dx gegen 0 laufen wird. dx ist ein Teil der gesamten Strecke x, also des Definitionsbereiches.
+ Die Fläche eines Rechtseckes nennen wir entsprechend dA, da sie ein kleiner Teil der gesamten Fläche A ist. dA berechnet
+ sich dabei mit f(x)dx. Wir betrachten alle Flächen dA. Um auf die gesamte Fläche A zu kommen, summieren wir alle Teilflächen
+ dA. Das ist das Integralzeichen. Es sieht schon aus wie das S aus Summe, und das ist auch was es macht. Es summiert alle
+ Teilflächen dA. Wir können also die fläche schreiben als A=∫ dA, wobei dA einfach nur f(x)dx ist. Dabei ist auch hier im
+ Integral enthalten, dass es die Summe ist, wenn dx gegen 0 läuft. Zusätzlich können wir jetzt noch sagen das die Fläche
+ von 1 bis 5 berechnet werden soll. Das sieht man im Integral dann hier. Unten steht die linke Grenze und oben die rechte
+ Grenze.
 
 FluxIntegral:
-Kommen wir also zurück zu dem Fluss durch eine Oberfläche. Das ist die Oberfläche A und der Fluss ist phi=EA. Wir können jetzt eine kleine Fläche dA von dieser Oberfläche nehmen, dabei enthält das d bereits die Idee das dA gegen 0 laufen wird. Das Oberflächenelement ist A=nA, wenn wir also nun einen dA der Fläche nehmen Haben wir auch dA. Dementsprechend erhalten wir auf dphi = Eda. Wir wollen jetzt aber nicht nur einen Teil des Flusses haben sondern den gesamten. Dazu nehmen wir das Integral auf beiden Seiten. Das A unten bedeutet, das wir ein Oberflächenintegral haben. Wir berechnen nicht die Fläche unter einem Graphen, sondern die Oberfläche A eines Körpers, hier einfach eines Quadrats. Was das bedeutet, ist das die Oberfläche in viele kleine Teile dA aufgeteilt wird und dann werden diese summiert. Das Integral und d aus dphi kürzen sich weg, da die Summe aus allen Flüssen der Fluss selber ist. Der Grund warum wir das machen ist das die Fläche nicht immer so einfach ist. Hier betrachten wir eine Kugel. Diese wird in viele kleine Oberflächen unterteilt, die sich dann berechnen und addieren lassen.
-Wir können jetzt noch einen Ring um das Integral schreiben, das heißt dass die Oberfläche geschlossen ist. Die Kugel ist ein geschlossener Körper, das Quadrat vorher war keiner. Auch wenn man die Oberfläche einer Kugel einfach berechnen kann betrachtet man häufig Formen die nicht so trivial sind, sie transformierte Kugeln oder parametrische Oberflächen.
+Kommen wir also zurück zu dem Fluss durch eine Oberfläche. Das ist die Oberfläche A und der Fluss ist phi=EA. Wir können
+ jetzt eine kleine Fläche dA von dieser Oberfläche nehmen, dabei enthält das d bereits die Idee das dA gegen 0 laufen wird.
+ Das Oberflächenelement ist A=nA, wenn wir also nun einen dA der Fläche nehmen Haben wir auch dA. Dementsprechend erhalten
+ wir auf dphi = Eda. Wir wollen jetzt aber nicht nur einen Teil des Flusses haben sondern den gesamten. Dazu nehmen wir das
+ Integral auf beiden Seiten. Das A unten bedeutet, das wir ein Oberflächenintegral haben. Wir berechnen nicht die Fläche
+ unter einem Graphen, sondern die Oberfläche A eines Körpers, hier einfach eines Quadrats. Was das bedeutet, ist das die
+ Oberfläche in viele kleine Teile dA aufgeteilt wird und dann werden diese summiert. Das Integral und d aus dphi kürzen
+ sich weg, da die Summe aus allen Flüssen der Fluss selber ist. Der Grund warum wir das machen ist das die Fläche nicht
+ immer so einfach ist. Hier betrachten wir eine Kugel. Diese wird in viele kleine Oberflächen unterteilt, die sich dann
+ berechnen und addieren lassen.
+Wir können jetzt noch einen Ring um das Integral schreiben, das heißt dass die Oberfläche geschlossen ist. Die Kugel ist
+ ein geschlossener Körper, das Quadrat vorher war keiner. Auch wenn man die Oberfläche einer Kugel einfach berechnen kann
+ betrachtet man häufig Formen die nicht so trivial sind, sie transformierte Kugeln oder parametrische Oberflächen.
 
 GaussLawDerivation:
-Wie kommen wir jetzt entsprechend auf die Integrale Schreibweise? Das ist unser Fluss Integral. Wir betrachten entsprechend eine eingeschlossene Ladung in einer Kugel. Das ist unser Oberflächenelement auf einem Ausschnitt der Kugel. Wenn ich nun entsprechend den Positionsvektor r einzeichne, sehen wir das der Einheitsvektor aufgrund der Symmetrie einfach n ist. Wir ersetzen also n duch r. Da können wir auch einsetzen. Wenn wir uns das E Feld anschauen im Abstand r merken wir das dieses immer den gleichen Wert hat aufgrund der radialsymmetrie. E ist also eine konstante die überall gleich ist. Deshalb nimmt sie kein Einfluss auf das Integral und wir können diese heraus ziehen. Übrig bleibt das Flächenintegral der Kugel welches wir schon kennen. Wir setzten diesen term also ein. Das ist unser Fluss also. Hier gilt auch das Coulomb Gesetz. Somit bleibt noch phi=q/e0.
+Wie kommen wir jetzt entsprechend auf die Integrale Schreibweise? Das ist unser Fluss Integral. Wir betrachten entsprechend
+ eine eingeschlossene Ladung in einer Kugel. Das ist unser Oberflächenelement auf einem Ausschnitt der Kugel. Wenn ich nun
+ entsprechend den Positionsvektor r einzeichne, sehen wir das der Einheitsvektor aufgrund der Symmetrie einfach n ist. Wir
+ ersetzen also n duch r. Da können wir auch einsetzen. Wenn wir uns das E Feld anschauen im Abstand r merken wir das dieses
+ immer den gleichen Wert hat aufgrund der radialsymmetrie. E ist also eine konstante die überall gleich ist. Deshalb nimmt
+ sie kein Einfluss auf das Integral und wir können diese heraus ziehen. Übrig bleibt das Flächenintegral der Kugel welches
+ wir schon kennen. Wir setzten diesen term also ein. Das ist unser Fluss also. Hier gilt auch das Coulomb Gesetz. Somit
+ bleibt noch phi=q/e0.
 
 GaussSurfaceIndependence/3D:
-Eine weitere wichtige Eigenschaft ist das der Fluss unabhängig von der Form ist. Man kann sich vorstellen dass bei einer geschlossenen Form irgendwann alle Feldlinien durch die Oberfläche hindurch müssen und somit die gleiche Menge an Feld immer Austritt.
+Eine weitere wichtige Eigenschaft ist das der Fluss unabhängig von der Form ist. Man kann sich vorstellen dass bei einer
+ geschlossenen Form irgendwann alle Feldlinien durch die Oberfläche hindurch müssen und somit die gleiche Menge an Feld immer Austritt.
 
 FaradayIntuition:
-Das 3. Gesetz ist das Faradaysche Induktionsgestzt. Es besagt das Änderungen im magnetischen Fled zu einem elektrischen Wirbelfeld führen.
+Das 3. Gesetz ist das Faradaysche Induktionsgestzt. Es besagt das Änderungen im magnetischen Fled zu einem elektrischen
+ Wirbelfeld führen.
 
 FaradayInductionEField:
-Wenn wir uns einen Magneten nehmen und diesen durch eine Ebene Bewegen, dann wird ein elektrisches Feld induziert. Dieses ist ein Wirbelfeld und verläuft um den Magneten nach der rechten Hand Regel. Je nach position ist das induzierte Feld stärker oder schwächer bzw ändert die Richtung. Natürlich wird auch ein elektrisches Feld auf den anderen Ebenen erzeugt, aber alle darzustellen wird schnell unübersichtlich.
+Wenn wir uns einen Magneten nehmen und diesen durch eine Ebene Bewegen, dann wird ein elektrisches Feld induziert. Dieses
+ ist ein Wirbelfeld und verläuft um den Magneten nach der rechten Hand Regel. Je nach position ist das induzierte Feld
+ stärker oder schwächer bzw ändert die Richtung. Natürlich wird auch ein elektrisches Feld auf den anderen Ebenen erzeugt,
+ aber alle darzustellen wird schnell unübersichtlich.
 
 ChargesInFields:
 Wenn wir nun also Ladungen in diesem Feld haben bewegen sich diese entsprechend mit oder entgegen des Feldes.
 
 FaradayInductionCharges:
-Dementsprechend bewegen sich jetzt auch die Ladungen in einem Leiter wenn der Magnet sich hindurch bewegt. Aber wie kann man die Drehung dieser Ladungen und Felder beschreiben?
+Dementsprechend bewegen sich jetzt auch die Ladungen in einem Leiter wenn der Magnet sich hindurch bewegt. Aber wie kann
+ man die Drehung dieser Ladungen und Felder beschreiben?
 
 CurlIntro:
-Die Rotation gibt an wie sehr sich ein Punkt in dem Fled drehen würde. Hier ist die Rotation überall 2. Positive Werte sind Drehung nach links und negativ bedeutet nach rechts. Das ganze kann entsprechend auch als Fluss dargestellt werden. Man kann ich fragen wie sehr dreht sich das Wasser an dieser Stelle.
+Die Rotation gibt an wie sehr sich ein Punkt in dem Fled drehen würde. Hier ist die Rotation überall 2. Positive Werte 
+sind Drehung nach links und negativ bedeutet nach rechts. Das ganze kann entsprechend auch als Fluss dargestellt werden.
+ Man kann ich fragen wie sehr dreht sich das Wasser an dieser Stelle.
 
 
 CurlComplexExample:
-Wenn wir ein etwas komplexers Beispiel haben ist es schwerer zu sagen was die Rotation ist. Man kann es sich so vorstellen als wenn man ein kleines Rädchen ins Wasser hier hält und dann guckt wie es sich drehen würde.
+Wenn wir ein etwas komplexers Beispiel haben ist es schwerer zu sagen was die Rotation ist. Man kann es sich so vorstellen
+ als wenn man ein kleines Rädchen ins Wasser hier hält und dann guckt wie es sich drehen würde.
 
 Curl3D:
-Die Frage die sich stellt ist eigentlich worum dreht sich das Feld denn? Rotation ist eigentlich eine nur 3 dimensionale Idee, welche sich aber auch in 2D gut darstellen lässt. Neben den 2 Basisvektoren gibt es auch einen 3. k. Die Drehachse des Feldes ist dabei um diesen vector gerichtet.
+Die Frage die sich stellt ist eigentlich worum dreht sich das Feld denn? Rotation ist eigentlich eine nur 3 dimensionale
+ Idee, welche sich aber auch in 2D gut darstellen lässt. Neben den 2 Basisvektoren gibt es auch einen 3. k. Die Drehachse des Feldes ist dabei um diesen vector gerichtet.
 
 CurlToNabla:
-Wir können also die Rotation auch mit der nabla Schreibweise darstellen. Dabei wird hier das Kreditprodukt verwendet. Was es macht ist es nimmt 2 Vektoren und gibt entsprechend einen neuen Vektor aus im rechten Winkel. Es beschreibt also genau die Drehachse.
+Wir können also die Rotation auch mit der nabla Schreibweise darstellen. Dabei wird hier das Kreditprodukt verwendet.
+ Was es macht ist es nimmt 2 Vektoren und gibt entsprechend einen neuen Vektor aus im rechten Winkel. Es beschreibt also genau die Drehachse.
 
 FaradayCurl:
-Haben wir also nun ein sich veränderndes Magnetfeld, so entsteht eine Rotation des elektrischen Feldes welches sich dann auch auf die Ladungen auswirkt.
+Haben wir also nun ein sich veränderndes Magnetfeld, so entsteht eine Rotation des elektrischen Feldes welches sich dann 
+auch auf die Ladungen auswirkt.
 
 FaradayDiffForm:
-Wir sehen jetzt also ein sich änderndes Magnetfeld hat ein rotierendes Elektrisches Feld zur Folge. Das sich zeitlich verändernde Magnetfeld sieht man gut aus dieser Ansicht. Der Fluss des Feldes durch den Leiter ändert sich je nach position wodurch die Induktion stattfindet.
+Wir sehen jetzt also ein sich änderndes Magnetfeld hat ein rotierendes Elektrisches Feld zur Folge. Das sich zeitlich
+ verändernde Magnetfeld sieht man gut aus dieser Ansicht. Der Fluss des Feldes durch den Leiter ändert sich je nach position wodurch die Induktion stattfindet.
 
 MagneticFlux:
-Für die Integrale Form betrachten wir den Magnetischen Fluss zb. an einem Hufeisenmagnet. Dabei ist die Formel die selbe wie bei gaus nur das hier das Magnetfeld wirkt und nicht das elektrische. Dieser Fluss wird dann betrachtet durch die Fläche welche von dem Leiter eingeschlossen.
+Für die Integrale Form betrachten wir den Magnetischen Fluss zb. an einem Hufeisenmagnet. Dabei ist die Formel die
+ selbe wie bei gaus nur das hier das Magnetfeld wirkt und nicht das elektrische. Dieser Fluss wird dann betrachtet
+ durch die Fläche welche von dem Leiter eingeschlossen.
 
 LineIntegral:
-Wir haben eine Kurve C, welche in 2 Dimension Auftritt. wir durch eine Parametrisierung beschreiben können. Dabei haben wir eine Funktion r(t) welche über die Zeit in i und j definiert ist. Hier ist es sin und cos also ein Kreis. Zudem müssen wir noch definieren das Intervall von t. Die Quantität der Kurve die wir integrieren wollen kann man als Höhe in der 3. Dimension darstellen, repräsentiert zb Wasser Menge durch Rohr oder Menge an Schnee auf einem weg.
+Wir haben eine Kurve C, welche in 2 Dimension Auftritt. wir durch eine Parametrisierung beschreiben können. Dabei
+ haben wir eine Funktion r(t) welche über die Zeit in i und j definiert ist. Hier ist es sin und cos also ein Kreis.
+ Zudem müssen wir noch definieren das Intervall von t. Die Quantität der Kurve die wir integrieren wollen kann man
+ als Höhe in der 3. Dimension darstellen, repräsentiert zb Wasser Menge durch Rohr oder Menge an Schnee auf einem weg.
 Fläche einfärben.
-Um nun diese Fläche zu berechnen machen wir das selbe wie bei einem normalen Integral, die Fläche in Rechtecke Aufbrechen und summieren. Unsere dicke ist l und die Höhe ist f(x,y), A=fl Wir wollen jetzt die Rechtecke dünner machen also haben wir dA=fdl. Integriert A= int fdl.
+Um nun diese Fläche zu berechnen machen wir das selbe wie bei einem normalen Integral, die Fläche in Rechtecke
+ Aufbrechen und summieren. Unsere dicke ist l und die Höhe ist f(x,y), A=fl Wir wollen jetzt die Rechtecke dünner
+ machen also haben wir dA=fdl. Integriert A= int fdl.
 Line Integral full formula 
 E Feld und Kurve durch das Feld 
 Menge an E in Richtung dl ist E•dl
 
 FaradayLineIntegral:
-Das ist das Linienintegral. Unser Vektor T ist dabei Tangent und läuft entlang des Leiters. Das ist dann entsprechend das Linienelement. Das Integral misst also die Zirkulation des Feldes entlang des Leiters. Die Einheit wenn man genau hinsieht ist V.
+Das ist das Linienintegral. Unser Vektor T ist dabei Tangent und läuft entlang des Leiters. Das ist dann entsprechend
+ das Linienelement. Das Integral misst also die Zirkulation des Feldes entlang des Leiters. Die Einheit wenn man genau hinsieht ist V.
 
 LenzsLaw:
-Woher kommt eigentlich das Minus Zeichen in der Formel? Es ist zur Energieerhaltung und heißt lenzsche Regel. Der bewegte Strom erzeugt ein eigenes Magnetfeld welches dem anderen entgegenwirkt. Es kommt somit zu einer Gegenkraft die das Feld schwächt.
+Woher kommt eigentlich das Minus Zeichen in der Formel? Es ist zur Energieerhaltung und heißt lenzsche Regel. 
+Der bewegte Strom erzeugt ein eigenes Magnetfeld welches dem anderen entgegenwirkt. Es kommt somit zu einer Gegenkraft die das Feld schwächt.
