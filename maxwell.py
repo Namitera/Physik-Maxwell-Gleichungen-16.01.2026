@@ -1,5 +1,28 @@
 from manim import *
+#fr
+class Thumbnail(Scene):
+    def construct(self):
 
+        gleichung = Tex(".Maxwell-Gleichungen.").scale(2).set_z_index(1)
+        gleichung[0][0].set_opacity(0)
+        gleichung[0][-1].set_opacity(0)
+        b1 = SurroundingRectangle(gleichung,color=BLACK, fill_color=BLACK ,fill_opacity=0.9, stroke_width=0, corner_radius=0.6).set_z_index(1)
+
+        #Bfield
+        stream1 = SVGMobject("Magnetfield.svg", use_svg_cache=False).set_fill(opacity=0).scale(6).set_z_index(-1)
+        center = stream1.get_center() 
+        paths = stream1.family_members_with_points()
+        distances = [np.linalg.norm(path.get_center() - center) for path in paths]
+        max_distance = max(distances)
+        for path, dist in zip(paths, distances):
+            t = dist / max_distance  # 0 = center, 1 = farthest
+            color = color_gradient([BLUE, RED, BLACK], 100)[int(t*99)]
+            path.set_stroke(color=color, width=2)
+        stream1 = VGroup(*paths).set_z_index(-1)     
+
+        self.add(b1,gleichung)
+        self.add(stream1)
+#fr
 class Opening(Scene):
     def construct(self):
         
@@ -9,7 +32,7 @@ class Opening(Scene):
         b1 = SurroundingRectangle(gleichung,color=BLACK, fill_color=BLACK ,fill_opacity=0.9, stroke_width=0, corner_radius=0.6).set_z_index(1)
 
         #Bfield
-        stream1 = SVGMobject("Magnetfield.svg", use_svg_cache=False).set_fill(opacity=0).scale(3).set_z_index(-1)
+        stream1 = SVGMobject("Magnetfield.svg", use_svg_cache=False).set_fill(opacity=0).scale(6).set_z_index(-1)
         center = stream1.get_center() 
         paths = stream1.family_members_with_points()
         distances = [np.linalg.norm(path.get_center() - center) for path in paths]
@@ -17,10 +40,10 @@ class Opening(Scene):
         for path, dist in zip(paths, distances):
             t = dist / max_distance  # 0 = center, 1 = farthest
             color = color_gradient([BLUE, RED, BLACK], 100)[int(t*99)]
-            path.set_stroke(color=color, width=1.5)
+            path.set_stroke(color=color, width=2)
         stream1 = VGroup(*paths).set_z_index(-1)
 
-        stream2 = SVGMobject("Magnetfield.svg").set_fill(opacity=0).scale(6).set_z_index(-3)
+        stream2 = SVGMobject("Magnetfield.svg").set_fill(opacity=0).scale(5).set_z_index(-3)
         center = stream2.get_center() 
         paths = stream2.family_members_with_points()
         distances = [np.linalg.norm(path.get_center() - center) for path in paths]
@@ -31,7 +54,7 @@ class Opening(Scene):
             path.set_stroke(color=color, width=1)
         stream2 = VGroup(*paths).set_z_index(-3)
 
-        stream3 = SVGMobject("Magnetfield.svg").set_fill(opacity=0).scale(6).set_z_index(-3)
+        stream3 = SVGMobject("Magnetfield.svg").set_fill(opacity=0).scale(5).set_z_index(-3)
         center = stream3.get_center() 
         paths = stream3.family_members_with_points()
         distances = [np.linalg.norm(path.get_center() - center) for path in paths]
@@ -42,7 +65,7 @@ class Opening(Scene):
             path.set_stroke(color=color, width=1)
         stream3 = VGroup(*paths).set_z_index(-3)
 
-        stream4 = SVGMobject("Magnetfield.svg").set_fill(opacity=0).scale(11.5).set_z_index(-3)
+        stream4 = SVGMobject("Magnetfield.svg").set_fill(opacity=0).scale(10).set_z_index(-3)
         center = stream4.get_center() 
         paths = stream4.family_members_with_points()
         distances = [np.linalg.norm(path.get_center() - center) for path in paths]
@@ -50,111 +73,135 @@ class Opening(Scene):
         for path, dist in zip(paths, distances):
             t = dist / max_distance  # 0 = center, 1 = farthest
             color = color_gradient([BLUE, RED, BLACK], 100)[int(t*99)]
-            path.set_stroke(color=color, width=1)
-        stream4 = VGroup(*paths).set_z_index(-3)
+            path.set_stroke(color=color, width=2)
+        stream4 = VGroup(*paths).set_z_index(-3).shift(DOWN*0.4 + RIGHT*0.2)
 
         north_pole1 = Rectangle(width=1,height=0.5,color=BLUE,fill_opacity=1).shift(LEFT*0.5)
         south_pole1 = Rectangle(width=1,height=0.5,color=RED,fill_opacity=1).shift(LEFT*-0.5)
         north_pole_tex1 = MathTex(r"N").move_to(north_pole1)
         south_pole_tex1 = MathTex(r"S").move_to(south_pole1)
-        # r1 = Rectangle(color=BLACK, stroke_width=10).surround(stream2).scale(0.99).set_z_index(-2)
         magnet1 = VGroup(north_pole1,south_pole1,north_pole_tex1,south_pole_tex1, stream2).move_to([-12,0,0])
 
         north_pole2 = Rectangle(width=1,height=0.5,color=BLUE,fill_opacity=1).shift(LEFT*0.5)
         south_pole2 = Rectangle(width=1,height=0.5,color=RED,fill_opacity=1).shift(LEFT*-0.5)
         north_pole_tex2 = MathTex(r"N").move_to(north_pole2)
         south_pole_tex2 = MathTex(r"S").move_to(south_pole2)
-        # r2 = Rectangle(color=BLACK, stroke_width=10).surround(stream3).scale(0.99).set_z_index(-2)
         magnet2 = VGroup(north_pole2,south_pole2,north_pole_tex2,south_pole_tex2, stream3).move_to([12,0,0]).set_z_index(-2)
 
 
-        ###
+        ##
+        self.add_sound("Opening.wav", time_offset=1)
         self.add(b1,gleichung)
-        self.add(stream1, magnet1, magnet2)
+        self.add(stream1)
         
-        # self.play(VGroup(stream1,b1,gleichung).animate.scale(0.5), run_time=2.5)
-        # self.play(magnet1.animate.move_to([-3.1,0,0]), magnet2.animate.move_to([3.1,0,0]), rate_func=linear, run_time=5)
-        # shearIn = [[0, 0], [0, 1]]
-        # self.play(magnet1.animate.move_to([-1,0,0]), magnet2.animate.move_to([1,0,0]), VGroup(b1, gleichung).animate.apply_matrix(shearIn), stream1.animate.apply_matrix(shearIn), rate_func=linear, run_time=5/4.2381)
+        self.wait()
+        self.wait(4.4)
+        self.play(VGroup(stream1,b1,gleichung).animate.scale(0.5), run_time=2.5)
+        self.play(magnet1.animate.move_to([-3.1,0,0]), magnet2.animate.move_to([3.1,0,0]), rate_func=linear, run_time=5.5)
+        shearIn = [[0, 0], [0, 1]]
+        self.play(magnet1.animate.move_to([-1,0,0]), magnet2.animate.move_to([1,0,0]), VGroup(b1, gleichung).animate.apply_matrix(shearIn), stream1.animate.apply_matrix(shearIn), FocusOn(gleichung), rate_func=linear, run_time=5.5/4.2381)
 
-        # self.remove(gleichung,stream1,b1)
-        # magnet1[1].set_color(BLUE)
-        # magnet2[0].set_color(RED)
-        # self.remove(magnet1[3],magnet2[2])
+        self.remove(gleichung,stream1,b1)
+        magnet1[1].set_color(BLUE)
+        magnet2[0].set_color(RED)
+        self.remove(magnet1[3],magnet2[2])
 
-        # # particles
-        # class Electron(VGroup):
-        #     def __init__(self, **kwargs):
-        #         super().__init__(**kwargs)
-        #         core = Circle(radius=0.4,color=PURE_GREEN,fill_color=PURE_GREEN,fill_opacity=1)
-        #         corss = Rectangle(height=0.03,width=0.3,fill_opacity=1)
-        #         self.core = core
-        #         self.cross = corss
-        #         self.add(core, corss)
+        # particles
+        class Electron(VGroup):
+            def __init__(self, **kwargs):
+                super().__init__(**kwargs)
+                core = Circle(radius=0.4,color=PURE_GREEN,fill_color=PURE_GREEN,fill_opacity=1)
+                corss = Rectangle(height=0.03,width=0.3,fill_opacity=1)
+                self.core = core
+                self.cross = corss
+                self.add(core, corss)
  
-        # class Proton(VGroup):
-        #     def __init__(self, **kwargs):
-        #         super().__init__(**kwargs)
-        #         core = Circle(radius=0.4,color=RED,fill_opacity=1)
-        #         corss1 = Rectangle(height=0.02,width=0.4,fill_opacity=1)
-        #         corss2 = Rectangle(height=0.4,width=0.02,fill_opacity=1)
-        #         self.add(VGroup(core,corss1,corss2))
+        class Proton(VGroup):
+            def __init__(self, **kwargs):
+                super().__init__(**kwargs)
+                core = Circle(radius=0.4,color=RED,fill_opacity=1)
+                corss1 = Rectangle(height=0.02,width=0.4,fill_opacity=1)
+                corss2 = Rectangle(height=0.4,width=0.02,fill_opacity=1)
+                self.add(VGroup(core,corss1,corss2))
 
 
-        # t = ValueTracker(0)
+        t = ValueTracker(0)
 
-        # electron1 = Electron()
-        # electron2 = Electron()
-        # electron3 = Electron()
-        # electron4 = Electron()
-        # proton1 = Proton()
-        # proton2 = Proton()
-        # proton3 = Proton()
-        # proton4 = Proton()
-        # self.add(electron1,electron2,electron3,electron4)
-        # self.add(proton1,proton2,proton3,proton4)
+        electron1 = Electron()
+        electron2 = Electron()
+        electron3 = Electron()
+        electron4 = Electron()
+        proton1 = Proton()
+        proton2 = Proton()
+        proton3 = Proton()
+        proton4 = Proton()
+        self.add(electron1,electron2,electron3,electron4)
+        self.add(proton1,proton2,proton3,proton4)
 
-        # f = 3
-        # electron1.add_updater(lambda mob: mob.move_to([-1*f*np.cos(t.get_value())+1*f, -1*f*np.sin(t.get_value()), 0]))
-        # electron2.add_updater(lambda mob: mob.move_to([-0.125*f*np.cos(t.get_value())+0.125*f, -0.5*f*np.sin(t.get_value()), 0]))
-        # electron3.add_updater(lambda mob: mob.move_to([0.125*f*np.cos(t.get_value())-0.125*f, 0.5*f*np.sin(t.get_value()), 0]))
-        # electron4.add_updater(lambda mob: mob.move_to([1*f*np.cos(t.get_value())-1*f, 1*f*np.sin(t.get_value()), 0]))
-        # proton1.add_updater(lambda mob: mob.move_to([1*f*np.cos(t.get_value())-1*f, -1*f*np.sin(t.get_value()), 0]))
-        # proton2.add_updater(lambda mob: mob.move_to([0.125*f*np.cos(t.get_value())-0.125*f, -0.5*f*np.sin(t.get_value()), 0]))
-        # proton3.add_updater(lambda mob: mob.move_to([-0.125*f*np.cos(t.get_value())+0.125*f, 0.5*f*np.sin(t.get_value()), 0]))
-        # proton4.add_updater(lambda mob: mob.move_to([-1*f*np.cos(t.get_value())+1*f, 1*f*np.sin(t.get_value()), 0]))
-        # self.play(FadeOut(VGroup(stream2,stream3)), FadeIn(stream4), t.animate.set_value(0.4), rate_func=linear, run_time=1)
-        # self.play(t.animate.set_value(2), rate_func=linear, run_time=4)
+        f = 3
+        electron1.add_updater(lambda mob: mob.move_to([-1*f*np.cos(t.get_value())+1*f, -1*f*np.sin(t.get_value()), 0]))
+        electron2.add_updater(lambda mob: mob.move_to([-0.125*f*np.cos(t.get_value())+0.125*f, -0.5*f*np.sin(t.get_value()), 0]))
+        electron3.add_updater(lambda mob: mob.move_to([0.125*f*np.cos(t.get_value())-0.125*f, 0.5*f*np.sin(t.get_value()), 0]))
+        electron4.add_updater(lambda mob: mob.move_to([1*f*np.cos(t.get_value())-1*f, 1*f*np.sin(t.get_value()), 0]))
+        proton1.add_updater(lambda mob: mob.move_to([1*f*np.cos(t.get_value())-1*f, -1*f*np.sin(t.get_value()), 0]))
+        proton2.add_updater(lambda mob: mob.move_to([0.125*f*np.cos(t.get_value())-0.125*f, -0.5*f*np.sin(t.get_value()), 0]))
+        proton3.add_updater(lambda mob: mob.move_to([-0.125*f*np.cos(t.get_value())+0.125*f, 0.5*f*np.sin(t.get_value()), 0]))
+        proton4.add_updater(lambda mob: mob.move_to([-1*f*np.cos(t.get_value())+1*f, 1*f*np.sin(t.get_value()), 0]))
+        self.play(FadeOut(VGroup(stream2,stream3)), FadeIn(stream4), t.animate.set_value(0.4), Flash([0,0,0], line_length=2), rate_func=linear, run_time=1)
+        self.play(t.animate.set_value(2), rate_func=linear, run_time=4)
 
-        # electron1.clear_updaters()
-        # electron2.clear_updaters()
-        # electron3.clear_updaters()
-        # electron4.clear_updaters()
-        # proton1.clear_updaters()
-        # proton2.clear_updaters()
-        # proton3.clear_updaters()
-        # proton4.clear_updaters()
+        electron1.clear_updaters()
+        electron2.clear_updaters()
+        electron3.clear_updaters()
+        electron4.clear_updaters()
+        proton1.clear_updaters()
+        proton2.clear_updaters()
+        proton3.clear_updaters()
+        proton4.clear_updaters()
 
-        # lefover = VGroup(magnet1[0:4],magnet2[0:4], stream4,electron4,electron2,electron3,proton1,proton2,proton3,proton4)
+        lefover = VGroup(magnet1[0:4],magnet2[0:4], stream4,electron4,electron2,electron3,proton1,proton2,proton3,proton4)
+        south_pole_tex1.set_z_index(-10)
+        north_pole_tex2.set_z_index(-10)
         
-        # self.play(lefover.animate.rotate(-PI/2, about_point=[13,0,0]), run_time=4)
-        # self.remove(lefover)
+        self.play(lefover.animate.rotate(-83*DEGREES, about_point=[13,0,0]), Rotate(electron1, 2*PI), run_time=3)
+        self.remove(lefover)
 
-        # axis = Axes(x_range=[-20,0], y_range=[-1,1], x_length=20, y_length=2).rotate(-20*DEGREES).shift(LEFT*5+ UP*0.6).set_opacity(0)
-        # graph1 = axis.plot(lambda x: 0)
-        # graph2 = axis.plot(lambda x: 0)
+        axis = Axes(x_range=[-20,0], y_range=[-1,1], x_length=20, y_length=2)
+        b9 = SurroundingRectangle(axis,color=BLACK, fill_color=BLACK ,fill_opacity=1, stroke_width=0).set_z_index(1)
+        VGroup(axis,b9).rotate(-20*DEGREES).shift(LEFT*5+ UP*0.6)
+        axis.set_opacity(0)
+        graph1 = axis.plot(lambda x: 0)
+        graph2 = axis.plot(lambda x: 0)
 
-        # t2 = ValueTracker(0)
-        # graph1.add_updater(lambda mob: mob.become(axis.plot(lambda x: np.sin(x+t2.get_value()),color=BLUE)))
-        # graph2.add_updater(lambda mob: mob.become(axis.plot(lambda x: -0.5*np.sin(x+t2.get_value()), color=YELLOW)))
+        t2 = ValueTracker(0)
+        b = 2
+        c = 2
+        graph1.add_updater(lambda mob: mob.become(axis.plot(lambda x: np.sin(x+t2.get_value()) * 1/(1+np.pow(c*2.71828, b*x +1.5)),color=BLUE).set_z_index(-2)))
+        graph2.add_updater(lambda mob: mob.become(axis.plot(lambda x: -0.5*np.sin(x+t2.get_value()) * 1/(1+np.pow(c*2.71828, b*x +1.5)), color=YELLOW).set_z_index(-2)))
 
-        # self.add(graph1,graph2)
-        # electron1.set_z_index(1)
-        # self.play(t2.animate.set_value(2), rate_func=linear, run_time=1)
-        # self.play(t2.animate.set_value(14), rate_func=linear, run_time=4)
-        # self.play(t2.animate.set_value(20), FadeOut(electron1.cross), electron1.animate.set_color(YELLOW).shift(UP*3+LEFT*6), axis.animate.shift(UP*3+LEFT*6), rate_func=linear, run_time=2)
-        # self.play(t2.animate.set_value(24), electron1.animate.shift(UP*3+LEFT*6), axis.animate.shift(UP*3+LEFT*6), rate_func=linear, run_time=2)
 
+        self.add(graph1,graph2, b9)
+        electron1.set_z_index(2)
+        self.play(b9.animate.set_opacity(0), t2.animate.set_value(2), rate_func=linear, run_time=1)
+        self.play(t2.animate.set_value(14), rate_func=linear, run_time=4)
+        self.play(b9.animate.set_opacity(1), t2.animate.set_value(16), rate_func=linear, run_time=1)
+
+        #positron
+        class Positron(VGroup):
+            def __init__(self, **kwargs):
+                super().__init__(**kwargs)
+                core = Circle(radius=0.4,color=PURE_RED,fill_color=PURE_RED,fill_opacity=1)
+                corss = Rectangle(height=0.03,width=0.3,fill_opacity=1)
+                self.core = core
+                self.cross = corss
+                self.add(core, corss)
+
+        pos1 = Positron().move_to([-5,5,0])
+        self.remove(graph1,graph2, b9)
+        self.play(pos1.animate.move_to([0,0,0]),electron1.animate.move_to([0,0,0]), rate_func=rate_functions.ease_in_quad, run_time=5)
+        self.play(FadeOut(VGroup(electron1,pos1)),  Flash([0,0,0], line_length=2))
+        self.wait()
+#fr
 class Overview(Scene):
     def construct(self):   
 
@@ -171,6 +218,8 @@ class Overview(Scene):
         equation4 = MathTex(r" \nabla \times \vec{B}=\mu_{0}(\vec{J}+\varepsilon _{0}\frac{\partial \vec{E}}{\partial t})").shift(UP*-3).next_to(forth,RIGHT)
 
         #overview
+        self.add_sound("Overview.wav", time_offset=1)
+
         self.play(Write(header))
         self.play(header.animate.to_edge(UP))
         self.play(FadeIn(maxwell))
@@ -232,8 +281,8 @@ class Overview(Scene):
         magnet = VGroup(north_pole,south_pole,north_pole_tex,south_pole_tex).move_to([3.5,-0.5,0]).set_z_index(1)
 
         self.play(FadeIn(VGroup(magnet,vector_field1)))
-        self.wait()
-
+        self.wait(7)
+#f
 class Preview(ThreeDScene):
     def construct(self):   
 
@@ -261,10 +310,12 @@ class Preview(ThreeDScene):
         electron = VGroup(core1,corss3).shift(RIGHT*2).scale(0.7)
 
         #start
+        self.add_sound("Preview.wav", time_offset=1)
         self.wait()
-        self.add(stream, proton, electron)
-        stream.start_animation(flow_speed=1.4, warm_up=False)
-        self.wait(5)
+        self.play(FadeIn(VGroup(proton, electron)), run_time=0.5)
+        self.add(stream)
+        stream.start_animation(flow_speed=1.4, warm_up=True)
+        self.wait(7)
         self.remove(stream,proton,electron)
 
 
@@ -293,14 +344,13 @@ class Preview(ThreeDScene):
         vector_field2 = ArrowVectorField(vecField1Func2, max_color_scheme_value=0.8, min_color_scheme_value=0.2, colors=colors2, x_range=[-6,6], y_range=[-6,6])
 
         #start
-        self.move_camera(phi=60*DEGREES, run_time=0.01)
-        self.begin_ambient_camera_rotation(0.1)
         self.add(pipe2,stream2, vector_field2)
         stream2.start_animation(warm_up=False, flow_speed=1)
-        self.wait(5)
+        self.move_camera(phi=60*DEGREES, run_time=1)
+        self.begin_ambient_camera_rotation(0.1)
+        self.wait(7)
         self.stop_ambient_camera_rotation()
         self.remove(stream2,pipe2,vector_field2)
-        self.move_camera(phi=0, theta=-PI/2, run_time=0.01)
 
 
         #second law demo
@@ -325,9 +375,12 @@ class Preview(ThreeDScene):
         func3 = lambda pos: vecField3(pos=pos)
         stream3 = StreamLines(func3, stroke_width=2, max_anchors_per_line=200, virtual_time=20, n_repeats=5).set_z_index(-1)
 
-        self.add(magnet3,stream3)
-        stream3.start_animation(warm_up=False, flow_speed=3)
-        self.wait(5)
+        self.add_fixed_in_frame_mobjects(magnet3)
+        self.play(FadeIn(magnet3))
+        self.move_camera(phi=0, theta=-PI/2, run_time=0.01)
+        self.add(stream3)
+        stream3.start_animation(warm_up=True, flow_speed=3)
+        self.wait(7)
         self.remove(magnet3,stream3)
 
         #third law demo
@@ -360,7 +413,7 @@ class Preview(ThreeDScene):
         for path, dist in zip(paths, distances):
             t = dist / max_distance  # 0 = center, 1 = farthest
             color = color_gradient([BLUE, RED, BLACK], 100)[int(t*99)]
-            path.set_stroke(color=color, width=0.5)
+            path.set_stroke(color=color, width=0.7)
         stream4 = VGroup(*paths)
 
         magnet4 = VGroup(stream4, south_pole4, north_pole4)
@@ -394,7 +447,8 @@ class Preview(ThreeDScene):
         self.play(magnet4.animate.move_to([4,0,0]), rate_func=linear, run_time=5)
         self.play(magnet4.animate.move_to([-4,0,0]), rate_func=linear, run_time=5)
         self.remove(magnet4,vecs, loop)
-
+        self.wait()
+#fr
 class MagnetIntro(Scene):
     def construct(self):
         
@@ -411,7 +465,7 @@ class MagnetIntro(Scene):
             field[1] = (-x)/(normal1) + (x)/(normal2)
             return field[0]*RIGHT + field[1]*UP
         
-        stream = StreamLines(func1, stroke_width=5, max_anchors_per_line=100, virtual_time=45, n_repeats=1).set_z_index(-1)
+        stream = StreamLines(func1, stroke_width=3, max_anchors_per_line=150, virtual_time=60, n_repeats=1).set_z_index(-1)
 
         north_pole = Rectangle(width=1,height=0.5,color=BLUE,fill_opacity=1).shift(LEFT*0.5)
         south_pole = Rectangle(width=1,height=0.5,color=RED,fill_opacity=1).shift(LEFT*-0.5)
@@ -420,9 +474,10 @@ class MagnetIntro(Scene):
         magnet = VGroup(north_pole,south_pole,north_pole_tex,south_pole_tex).move_to([0,0,0.1]).set_z_index(1)
 
         #magnet and fieldlines
-        self.play(Write(magnet))
+        self.wait()
+        self.play(Write(magnet), run_time=2)
         self.add(stream)
-        stream.start_animation(warm_up=True, flow_speed=3)
+        stream.start_animation(warm_up=True, flow_speed=5)
         self.wait(7)
         self.play(FadeOut(stream))
         stream.end_animation()
@@ -441,24 +496,26 @@ class MagnetIntro(Scene):
         magnet3 = VGroup(north_pole3,south_pole3,north_pole_tex3,south_pole_tex3).move_to([0.75,0,0.1]).set_z_index(1)
 
         # self.add(NumberPlane())
-        self.play(ReplacementTransform(magnet,magnet2), ReplacementTransform(magnet.copy(),magnet3))
-        self.wait()
+        self.wait(3)
+        self.play(ReplacementTransform(magnet,magnet2), ReplacementTransform(magnet.copy(),magnet3), run_time=2)
+        self.wait(3)
 
         #keine monos
         mono = Tex("keine magnetischen Monopole").shift(UP*3)
         exept = Tex("*soweit wir wissen").shift(UP*2).scale(0.9).align_to(mono,LEFT)
 
         self.play(Write(mono))
+        self.wait()
         self.play(FadeIn(exept))
+        self.wait(5)
         self.play(FadeOut(exept))
         self.play(FadeOut(magnet3), magnet2.animate.move_to([0,0,0.1]))
 
-        # stream2 = StreamLines(func1, stroke_width=2, max_anchors_per_line=300, virtual_time=50, n_repeats=1).set_z_index(-1)
-        # self.play(FadeIn(stream2))
-
         vector_field = ArrowVectorField(func=func1,max_color_scheme_value=0.1,min_color_scheme_value=0.01)
+        self.wait(2)
         self.play(FadeIn(vector_field))
-
+        self.wait()
+#fr
 class VectorIntro(Scene):
     def construct(self): 
 
@@ -489,13 +546,12 @@ class VectorIntro(Scene):
 
         #schreibweisen
         self.wait()
-
         self.play(Write(p1tex))
+        self.wait(3)
         self.play(Write(p1tex2))
-        self.wait()
 
         #switch to basis vectors
-        self.wait()
+        self.wait(3)
         self.play(Unwrite(p1tex),Unwrite(p1tex2), Unwrite(np))
 
         self.play(x.animate.set_color(RED))
@@ -526,14 +582,14 @@ class VectorIntro(Scene):
         yvec1 = VGroup(jhatvec.copy(),y.copy()).shift(3*RIGHT)
         yvec2 = VGroup(jhatvec.copy(),y.copy()).shift(3*RIGHT+UP)
 
-        self.wait()
-        self.play(ReplacementTransform(ihatvec.copy(),xvec2))
-        self.wait()
-        self.play(ReplacementTransform(ihatvec.copy(),xvec3))
-        self.wait()
-        self.play(ReplacementTransform(jhatvec.copy(),yvec1))
-        self.wait()
-        self.play(ReplacementTransform(jhatvec.copy(),yvec2))
+        self.wait(5)
+        self.play(ReplacementTransform(ihatvec.copy(),xvec2), run_time=1.5)
+        self.wait(0.5)
+        self.play(ReplacementTransform(ihatvec.copy(),xvec3), run_time=1.5)
+        self.wait(0.5)
+        self.play(ReplacementTransform(jhatvec.copy(),yvec1), run_time=1.5)
+        self.wait(0.5)
+        self.play(ReplacementTransform(jhatvec.copy(),yvec2), run_time=1.5)
         self.wait()
         
         #combination
@@ -547,32 +603,34 @@ class VectorIntro(Scene):
         self.play(Write(v))
         self.wait()
         self.play(Unwrite(p1))
-        self.wait()
+        self.wait(3)
         self.play(Write(vtex))
         
         vinxy = MathTex(r"\vec{v}",r"=3",r"\vec{x}",r"+2",r"\vec{y}").shift(DOWN*2)
         vinxy[0].set_color(YELLOW)
         vinxy[2][1].set_color(RED)
         vinxy[4][1].set_color(GREEN)
-        self.play(Write(vinxy))
+        self.wait(2)
+        self.play(Write(vinxy), run_time=2)
 
         #transition i,j
         self.play(Unwrite(VGroup(xvec2,xvec3,yvec1,yvec2,p1tex,p1tex2,p1)))
 
         ihat = (MathTex(r"\hat{i}")).move_to(x).set_color(RED)
         jhat = (MathTex(r"\hat{j}")).move_to(y).set_color(GREEN)
-        self.wait()
+        self.wait(3)
         self.play(ReplacementTransform(x,ihat))
         self.wait()
         self.play(ReplacementTransform(y,jhat))
-        self.wait()
+        self.wait(6)
 
         vinij = MathTex(r"\vec{v}",r"=3",r"\hat{i}",r"+2",r"\hat{j}").shift(DOWN*2)
         vinij[0].set_color(YELLOW)
         vinij[2].set_color(RED)
         vinij[4].set_color(GREEN)
         self.play(ReplacementTransform(vinxy,vinij))
-
+        self.wait()
+#fr
 class VectorFieldIntro(Scene):
     def construct(self):
 
@@ -593,6 +651,7 @@ class VectorFieldIntro(Scene):
 
         self.wait()
         self.play(Write(field_equation1))
+        self.wait(2)
         self.play(Write(point_example))
         self.wait()
 
@@ -629,7 +688,7 @@ class VectorFieldIntro(Scene):
         self.wait()
         self.play(Write(field_equation1_example1[0:2]))
         self.wait(2)
-        self.play(p1.animate.shift(RIGHT*2 + UP))
+        self.play(p1.animate.shift(RIGHT*2 + UP), run_time=2)
 
         #vector
         ihatvec = Vector(RIGHT,color=RED)
@@ -638,11 +697,13 @@ class VectorFieldIntro(Scene):
         jhat = (MathTex(r"\hat{j}")).next_to(jhatvec,LEFT).set_color(GREEN)
         vector1 = Vector([2,1],color=YELLOW).shift(RIGHT*2+UP)
 
+        self.wait(2)
         self.play(Write(field_equation1_example1[2]))
         self.wait(3)
 
         self.play(Write(ihatvec),Write(ihat))
         self.play(Write(jhatvec),Write(jhat))
+        self.wait(2)
         self.play(GrowArrow(vector1))
 
 
@@ -659,9 +720,9 @@ class VectorFieldIntro(Scene):
 
         self.play(ReplacementTransform(field_equation1_example1,field_equation1_example2))
         self.wait()
-        self.play(p1.animate.move_to([2,-1.5,0]))
+        self.play(p1.animate.move_to([2,-1.5,0]), run_time=3)
         self.wait()
-        self.play(p1.animate.move_to([-3,-1.5,0]))
+        self.play(p1.animate.move_to([-3,-1.5,0]), run_time=3)
 
         #prepare for full visual
         vector1.suspend_updating()
@@ -679,13 +740,13 @@ class VectorFieldIntro(Scene):
         #streamlines
         stream = StreamLines(vecField1Func1, stroke_width=2, max_anchors_per_line=100, virtual_time=50, n_repeats=5, colors=colors1, min_color_scheme_value=1,  max_color_scheme_value=6)
 
-        self.wait(3)
+        self.wait(6)
 
         self.play(vector_field1.animate.set_opacity(0.3), run_time=0.1)
         self.add(stream)
         stream.start_animation(warm_up=True, flow_speed=5)
         self.wait(5)
-
+#fr
 class VectorFieldExamples1(Scene):
     def construct(self):
 
@@ -700,27 +761,30 @@ class VectorFieldExamples1(Scene):
         colors1 = [BLUE,GREEN,YELLOW,RED]
         
         #prepare for full visual
-        field_equation2 = MathTex(r"\vec{F}(x,y)=y\hat{i} +0\hat{j}").to_corner(UL).set_z_index(1)
+        field_equation2 = MathTex(r"\vec{F}(x,y)=y\hat{i} +0\hat{j}").set_z_index(1)
         b1 = SurroundingRectangle(field_equation2,color=BLACK,fill_opacity=1,fill_color=BLACK).move_to(field_equation2).set_z_index(1)
+        self.wait()
         self.play(Write(VGroup(b1,field_equation2)))
+        self.wait(4)
+        self.play(VGroup(b1,field_equation2).animate.to_corner(UL))
 
         vecField1Func2 = lambda pos: pos[1]*RIGHT + 0*pos[1]*UP
         vector_field2 = ArrowVectorField(vecField1Func2, max_color_scheme_value=3,min_color_scheme_value=0, colors=colors1).set_z_index(-1)
         self.play(Write(vector_field2))
+        self.wait(10)
 
         #streamlines
         stream = StreamLines(vecField1Func2, stroke_width=2, max_anchors_per_line=100, virtual_time=50, n_repeats=5, colors=colors1, min_color_scheme_value=1,  max_color_scheme_value=3).set_z_index(-1)
 
-        self.wait(3)
-        self.play(vector_field2.animate.set_opacity(0.3), run_time=0.1)
+        self.play(vector_field2.animate.set_opacity(0.3), run_time=1)
         self.add(stream)
         stream.start_animation(warm_up=True, flow_speed=2)
-        self.wait(5)
+        self.wait(7)
 
 #DesmosField1
 
 #DesmosField2
-
+#fr
 class VectorFieldExamples2(Scene):
     def construct(self):
 
@@ -735,9 +799,11 @@ class VectorFieldExamples2(Scene):
         colors1 = [BLUE,GREEN,YELLOW,RED]
         
         #prepare for full visual
-        field_equation3 = MathTex(r"\vec{F}(x,y)=-y\hat{i} +x\hat{j}").to_corner(UL).set_z_index(1)
+        field_equation3 = MathTex(r"\vec{F}(x,y)=-y\hat{i} +x\hat{j}").set_z_index(1)
         b1 = SurroundingRectangle(field_equation3,color=BLACK,fill_opacity=1,fill_color=BLACK).move_to(field_equation3).set_z_index(1)
         self.play(Write(VGroup(b1,field_equation3)))
+        self.wait(4)
+        self.play(VGroup(b1,field_equation3).animate.to_corner(UL))
 
         vecField1Func3 = lambda pos: -pos[1]*RIGHT + pos[0]*UP
         vector_field3 = ArrowVectorField(vecField1Func3, max_color_scheme_value=6,min_color_scheme_value=1, colors=colors1).set_z_index(-1)
@@ -745,13 +811,13 @@ class VectorFieldExamples2(Scene):
 
         #streamlines
         stream = StreamLines(vecField1Func3, stroke_width=2, max_anchors_per_line=50, virtual_time=50, n_repeats=1, colors=colors1, min_color_scheme_value=1,  max_color_scheme_value=6).set_z_index(-1)
-        self.wait(3)
+        self.wait(7)
 
         self.play(vector_field3.animate.set_opacity(0.3), run_time=0.1)
         self.add(stream)
         stream.start_animation(warm_up=True, flow_speed=2)
-        self.wait(5)
-
+        self.wait(10)
+#fr
 class MagnetFieldPicture1(Scene):
     def construct(self):
         
@@ -776,7 +842,7 @@ class MagnetFieldPicture1(Scene):
         vector_field = ArrowVectorField(func=func1,max_color_scheme_value=0.3,min_color_scheme_value=0.01)
 
         self.add(magnet,vector_field)
-
+#fr
 class MagnetFieldPicture2(Scene):
     def construct(self):
         
@@ -801,7 +867,7 @@ class MagnetFieldPicture2(Scene):
         stream = StreamLines(func1, stroke_width=2, max_anchors_per_line=600, virtual_time=100, n_repeats=1, max_color_scheme_value=1.1, x_range=[-16,16], y_range=[-8,8]).set_z_index(-1).scale(0.5)
 
         self.add(magnet,stream)
-
+#fr
 class DivergenceExample1(Scene):
     def construct(self):
 
@@ -839,21 +905,36 @@ class DivergenceExample1(Scene):
         decnum.add_updater(lambda mob: mob.set_value(divFunc1(p1.get_x(),p1.get_y(),0.8)).next_to(p1,UP).shift(RIGHT*1.5))
 
         #fields
-        self.play(Create(vector_field1))
-        self.wait(3)
+        self.play(Write(vector_field1))
+        self.wait(6)
         self.add(stream)
         stream.start_animation(flow_speed=1.4)
-        self.wait(7)
+        self.wait(3)
 
-        self.play(FadeIn(p1,s1,s2,decnum,c1,div_tex))
-        self.wait()
-
-        self.play(p1.animate.move_to([2,0,0]),run_time=4)
+        rot = Tex("Divergenz").scale(1.5).to_edge(UP)
+        b1 = SurroundingRectangle(rot,color=BLACK,fill_color=BLACK,fill_opacity=0.7, stroke_opacity=0).move_to(rot)
+        self.play(FadeIn(VGroup(b1,rot)))
         self.wait(4)
 
-        self.play(p1.animate.move_to([-2,0,0]),run_time=4)
-        self.wait(6)
+        self.play(FadeIn(p1,s1,s2,decnum,c1,div_tex))
+        self.wait(7)
 
+        self.play(p1.animate.move_to([2,0,0]),run_time=3)
+        self.wait(3)
+
+        self.play(p1.animate.move_to([-2,0,0]),run_time=3)
+        self.wait(2)
+        self.play(p1.animate.move_to([-2,2,0]),run_time=3)
+        self.wait()
+        self.play(p1.animate.move_to([2,2,0]),run_time=3)
+        self.wait()
+        self.play(p1.animate.move_to([0,2,0]),run_time=3)
+        self.wait()
+        self.play(p1.animate.move_to([0,-2,0]),run_time=3)
+        self.wait()
+        self.play(p1.animate.move_to([0,0,0]),run_time=3)
+        self.wait()
+#fr
 class DivergenceExample2(Scene):
     def construct(self):
 
@@ -874,7 +955,7 @@ class DivergenceExample2(Scene):
 
         
         p1 = Dot().scale(0.5)
-        c1 = Circle(color=WHITE,radius=1)
+        c1 = Circle(color=WHITE,radius=0.2)
         div_tex = MathTex(r"div\vec{F}>0")
         div_tex[0][3:5].set_color(YELLOW)
         s1 = SurroundingRectangle(div_tex,color=BLACK, fill_color=BLACK ,fill_opacity=1, stroke_width=0)
@@ -884,16 +965,16 @@ class DivergenceExample2(Scene):
         s1.add_updater(lambda mob: mob.move_to(div_tex))
 
         #fields
-        self.play(Create(vector_field1))
-        self.wait()
+        self.play(Write(vector_field1))
+        self.wait(4)
 
         self.add(stream)
         stream.start_animation(flow_speed=1.5)
         self.wait(4)
 
         self.play(FadeIn(p1,s1,c1,div_tex))
-        self.wait(7)
-
+        self.wait(13)
+#fr
 class MagnetRecap(Scene):
     def construct(self):
         
@@ -928,32 +1009,36 @@ class MagnetRecap(Scene):
         div_tex.add_updater(lambda mob: mob.next_to(c1,UP))
         s1.add_updater(lambda mob: mob.move_to(div_tex))
 
-        self.play(Write(magnet),FadeIn(vector_field))
+        self.play(Write(magnet))
+        self.play(FadeIn(vector_field))
         self.wait()
-        self.add(stream)
-        stream.start_animation(flow_speed=4)
+        # self.add(stream)
+        # stream.start_animation(flow_speed=4)
         self.play(FadeIn(p1,s1,c1,div_tex))
+        self.play(p1.animate.move_to([0,1,0]),run_time=1)
+        self.wait(2)
         self.play(p1.animate.move_to([2,0,0]),run_time=3)
         self.wait(2)
-        self.play(p1.animate.move_to([-2,3,0]),run_time=3)
+        self.play(p1.animate.move_to([0,-2,0]),run_time=3)
         self.wait(2)
-        self.play(p1.animate.move_to([0,-3,0]),run_time=3)
+        self.play(p1.animate.move_to([-2,0,0]),run_time=3)
         self.wait(2)
-
+#fr
 class Nabla2ndLaw(Scene):
     def construct(self):
         
         # Gauss's law for magnetism
-        div_tex = MathTex(r"2.div",r"\vec{B}",r"=0")
+        div_tex = MathTex(r"div",r"\vec{B}",r"=0")
         div_tex[1].set_color(YELLOW)
-        div_formula = MathTex(r"2.\nabla \cdot",r"\vec{B}",r"=0").shift(UP*2)
+        div_formula = MathTex(r"\nabla \cdot",r"\vec{B}",r"=0").shift(UP*2)
         div_formula[1].set_color(YELLOW)
 
 
         self.play(Write(div_tex))
+        self.wait(3)
         self.play(Write(div_formula))
-        self.wait(5)
-        self.play(div_tex.animate.to_corner(UL), div_formula.animate.to_corner(UR))
+        self.wait(3)
+        self.play(div_tex.animate.to_corner(UL), div_formula.animate.to_corner(UR), run_time=2)
 
         # Nabla operator intro
         nabla_tex = MathTex(r"\nabla").scale(2).shift(UP)
@@ -963,29 +1048,30 @@ class Nabla2ndLaw(Scene):
         self.play(Write(nabla_tex))
         self.wait()
         self.play(Write(nabla_word))
-        self.wait(3)
+        self.wait(5)
 
         # Show components
         nabla_components = MathTex(r"\nabla=\left [ \frac{\partial}{\partial x},\frac{\partial}{\partial y} \right ]").shift(DOWN*2)
 
         self.play(Write(nabla_components))
-        self.wait(10)
+        self.wait(25)
         self.play(FadeOut(VGroup(nabla_tex,nabla_word,nabla_components)))
 
         # Magnetic field formula
         magnet_field1 = MathTex(r"\vec{B}",r"(x,y) = ",r"\frac{y-s}{x^2+(y-s)^2}",r"\hat{i}",r"- \frac{y+s}{x^2+(y+s)^2}",r"\hat{i}").shift(DOWN*-1.5).to_edge(LEFT)
-        magnet_field2 = MathTex(r"\frac{-x}{x^2+(y-s)^2}",r"\hat{j}",r"+ \frac{x}{x^2+(y+s)^2}",r"\hat{j}").shift(DOWN*0.5).to_edge(LEFT)
+        magnet_field2 = MathTex(r"+ \frac{-x}{x^2+(y-s)^2}",r"\hat{j}",r"+ \frac{x}{x^2+(y+s)^2}",r"\hat{j}").shift(DOWN*0.5).to_edge(LEFT)
 
         magnet_field1[0].set_color(YELLOW)
         self.wait(2)
-        self.play(Write(magnet_field1))
-        self.play(Write(magnet_field2))
+        self.play(Write(magnet_field1), run_time=5)
+        self.play(Write(magnet_field2), run_time=4)
 
         equation = MathTex(r"\nabla \cdot \vec{B} = \frac{\partial}{\partial x} B_{x} + \frac{\partial}{\partial y} B_{y}").shift(DOWN*3).to_edge(LEFT)
 
         self.wait(4)
         self.play(Write(equation))
-
+        self.wait()
+#fr
 class GaussLawIntuition(Scene):
     def construct(self):
 
@@ -1000,7 +1086,9 @@ class GaussLawIntuition(Scene):
         self.play(Write(law_tex))
         self.play(law_tex.animate.to_corner(UR))
 
-        self.play(Write(dif_tex), Write(differential_form))
+        self.play(Write(dif_tex))
+        self.wait()
+        self.play(Write(differential_form))
 
         func1 = lambda pos: 3*(pos[0]/(pos[0]**2 + pos[1]**2 +0.0001)) * RIGHT + 3*(pos[1]/(pos[0]**2 + pos[1]**2 +0.0001)) * UP
         vector_field = ArrowVectorField(func1,x_range=[-3,3],y_range=[-1.5,2.5]).move_to([3.5,0.2,0])
@@ -1018,11 +1106,15 @@ class GaussLawIntuition(Scene):
         self.play(FadeIn(vector_field))
         self.wait(6)
 
-        self.play(Write(int_tex), Write(integral_form))
-        self.wait(3)
-        self.play(Write(word_tex), Write(word_form))
-        self.wait(3)
-
+        self.play(Write(int_tex))
+        self.wait()
+        self.play(Write(integral_form))
+        self.wait(7)
+        self.play(Write(word_tex))
+        self.wait()
+        self.play(Write(word_form))
+        self.wait()
+#fr
 class GausDivergence(Scene):
     def construct(self):
 
@@ -1041,7 +1133,7 @@ class GausDivergence(Scene):
         stream = StreamLines(vecField1Func1, stroke_width=2, max_anchors_per_line=100, virtual_time=5, n_repeats=4, max_color_scheme_value=2, min_color_scheme_value=0.01, color=colors1).set_z_index(-1)
         
         p1 = Dot().scale(0.5)
-        c1 = Circle(color=WHITE,radius=0.5)
+        c1 = Circle(color=WHITE,radius=0.2)
         div_tex = MathTex(r"div\vec{E}=")
         div_tex[0][3:5].set_color(YELLOW)
         decnum = DecimalNumber(0)
@@ -1068,10 +1160,10 @@ class GausDivergence(Scene):
 
         #fields
         self.wait()
-        self.play(Create(vector_field1), Create(proton), Create(electron))
-        self.wait(2)
+        self.play(Write(vector_field1), Create(proton), Create(electron))
+        self.wait(3)
         self.play(FadeIn(VGroup(b1,differential_form)))
-        self.wait(2)
+        self.wait(6)
         self.add(stream)
         stream.start_animation(flow_speed=1.4)
         self.wait(5)
@@ -1079,14 +1171,13 @@ class GausDivergence(Scene):
         self.play(FadeIn(p1,s1,s2,decnum,c1,div_tex))
         self.wait(2)
         self.play(p1.animate.move_to([2,0,0]), run_time=3)
-        self.wait(5)
         decnum.set_value(-1)
-        self.wait()
+        self.wait(4)
         decnum.set_value(0)
-        self.play(p1.animate.move_to([-2,0,0]), decnum.animate.set_value(-1), run_time=3)
+        self.play(p1.animate.move_to([-2,0,0]), run_time=3)
         decnum.set_value(1)
-        self.wait()
-
+        self.wait(5)
+#fr
 class GausChargeDensity(ThreeDScene):
     def construct(self):
 
@@ -1122,7 +1213,7 @@ class GausChargeDensity(ThreeDScene):
 #DesmosElectircField1
 
 #DesmosElectircField2
-
+#fr
 class Gauss(ThreeDScene):
     def construct(self):
 
@@ -1138,26 +1229,28 @@ class Gauss(ThreeDScene):
         vector_field2 = ArrowVectorField(func1,x_range=[-8,8],y_range=[-8,8]).rotate(PI/2,axis=RIGHT)
 
         arrows = VGroup(vector_field1,vector_field2)
-        self.play(Create(charge))
+        self.play(Create(charge),run_time=2)
         self.wait(2)
         self.play(FadeIn(arrows))
 
         #surface
-        sphere = Sphere(resolution=(24,12))
+        sphere = Sphere(resolution=(24,12)).rotate(PI/2, OUT)
 
-        self.wait(2)
+        self.wait(5)
         self.play(arrows.animate.scale(2), run_time=2)
-        self.play(Create(sphere), run_time=3)
+        self.wait(2)
+        self.play(Create(sphere), run_time=4)
 
         #Law
         law_tex = MathTex(r"\oint_{A}\vec{E}\cdot d\vec{A} = \frac{q}{\varepsilon_{0}}").move_to([0,0,2])
         b1 = SurroundingRectangle(law_tex,color=BLACK,fill_color=BLACK,fill_opacity=0.7, stroke_opacity=0).move_to(law_tex)
 
+        self.wait(3)
         self.add_fixed_orientation_mobjects(b1,law_tex)
         self.add_fixed_in_frame_mobjects(b1,law_tex)
         self.play(Write(law_tex),Write(b1))
-        self.wait(4)
-
+        self.wait(8)
+#fr
 class VectorDotProductLabel(Scene):
     def construct(self):
 
@@ -1172,17 +1265,13 @@ class VectorDotProductLabel(Scene):
         #dot product intro
         self.wait()
         self.play(Write(dotproduct2))
-        self.wait()
+        self.wait(3)
 
-        self.play(Write(dotproduct), GrowArrow(ar1))
-        self.wait()
-
+        self.play(Write(dotproduct), GrowArrow(ar1), run_time=2)
         self.play(Circumscribe(dotproduct2[1]))
-        self.wait()
-
         self.play(Indicate(dotproduct2[1]))
-        self.wait()
 
+        self.wait()
         self.play(Unwrite(ar1))
         self.wait()
 
@@ -1197,13 +1286,13 @@ class VectorDotProductLabel(Scene):
         npV1 = number_plane.get_vector([3,2,0]).set_color(YELLOW)
         npW1 = number_plane.get_vector([4,1,0]).set_color(BLUE)
 
-        self.play(Write(number_plane))
+        self.play(Write(number_plane),run_time=2)
         self.wait()
 
-        self.play(ReplacementTransform(dotproduct2[0].copy(),npV1))
+        self.play(ReplacementTransform(dotproduct2[0].copy(),npV1),run_time=2)
         self.wait()
 
-        self.play(ReplacementTransform(dotproduct2[2].copy(),npW1))
+        self.play(ReplacementTransform(dotproduct2[2].copy(),npW1),run_time=2)
 
         #calculation
         vectorv = MathTex(r"\begin{bmatrix}3\\2\end{bmatrix}").shift(2*DOWN+LEFT)
@@ -1237,20 +1326,20 @@ class VectorDotProductLabel(Scene):
         self.wait()
         self.play(Write(equals))
         self.wait()
-        self.play(ClockwiseTransform(equationCopy1,equation[0]))
+        self.play(ClockwiseTransform(equationCopy1,equation[0]),run_time=4)
         self.wait()
         self.play(FadeIn(equation[1]))
         self.wait()
-        self.play(ClockwiseTransform(equationCopy2,equation[2]))
+        self.play(ClockwiseTransform(equationCopy2,equation[2]),run_time=4)
 
         #numberplane visual2
         npV2 = number_plane.get_vector([-4,4,0]).set_color(YELLOW)
         npW2 = number_plane.get_vector([-1,-3,0]).set_color(BLUE)
 
+        self.wait(2)
+        self.play(ReplacementTransform(npV1,npV2),run_time=2)
         self.wait()
-        self.play(ReplacementTransform(npV1,npV2))
-        self.wait()
-        self.play(ReplacementTransform(npW1,npW2))
+        self.play(ReplacementTransform(npW1,npW2),run_time=2)
         self.wait()
 
         #calculation2
@@ -1266,9 +1355,7 @@ class VectorDotProductLabel(Scene):
         vectorw2[0][3:5].set_color(GREEN)
 
         self.play(Unwrite(VGroup(vectorv,vectorw)))
-        self.wait()
         self.play(Unwrite(equationCopy1),Unwrite(equationCopy2), Unwrite(equation))
-        self.wait()
         self.play(ReplacementTransform(dotproduct2[0].copy(),vectorv2))
         self.wait()
         self.play(ReplacementTransform(dotproduct2[2].copy(),vectorw2))
@@ -1282,13 +1369,13 @@ class VectorDotProductLabel(Scene):
         equation2[2].set_color(GREEN)
 
         self.wait()
-        self.play(ClockwiseTransform(equationCopy3,equation2[0]))
+        self.play(ClockwiseTransform(equationCopy3,equation2[0]), run_time=3)
         self.wait()
         self.play(FadeIn(equation2[1]))
         self.wait()
-        self.play(ClockwiseTransform(equationCopy4,equation2[2]))
+        self.play(ClockwiseTransform(equationCopy4,equation2[2]), run_time=3)
         self.wait()
-
+#fr
 class VectorDotProduct(Scene):
     def construct(self): 
 
@@ -1310,9 +1397,8 @@ class VectorDotProduct(Scene):
         self.wait()
         self.play(FadeIn(nump))
         self.wait()
-        self.play(GrowArrow(v_vec), FadeIn(v_vectex))
-        self.wait()
-        self.play(GrowArrow(w_vec), FadeIn(w_vectex))
+        self.play(GrowArrow(v_vec), FadeIn(v_vectex),run_time=1.5)
+        self.play(GrowArrow(w_vec), FadeIn(w_vectex),run_time=1.5)
         self.wait()
         self.play(Write(VGroup(dotproduct,dotproduct2)))
 
@@ -1327,14 +1413,13 @@ class VectorDotProduct(Scene):
             )))
         rightan = Angle(conetctLine,line, dot=True, quadrant=(-1,1), other_angle=True)
 
-        self.wait()
-        self.play(GrowFromCenter(line))
-        self.wait()
+        self.wait(3)
+        self.play(GrowFromCenter(line), run_time=3)
         self.play(Indicate(VGroup(v_vec,v_vectex)))
         self.wait()
-        self.play(Write(conetctLine))
-        self.wait(3)
-        self.play(ReplacementTransform(w_vec.copy(),projectVector), run_time=3)
+        self.play(Write(conetctLine), run_time=3)
+        self.wait(2)
+        self.play(ReplacementTransform(w_vec.copy(),projectVector), run_time=5)
         self.wait()
         self.play(GrowFromPoint(rightan, projectVector.get_end()))
         self.wait(3)
@@ -1358,16 +1443,15 @@ class VectorDotProduct(Scene):
         self.play(Unwrite(conetctLine))
         self.wait(3)
 
-        self.play(w_vec.animate.rotate_about_origin(PI), run_time=2)
+        self.play(w_vec.animate.rotate_about_origin(PI), run_time=3)
         self.play(Indicate(eqation1))
-        self.wait(3)
         self.play(TransformMatchingShapes(eqation1,eqation2))
+        self.wait(6)
 
-        self.play(w_vec.animate.rotate_about_origin(PI+0.6435), run_time=2)
+        self.play(w_vec.animate.rotate_about_origin(PI+0.6435), run_time=3)
         self.play(Indicate(eqation2))
-        self.wait(2)
         self.play(TransformMatchingShapes(eqation2,eqation3))
-        self.wait(2)
+        self.wait(6)
 
         #rotation and calc
         dotp = ValueTracker()
@@ -1383,7 +1467,7 @@ class VectorDotProduct(Scene):
         self.play(Rotate(w_vec,2*PI,about_point=ORIGIN), rate_func=linear, run_time=7)
         self.play(Rotate(w_vec,-2*PI,about_point=ORIGIN), rate_func=linear, run_time=20)
         self.wait()
-
+#fr
 class Flux(Scene):
     def construct(self):
 
@@ -1400,20 +1484,21 @@ class Flux(Scene):
         fieldLines = VGroup(field_line1,field_line2,field_line3,field_line4,field_line5)
 
         #condensator fieldlines
+        self.wait()
         self.play(Write(positive_plate),Write(positive_plate2))
         self.wait()
         self.play(Write(negativ_plate), Write(negativ_plate2))
-        self.wait()
-        self.play(AnimationGroup(GrowArrow(fieldLines[0]),GrowArrow(fieldLines[1]),GrowArrow(fieldLines[2]),GrowArrow(fieldLines[3]),GrowArrow(fieldLines[4]), lag_ratio=0.7), run_time=4)
+        self.wait(4)
+        self.play(AnimationGroup(GrowArrow(fieldLines[0]),GrowArrow(fieldLines[1]),GrowArrow(fieldLines[2]),GrowArrow(fieldLines[3]),GrowArrow(fieldLines[4]), lag_ratio=0.7), run_time=6)
 
         #introduce surface
         plane_surface = Rectangle(height=4,width=0.25,fill_opacity=1,color=BLUE).set_z_index(1)
         plane_surface2 = Polygon(plane_surface.get_corner(UR),plane_surface.get_corner(DR),plane_surface.get_corner(DR)+[0.2,0.4,0],plane_surface.get_corner(UR)+[0.2,-0.4,0],fill_opacity=1,color=DARK_BLUE).set_z_index(-1)
 
         self.wait(2)
-        self.play(VGroup(negativ_plate,negativ_plate2).animate.shift(RIGHT*2))
-        self.wait()
-        self.play(Write(plane_surface),Write(plane_surface2))
+        self.play(VGroup(negativ_plate,negativ_plate2).animate.shift(RIGHT*2), run_time=3)
+        self.wait(2)
+        self.play(Write(plane_surface),Write(plane_surface2), run_time=2)
 
         #show flux
         flux_tex = Tex("Fluss").shift(UP*3).scale(1.5)
@@ -1421,11 +1506,12 @@ class Flux(Scene):
         stream = StreamLines(func1, stroke_width=4, max_anchors_per_line=25, virtual_time=50, n_repeats=15,
                              x_range=[-5.7,5,7],y_range=[-2,2])
 
+        self.wait(2)
         self.play(Write(flux_tex))
-        self.wait(6)
+        self.wait(3)
         self.add(stream)
         stream.start_animation(warm_up=True, flow_speed=5)
-        self.wait(5)
+        self.wait(10)
 
         #equation
         forumla = MathTex(r"\phi = E \cdot A").shift(UP*3)
@@ -1446,14 +1532,16 @@ class Flux(Scene):
         vecE = MathTex(r"\vec{E}").next_to(positive_plate,DR)
         area = MathTex(r"A").next_to(plane_surface,DOWN).set_color(BLUE)
 
-        self.wait()
-        self.play(ReplacementTransform(forumla[0][2].copy(),vecE),run_time=3)
-        self.wait(3)
-        self.play(ReplacementTransform(forumla[0][4].copy(),area),run_time=3)
-        self.wait(3)
-        self.play(Write(normal_vector_tex), GrowArrow(normal_vector), run_time=4)
-        self.wait(5)
+        self.wait(7)
+        self.play(ReplacementTransform(forumla[0][2].copy(),vecE),run_time=2)
+        self.wait(4)
+        self.play(ReplacementTransform(forumla[0][4].copy(),area),run_time=1.5)
+        self.wait(4)
+        self.play(GrowArrow(normal_vector), run_time=2)
+        self.wait(6)
+        self.play(Write(normal_vector_tex))
 
+        self.wait(2)
         self.play(vecE.animate.next_to(e_vector,UP).set_color(GREEN))
         self.wait(2)
         self.play(GrowArrow(e_vector))
@@ -1467,7 +1555,7 @@ class Flux(Scene):
         normal_vector_tex.add_updater(lambda mob: mob.next_to(normal_vector,DOWN))
 
         self.play(normal_vector.animate.rotate_about_origin(PI/4), VGroup(plane_surface,plane_surface2).animate.rotate_about_origin(PI/4), run_time=3)
-        self.wait(3)
+        self.wait(7)
         self.play(ReplacementTransform(forumla,forumla2))
         self.wait(6)
 
@@ -1484,15 +1572,15 @@ class Flux(Scene):
         self.play(TransformMatchingShapes(forumla2,forumla3))
         self.wait(3)
         self.play(Write(value))
-        self.wait(3)
+        self.wait(5)
         self.play(VGroup(plane_surface,plane_surface2,normal_vector).animate.rotate_about_origin(PI/4),angle.animate.set_value(PI/2), run_time=3)
-        self.wait()
+        self.wait(4)
         self.play(VGroup(plane_surface,plane_surface2,normal_vector).animate.rotate_about_origin(PI/2),angle.animate.set_value(PI), run_time=3)
-        self.wait()
+        self.wait(4)
         self.play(VGroup(plane_surface,plane_surface2,normal_vector).animate.rotate_about_origin(PI/2),angle.animate.set_value(3*PI/2), run_time=3)
-        self.wait()
+        self.wait(4)
         self.play(VGroup(plane_surface,plane_surface2,normal_vector).animate.rotate_about_origin(3*PI/8),angle.animate.set_value(15*PI/8), run_time=3)
-        self.wait()
+        self.wait(4)
 
         #surface element
         surface_element = MathTex(r"\vec{A}=\hat{n}\cdot A").shift(UP*3).next_to(plane_surface,LEFT)
@@ -1500,12 +1588,12 @@ class Flux(Scene):
         forumla4[0][2:4].set_color(GREEN)
         forumla4[0][5:7].set_color(RED)
 
-        self.wait(2)
+        self.wait()
         self.play(Write(surface_element))
+        self.wait(5)
+        self.play(ReplacementTransform(forumla3,forumla4), FadeOut(value), run_time=2)
         self.wait()
-        self.play(ReplacementTransform(forumla3,forumla4), FadeOut(value))
-        self.wait()
-
+#fr
 class IngegralIntro(Scene):
     def construct(self):   
 
@@ -1530,7 +1618,7 @@ class IngegralIntro(Scene):
         #start
         self.play(Write(axes),Write(graph))
         self.wait()
-        self.play(Write(labels))
+        self.play(Write(labels), run_time=3)
         self.wait()
 
         self.play(Indicate(graph))
@@ -1549,28 +1637,30 @@ class IngegralIntro(Scene):
 
         #Lösung
         self.play(Write(dftex))
+        self.wait()
         self.play(Write(dxtex))
         self.wait()
-        self.play(Write(equation))
-        self.wait(4)
+        self.play(Write(equation), run_time=2)
+        self.wait()
         self.play(Unwrite(svt))
 
         #observation
         self.play(FadeIn(rect))
+        self.wait(2)
         self.play(Write(bracedf))
         self.play(Write(bracedx))
-
+        self.wait(2)
         #area
         area = MathTex(r"[",r"A",r"]",r"=\frac{m}{s}\cdot s=m").move_to(rect)
         area[0][2:5].set_color(GREEN)
         area[0][6:7].set_color(YELLOW)
 
         self.play(Write(area[1]))
-        self.wait()
+        self.wait(3)
         self.play(Write(area[0]),Write(area[2:]))
 
         aiss = MathTex(r"s=A").next_to(equation, DOWN).align_to(equation,LEFT)
-        self.wait(2)
+        self.wait(5)
         self.play(Write(aiss))
         self.play(Indicate(aiss))
         self.wait(2)
@@ -1579,7 +1669,7 @@ class IngegralIntro(Scene):
         integral = MathTex(r"s=\int_{}^{}2\frac{m}{s}\cdot 5s=10m").next_to(aiss,DOWN).to_edge(RIGHT)
         self.play(Write(integral))
         self.wait()
-
+#fr
 class IngegralTriangle(Scene):
     def construct(self):  
 
@@ -1603,6 +1693,7 @@ class IngegralTriangle(Scene):
         a3[0][0].set_color(YELLOW)
         
         #setup
+        self.wait()
         self.play(Write(axes),Write(graph1),Write(vtex),Write(ttex))
         self.wait()
         self.play(Write(rect1), run_time=1)
@@ -1613,15 +1704,16 @@ class IngegralTriangle(Scene):
         self.wait()
 
         #area2
-        self.play(ReplacementTransform(graph1,graph2),ReplacementTransform(rect1,rect2))
-        self.play(ReplacementTransform(a1,a2))
-        self.wait(3)
+        self.wait(2) 
+        self.play(ReplacementTransform(graph1,graph2),ReplacementTransform(rect1,rect2), run_time=2)
+        self.play(ReplacementTransform(a1,a2), run_time=1)
+        self.wait(4)
 
         #area3 no solution
-        self.play(ReplacementTransform(graph2,graph3),ReplacementTransform(rect2,rect3))
+        self.play(ReplacementTransform(graph2,graph3),ReplacementTransform(rect2,rect3), run_time=2)
         self.play(ReplacementTransform(a2,a3))
-        self.wait(2)
-
+        self.wait()
+#fr
 class IngegralFineRectangles(Scene):
     def construct(self):      
 
@@ -1657,24 +1749,30 @@ class IngegralFineRectangles(Scene):
         arrows = VGroup(arrow1,arrow3,arrow2).set_color(YELLOW)
 
         #build
+        self.wait()
         self.play(Create(graph))
         self.play(Write(axes), Write(labels))
         self.play(Write(area))
-        self.add(finer_rects)
+        self.wait(2)
+        self.play(FadeIn(finer_rects))
+        self.wait(5)
         self.play(opacity.animate.set_value(0.7))
 
         #show overlap
         self.play(GrowArrow(arrow1))
         self.play(GrowArrow(arrow2))
         self.play(GrowArrow(arrow3))
+        self.wait(5)
 
         #show smaller rectangles
         self.play(Unwrite(arrows))
+        self.wait()
         self.play(d.animate.set_value(0.5), run_time=5)
         self.play(d.animate.set_value(0.25), run_time=5)
         self.play(d.animate.set_value(0.1), run_time=5)
         self.play(d.animate.set_value(0.01), opacity.animate.set_value(1), run_time=5)
-
+        self.wait()
+#fr
 class IngegralExplanation(Scene):
     def construct(self): 
 
@@ -1726,53 +1824,58 @@ class IngegralExplanation(Scene):
         fx_tex.add_updater(lambda mob: mob.next_to(brace_fx,LEFT))
 
         #build
+        self.wait()
         self.play(Create(graph))
         self.play(Write(axes), Write(labels))
         self.play(Write(rect))
 
         #df dx
+        self.wait()
         self.play(Write(brace_dx))
         self.play(Write(dx_tex))
+        self.wait(7)
         self.play(Write(brace_fx))
         self.play(Write(VGroup(fx_tex,b1)))
-        self.wait(6)
+        self.wait(4)
 
         #area def
         self.play(Write(VGroup(A_tex,b2)))
-        self.wait(3)
+        self.wait(5)
         self.play(ReplacementTransform(A_tex.copy(),A_calc[0]))
         self.play(ReplacementTransform(fx_tex.copy(),A_calc[1]), Write(A_calc[2]))
         self.play(ReplacementTransform(dx_tex.copy(),A_calc[3]))
 
         #hop over rectangles
-        self.wait(3)
+        self.wait(4)
         self.play(brace_dx.animate.become(Brace(rect[1],DOWN)), brace_fx.animate.become(Brace(rect[1],LEFT)), A_tex.animate.move_to(rect[1]),run_time=3)
         self.play(brace_dx.animate.become(Brace(rect[2],DOWN)), brace_fx.animate.become(Brace(rect[2],LEFT)), A_tex.animate.move_to(rect[2]),run_time=3)
         self.play(brace_dx.animate.become(Brace(rect[3],DOWN)), brace_fx.animate.become(Brace(rect[3],LEFT)), A_tex.animate.move_to(rect[3]),run_time=3)
 
         #meaning of A
         self.play(Unwrite(VGroup(brace_dx,brace_fx,fx_tex,dx_tex,b1,b2,A_tex)))
-        self.play(ReplacementTransform(A_calc, awords))
+        self.wait()
+        self.play(ReplacementTransform(A_calc, awords), run_time=2)
 
         dA1 = MathTex(r"dA").move_to(rect[0])
         dA2 = MathTex(r"dA").move_to(rect[1])
         dA3 = MathTex(r"dA").move_to(rect[2])
         dA4 = MathTex(r"dA").move_to(rect[3])
         self.play(Write(VGroup(dA1,dA2,dA3,dA4)))
+        self.wait()
         self.play(AnimationGroup(dA1.animate.move_to(awords[0]).set_opacity(0),
                                  dA2.animate.move_to(awords[0]).set_opacity(0),
                                  dA3.animate.move_to(awords[0]).set_opacity(0),
-                                 dA4.animate.move_to(awords[0]).set_opacity(0),lag_ratio=0.8))
+                                 dA4.animate.move_to(awords[0]).set_opacity(0),lag_ratio=0.8), run_time=4)
 
         #int explain
         self.play(awords[1][0][0:5].animate.set_color(YELLOW))
         self.wait(2)
         self.play(Write(A_word4))
-        self.wait(2)
+        self.wait(5)
         self.play(ReplacementTransform(A_word4, A_calc2))
         self.wait(4)
         self.play(ReplacementTransform(A_calc2.copy(), A_calc3))
-        self.wait(2)
+        self.wait(4)
 
 
         #add domain
@@ -1790,8 +1893,9 @@ class IngegralExplanation(Scene):
         self.wait(2)
 
         self.play(ReplacementTransform(A_calc3,A_calc4), x0.copy().animate.move_to(A_calc4).set_opacity(0),
-                   x1.copy().animate.move_to(A_calc4).set_opacity(0), run_time=4)
-
+                   x1.copy().animate.move_to(A_calc4).set_opacity(0), run_time=3)
+        self.wait()
+#fr
 class FluxIntegral(ThreeDScene):
     def construct(self):
         
@@ -1802,6 +1906,7 @@ class FluxIntegral(ThreeDScene):
         formula[1].set_color(GREEN)
         formula[3].set_color(RED)
 
+        self.wait()
         self.play(DrawBorderThenFill(surface))
         self.wait()
         self.play(Write(area))
@@ -1828,19 +1933,19 @@ class FluxIntegral(ThreeDScene):
         self.play(DrawBorderThenFill(rect))
         self.play(GrowFromEdge(da,LEFT))
         self.wait(3)
-        self.play(VGroup(rect,da).animate.scale(0.01))
+        self.play(VGroup(rect,da).animate.scale(0.01), run_time=3)
         self.wait(2)
-        self.play(VGroup(rect,da).animate.scale(100))
+        self.play(VGroup(rect,da).animate.scale(100), run_time=3)
 
-        self.wait()
+        self.wait(2)
         self.play(Write(surface_elementOld))
-        self.wait()
+        self.wait(3)
         self.play(ReplacementTransform(surface_elementOld.copy(),surface_element))
-        self.wait()
+        self.wait(7)
 
         self.play(Circumscribe(formula))
         self.play(ReplacementTransform(formula,formula2))
-        self.wait()
+        self.wait(2)
 
 
         #integral form
@@ -1863,18 +1968,21 @@ class FluxIntegral(ThreeDScene):
         self.play(Circumscribe(formula2[0][0:2]))
         self.wait()
         self.play(ReplacementTransform(formula2,formula3))
+        self.wait(10)
 
         self.play(FadeOut(rect))
         self.play(da.animate.next_to(surface,DOWN))
         self.play(LaggedStart( *[FadeIn(tile, scale=0.5) for tile in dA_tiles], lag_ratio=0.02))
 
         #integral cancel
-        self.play(Circumscribe(formula3[0][0:4]))
         self.wait(1)
+        self.play(Circumscribe(formula3[0][0:4]))
+        self.wait()
         self.play(FadeOut(formula3[0][0:3]))
 
         #realise complexity
         self.play(dA_tiles.animate.set_opacity(0),FadeOut(da))
+        self.wait(5)
         self.move_camera(phi=60*DEGREES,theta=-80*DEGREES)
         self.begin_ambient_camera_rotation(rate=0.4, about= "theta")
         self.wait(5)
@@ -1916,7 +2024,7 @@ class FluxIntegral(ThreeDScene):
         self.play(sphere.animate.apply_matrix(matrix=matrix2), run_time=5)
         self.play(sphere.animate.apply_matrix(matrix=matrix3), run_time=5)
         self.wait(3)
-
+#fr
 class GaussLawDerivation(ThreeDScene):
     def construct(self):
 
@@ -1943,14 +2051,12 @@ class GaussLawDerivation(ThreeDScene):
         sphere = Sphere().rotate(PI/4,axis=RIGHT).scale(2.5)
         self.wait()
         self.play(Create(sphere))
-        self.wait()
-        self.play(Rotate(sphere, 3*PI, axis=UP), run_time=4)
-        self.wait(2)
-        self.play(sphere.animate.shift(-5.5*RIGHT+2*DOWN).scale(1/2.5))
+        self.play(Rotate(sphere, 3*PI, axis=UP), run_time=5)
+        self.play(sphere.animate.shift(-5.5*RIGHT+2*DOWN).scale(1/2.5), run_time=1.5)
         self.wait()
 
         #r is n 
-        da = MathTex(r"d",r"\vec{A}",r"=",r"\hat{n}",r"\cdot",r"A").shift(UP*3)
+        da = MathTex(r"d",r"\vec{A}",r"=",r"\hat{n}",r"\cdot",r"dA").shift(UP*3)
         da[3].set_color(RED)
         n_vec = Vector([1,0]).next_to(circle,RIGHT,buff=0).set_color(RED)
         nhat = MathTex(r"\hat{n}").next_to(n_vec,UP).set_color(RED)
@@ -1971,9 +2077,10 @@ class GaussLawDerivation(ThreeDScene):
         self.play(Write(risn))
         self.wait(2)
         self.play(Rotate(VGroup(nhat,rhat,n_vec,r_vec),2*PI,about_point=ORIGIN), run_time=7)
+        self.play(Rotate(VGroup(nhat,rhat,n_vec,r_vec),-2*PI,about_point=ORIGIN), run_time=7)
 
         #reinsert
-        da2 = MathTex(r"d\vec{A}=",r"\hat{r}",r"\cdot A").shift(UP*3)
+        da2 = MathTex(r"d\vec{A}=",r"\hat{r}",r"\cdot dA").shift(UP*3)
         da2[1].set_color(YELLOW)
 
         self.wait()
@@ -1989,24 +2096,26 @@ class GaussLawDerivation(ThreeDScene):
 
         #constants
         e_con = MathTex(r"E").shift(UP*1)
-        formula2 = MathTex(r"\oint_{A}",r"A").shift(UP*3)
+        formula2 = MathTex(r"\oint_{A}",r"dA").shift(UP*3)
 
         self.wait()
         self.play(FadeOut(proton))
         self.wait()
         self.play(VGroup(formula[1:3],da2[1]).animate.shift(DOWN*2))
-        self.wait(5)
+        self.wait(14)
 
         self.play(ReplacementTransform(VGroup(formula[1:3],da2[1]), e_con))
         self.wait()
 
         self.play(e_con.animate.shift(UP*2))
-        self.wait(3)
+        self.wait(1)
         self.play(e_con.animate.shift(LEFT*1), FadeOut(VGroup(formula[0],da2[2])), FadeIn(formula2))
+        self.wait(6)
 
         #back to sphere
         self.wait()
         self.play(sphere.animate.move_to([0,-0.7,0]))
+        self.wait()
         self.play(sphere.animate.scale(2.5))
         self.wait(3)
 
@@ -2024,9 +2133,9 @@ class GaussLawDerivation(ThreeDScene):
 
         self.wait(4)
         self.play(FadeOut(VGroup(area2, e_con, area)), FadeIn(formula3))
-        self.wait()
+        self.wait(2)
         self.play(Write(coulomb))
-        self.wait(5)
+        self.wait(7)
         self.play(ReplacementTransform(formula3,solution))
         self.wait(4)
 
@@ -2060,8 +2169,8 @@ class GaussLawDerivation(ThreeDScene):
         stream2 = StreamLines(vecField1Func2, stroke_width=2, max_anchors_per_line=50, virtual_time=50, n_repeats=1, colors=colors2, min_color_scheme_value=1,  max_color_scheme_value=6).set_z_index(-99)
         self.add(stream2)
         stream2.start_animation(warm_up=True, flow_speed=2)
-        self.wait(5)
-
+        self.wait(8)
+#fr
 class GaussSurfaceIndependence(Scene):
     def construct(self):
 
@@ -2098,6 +2207,8 @@ class GaussSurfaceIndependence(Scene):
         proton = VGroup(core,corss1,corss2)
 
         #init
+        self.wait()
+
         self.play(Write(square))
         self.play(Write(proton))
 
@@ -2120,7 +2231,7 @@ class GaussSurfaceIndependence(Scene):
             run_time=17,
             rate_func=linear
         )
-
+#fr
 class GaussSurfaceIndependence3D(ThreeDScene):
     def construct(self):
 
@@ -2157,6 +2268,7 @@ class GaussSurfaceIndependence3D(ThreeDScene):
         proton = VGroup(core,corss1,corss2)
 
         #init
+        self.wait()
         self.play(Write(square))
         self.play(Write(proton))
         self.move_camera(phi=60*DEGREES,theta=-45*DEGREES)
@@ -2164,7 +2276,7 @@ class GaussSurfaceIndependence3D(ThreeDScene):
 
         #field stretch
         func0 = lambda pos: pos[0]*RIGHT + pos[1]*UP
-        f0 = ArrowVectorField(func=func0,color=RED).set_opacity(0.7).set_z_index(-2)
+        f0 = ArrowVectorField(func=func0,color=RED, x_range=[-10,10], y_range=[-10,10]).set_opacity(0.7).set_z_index(-2)
 
         self.begin_ambient_camera_rotation(rate=0.3)
         self.play(Create(f0))
@@ -2182,7 +2294,7 @@ class GaussSurfaceIndependence3D(ThreeDScene):
             run_time=17,
             rate_func=linear
         )
- 
+#fr
 class FaradayIntuition(ThreeDScene):
     def construct(self):
 
@@ -2258,6 +2370,7 @@ class FaradayIntuition(ThreeDScene):
         # 
 
         #setup
+        self.wait()
         self.add_fixed_in_frame_mobjects(law_tex)
         self.play(Write(law_tex))
         self.play(law_tex.animate.to_corner(UR))
@@ -2269,22 +2382,32 @@ class FaradayIntuition(ThreeDScene):
         self.move_camera(frame_center=[-4,-4,-0.2], zoom=0.8)
 
         #formulas
-        self.add_fixed_in_frame_mobjects(dif_tex, differential_form)
-        self.play(Write(dif_tex), Write(differential_form))
+        self.add_fixed_in_frame_mobjects(dif_tex)
+        self.play(Write(dif_tex))
+        self.wait()
+        self.add_fixed_in_frame_mobjects(differential_form)
+        self.play(Write(differential_form))
+        self.wait()
 
         #magnet
         self.add(vecs)
-        self.play(magnet.animate.move_to([4,0,0]), rate_func=linear, run_time=7)
-        self.play(magnet.animate.move_to([-4,0,0]), rate_func=linear, run_time=7)
+        self.play(magnet.animate.move_to([4,0,0]), rate_func=linear, run_time=5)
+        self.play(magnet.animate.move_to([-4,0,0]), rate_func=linear, run_time=5)
 
         #more formulas
-        self.add_fixed_in_frame_mobjects(int_tex,integral_form)
-        self.play(Write(int_tex), Write(integral_form))
-        self.wait(4)
-        self.add_fixed_in_frame_mobjects(word_form,word_tex)
-        self.play(Write(word_tex), Write(word_form))
+        self.add_fixed_in_frame_mobjects(int_tex)
+        self.play(Write(int_tex))
         self.wait()
-
+        self.add_fixed_in_frame_mobjects(integral_form)
+        self.play(Write(integral_form))
+        self.wait(6)
+        self.add_fixed_in_frame_mobjects(word_tex)
+        self.play(Write(word_tex))
+        self.wait()
+        self.add_fixed_in_frame_mobjects(word_form)
+        self.play(Write(word_form))
+        self.wait()
+#fr
 class FaradayInductionEField(ThreeDScene):
     def construct(self):
 
@@ -2347,7 +2470,8 @@ class FaradayInductionEField(ThreeDScene):
         vector_field2 = ArrowVectorField(vecField1Func2, max_color_scheme_value=3.2,min_color_scheme_value=0.8, colors=colors1, x_range=[-6,6], y_range=[-6,6]).rotate(PI/2, UP)
 
         #move magnet
-        self.play(magnet.animate.move_to([-4,0,0]))
+        self.play(magnet.animate.move_to([-4,0,0]), run_time=2)
+        self.wait(3)
         vector_field1.add_updater(lambda mob, dt: mob.rotate(0.3*dt*currentFlow(magnet.get_x()), RIGHT))
         vector_field2.add_updater(lambda mob, dt: mob.rotate(0.3*dt*currentFlow(magnet.get_x()), RIGHT))
 
@@ -2358,7 +2482,8 @@ class FaradayInductionEField(ThreeDScene):
         self.play(magnet.animate.move_to([4,0,0]), rate_func=linear, run_time=6)
         self.remove(vector_field2)
 
-        self.play(magnet.animate.move_to([-4,0,0]))
+        self.wait(2)
+        self.play(magnet.animate.move_to([-4,0,0]),run_time=2.5)
         self.add(vector_field1)
         self.play(magnet.animate.move_to([0,0,0]), rate_func=linear, run_time=6)
         self.add(vector_field2)
@@ -2366,7 +2491,16 @@ class FaradayInductionEField(ThreeDScene):
         self.play(magnet.animate.move_to([4,0,0]), rate_func=linear, run_time=6)
         self.remove(vector_field2)
 
-        self.wait(3)
+        self.wait(2)
+        self.play(magnet.animate.move_to([-4,0,0]),run_time=2.5)
+        self.add(vector_field1)
+        self.play(magnet.animate.move_to([0,0,0]), rate_func=linear, run_time=6)
+        self.add(vector_field2)
+        self.remove(vector_field1)
+        self.play(magnet.animate.move_to([4,0,0]), rate_func=linear, run_time=6)
+        self.remove(vector_field2)
+
+        self.wait(4)
 
         #numberplanes
         n1 = NumberPlane(x_length=7, y_length=7, x_range=[-3.5,3.5], y_range=[-3.5,3.5]).rotate(PI/2, UP).shift(LEFT*6)
@@ -2378,7 +2512,8 @@ class FaradayInductionEField(ThreeDScene):
         n7 = NumberPlane(x_length=7, y_length=7, x_range=[-3.5,3.5], y_range=[-3.5,3.5]).rotate(PI/2, UP).shift(LEFT*-6)
 
         self.play(AnimationGroup(FadeIn(n1),FadeIn(n2),FadeIn(n3),FadeIn(n4),FadeIn(n5),FadeIn(n6),FadeIn(n7), lag_ratio=1))
-
+        self.wait()
+#fr
 class ChargesInFields(Scene):
     def construct(self):
 
@@ -2415,9 +2550,10 @@ class ChargesInFields(Scene):
         allMagnets = VGroup(magnetIn1)
         # allMagnets = VGroup(magnetIn1,magnetIn2,magnetIn3,magnetIn4)
 
-        self.play(Create(vector_field1))
+        self.wait()
+        self.play(Write(vector_field1))
         self.wait(3)
-        self.add(allMagnets)
+        self.play(FadeIn(allMagnets))
 
         #moving chrages
         core = Circle(radius=0.4,color=RED,fill_opacity=1)
@@ -2429,11 +2565,15 @@ class ChargesInFields(Scene):
         corss3 = Rectangle(height=0.03,width=0.3,fill_opacity=1)
         electron = VGroup(core1,corss3).shift(RIGHT*2).scale(0.7)
 
+        self.wait(4)
         self.play(Write(proton), Write(electron))
         self.wait()
-        self.play(Rotate(proton, PI, about_point=ORIGIN), Rotate(electron, -PI, about_point=ORIGIN), run_time=5)
-        self.play(Rotate(proton, PI, about_point=ORIGIN), Rotate(electron, -PI, about_point=ORIGIN), run_time=5)
-
+        self.play(Rotate(proton, PI, about_point=ORIGIN), Rotate(electron, -PI, about_point=ORIGIN), rate_func=linear, run_time=5)
+        self.play(Rotate(proton, PI, about_point=ORIGIN), Rotate(electron, -PI, about_point=ORIGIN), rate_func=linear, run_time=5)
+        self.play(Rotate(proton, PI, about_point=ORIGIN), Rotate(electron, -PI, about_point=ORIGIN), rate_func=linear, run_time=5)
+        self.play(Rotate(proton, PI, about_point=ORIGIN), Rotate(electron, -PI, about_point=ORIGIN), rate_func=linear, run_time=5)
+        self.wait()
+#fr
 class FaradayInductionCharges(ThreeDScene):
     def construct(self):
 
@@ -2474,14 +2614,15 @@ class FaradayInductionCharges(ThreeDScene):
 
         loop = Circle(radius=2,color=GREEN).rotate(PI/2,UP) 
 
+        self.wait()
         self.play(FadeIn(magnet))
         self.wait()
         self.move_camera(phi=60*DEGREES, theta=-45*DEGREES)
         self.wait()
         self.play(Write(loop))
-        self.wait()
+        self.wait(5)
         
-        self.play(magnet.animate.move_to([-4,0,0]))
+        self.play(magnet.animate.move_to([-4,0,0]), run_time=2)
 
         #move magnet
         vec1 = Cube(side_length=0.15, fill_color=YELLOW, fill_opacity=1).move_to([0,0,2]).rotate(PI/2,OUT)
@@ -2502,14 +2643,17 @@ class FaradayInductionCharges(ThreeDScene):
         l4.add_updater(lambda mob: mob.become(Line(start=[0,-2,0], end=vec4.get_center(), color=YELLOW)))
         vecs = VGroup(vec1,vec2,vec3,vec4, l1,l2,l3,l4)
 
+        self.wait(2)
         self.add(vecs)
+        self.play(FadeIn(vecs))
         self.play(magnet.animate.move_to([4,0,0]), rate_func=linear, run_time=7)
         self.play(magnet.animate.move_to([-4,0,0]), rate_func=linear, run_time=7)
         self.play(magnet.animate.move_to([4,0,0]), rate_func=linear, run_time=7)
         self.play(magnet.animate.move_to([-4,0,0]), rate_func=linear, run_time=7)
         self.play(magnet.animate.move_to([4,0,0]), rate_func=linear, run_time=7)
         self.play(magnet.animate.move_to([-4,0,0]), rate_func=linear, run_time=7)
-
+        self.wait()
+#fr
 class CurlIntro(Scene):
     def construct(self):
 
@@ -2547,10 +2691,12 @@ class CurlIntro(Scene):
         stream = StreamLines(vecField1Func1, stroke_width=2, max_color_scheme_value=8)
 
         #basic shwow
+        self.wait()
         self.add(stream)
         stream.start_animation(warm_up=True, flow_speed=1)
+        self.wait(2)
         self.play(FadeIn(VGroup(b1,rot)))
-        self.wait(6)
+        self.wait(4)
         self.play(FadeOut(stream))
         stream.end_animation()
         self.remove(stream)
@@ -2571,18 +2717,23 @@ class CurlIntro(Scene):
         decnum.add_updater(lambda mob: mob.set_value(curlFunc1(p1.get_x(),p1.get_y())).next_to(c1,UP).shift(RIGHT*1.5))
 
         #setup
-        self.play(Create(vector_field1))
+        self.play(Write(vector_field1))
         self.wait()
         self.add(p1,s1,s2,decnum,c1,rot_tex)
 
         #show uniform
         self.play(c1.animate.move_to([0,0,0]))
-        self.play(c1.animate.move_to([-5,0,0]))
-        self.play(c1.animate.move_to([0,-2,0]))
-        self.play(c1.animate.move_to([-3,-1,0]))
-        self.play(c1.animate.move_to([3,-2,0]))
-        self.play(c1.animate.move_to([1,2,0]))
-        self.play(c1.animate.move_to([0,0,0]))
+        self.wait()
+        self.play(c1.animate.move_to([2,0,0]), run_time=2)
+        self.wait()
+        self.play(c1.animate.move_to([5,0,0]), run_time=2)
+        self.wait()
+        self.play(c1.animate.move_to([3,-2,0]), run_time=2)
+        self.wait()
+        self.play(c1.animate.move_to([0,-3,0]), run_time=2)
+        self.wait()
+        self.play(c1.animate.move_to([0,0,0]), run_time=2)
+        self.wait()
 
         #old dir
         vecField1Func2 = lambda pos: vecField2(pos=pos)
@@ -2604,10 +2755,11 @@ class CurlIntro(Scene):
 
         self.add(stream3)
         stream3.start_animation(warm_up=True, flow_speed=1)
-        self.wait(5)
+        self.wait(6)
         self.play(FadeOut(stream3))
         self.remove(stream2,stream3)
-
+        self.wait()
+#fr
 class CurlComplexExample(Scene):
     def construct(self):
 
@@ -2630,6 +2782,7 @@ class CurlComplexExample(Scene):
         stream = StreamLines(vecField1Func1, stroke_width=2, max_color_scheme_value=1.4, min_color_scheme_value=0.5)
 
         #basic shwow
+        self.wait()
         self.add(stream)
         stream.start_animation(warm_up=True, flow_speed=1)
         self.wait(10)
@@ -2650,18 +2803,17 @@ class CurlComplexExample(Scene):
         decnum.add_updater(lambda mob: mob.set_value(curlFunc3(p1.get_x(),p1.get_y())).next_to(c1,UP).shift(RIGHT*1.5))
 
         #setup
-        self.play(Create(vector_field1))
-        self.wait(3)
-        self.add(p1,s1,s2,decnum,c1,rot_tex)
+        self.play(Write(vector_field1))
         self.wait()
-
         self.play(FadeOut(stream))
         stream.end_animation()
         self.remove(stream)
+        self.wait()
 
+        self.add(p1,s1,s2,decnum,c1,rot_tex)
         #show uniform
         self.play(c1.animate.move_to([0,0,0]))
-        self.wait(1)
+        self.wait(2)
         self.play(c1.animate.move_to([-5,0,0]))
         self.wait(1)
         self.play(c1.animate.move_to([0,2,0]))
@@ -2681,19 +2833,20 @@ class CurlComplexExample(Scene):
 
         self.wait(2)
         self.play(Write(twig))
+        self.wait(5)
 
         #show twig at spot
         dt = 0.2
         twig.add_updater(lambda mob: mob.rotate(dt*curlFunc3(twig.get_x(),twig.get_y())))
         self.play(twig.animate.move_to([-4.5,-1.5,0]),rate_func=linear, run_time=6)
-        self.wait(3)
+        self.wait(3, frozen_frame=False)
         self.play(twig.animate.move_to([2,-1.5,0]),rate_func=linear, run_time=6)
-        self.wait(3)
+        self.wait(3, frozen_frame=False)
         self.play(twig.animate.move_to([1.5,1.6,0]),rate_func=linear, run_time=6)
-        self.wait(3)
+        self.wait(3, frozen_frame=False)
         self.play(twig.animate.move_to([-1.5,1.5,0]),rate_func=linear, run_time=6)
-        self.wait(5)
-
+        self.wait(5, frozen_frame=False)
+#fr
 class Curl3D(ThreeDScene):
     def construct(self):
 
@@ -2725,6 +2878,7 @@ class Curl3D(ThreeDScene):
         khat_tex = MathTex(r"\hat{k}").set_color(PURE_BLUE).move_to([-1,0,1]).rotate(PI/2,axis=RIGHT).rotate(PI/2,axis=OUT)
 
         #intro khat
+        self.wait()
         self.play(Write(VGroup(ihat_tex,jhat_tex)), GrowArrow(ihat), GrowArrow(jhat))
         self.wait(3)
         self.move_camera(phi=60*DEGREES, theta=-45*DEGREES)
@@ -2739,9 +2893,12 @@ class Curl3D(ThreeDScene):
         self.wait(3)
         self.play(FadeIn(vector_field1))
         self.wait(3)
-        self.move_camera(zoom=1,frame_center=[0,0,0])
+        self.move_camera(zoom=1,frame_center=[0,0,0], theta=PI/4)
 
+        self.stop_ambient_camera_rotation()
         self.play(Rotate(vector_field1, 2*PI), run_time=10)
+        self.wait()
+        self.begin_ambient_camera_rotation(rate=0.2)
 
         #streamlines
         stream = StreamLines(vecField1Func1, stroke_width=2, max_anchors_per_line=50, virtual_time=50, n_repeats=1, colors=colors1, min_color_scheme_value=1,  max_color_scheme_value=6).set_z_index(-99)
@@ -2752,7 +2909,7 @@ class Curl3D(ThreeDScene):
         self.wait(7)
         self.move_camera(zoom=2)
         self.wait(7)
-
+#fr
 class CurlToNabla(Scene):
     def construct(self):
         
@@ -2761,20 +2918,22 @@ class CurlToNabla(Scene):
         rot_tex[1].set_color(YELLOW)
         nabla_tex[1].set_color(YELLOW)
         
+        self.wait()
         self.play(Write(rot_tex))
+        self.wait()
         self.play(Write(nabla_tex))
-        self.wait(3)
+        self.wait(5)
         self.play(VGroup(rot_tex,nabla_tex).animate.to_edge(UP))
 
         # Show components
         nabla_components = MathTex(r"\nabla=\left [ \frac{\partial}{\partial x},\frac{\partial}{\partial y} \right ]").shift(UP*2)
         self.wait()
         self.play(Write(nabla_components))
-        self.wait(3)
+        self.wait(6)
         self.play(nabla_components.animate.to_edge(LEFT))
 
         equation = MathTex(r"\nabla \times \vec{E} = \frac{\partial}{\partial x} E_{y} - \frac{\partial}{\partial y} E_{x}").to_edge(LEFT)
-        self.wait()
+        self.wait(3)
         self.play(Write(equation))
 
         #cross product
@@ -2792,8 +2951,12 @@ class CurlToNabla(Scene):
         self.play(Write(vecs))
         self.wait()
         self.play(Write(cross_equation))
-        self.wait()
+        self.wait(12)
 
+        equation2 = MathTex(r"\nabla \cdot \vec{E} = \frac{\partial}{\partial x} E_{x} + \frac{\partial}{\partial y} E_{y}").shift(DOWN*2).to_edge(LEFT)
+        self.play(Write(equation2))
+        self.wait()
+#fr
 class FaradayCurl(Scene):
     def construct(self):
 
@@ -2834,11 +2997,13 @@ class FaradayCurl(Scene):
         decnum2 = DecimalNumber(0)
         s1 = SurroundingRectangle(div_tex,color=BLACK, fill_color=BLACK ,fill_opacity=1, stroke_width=0)
         s2 = SurroundingRectangle(decnum,color=BLACK, fill_color=BLACK ,fill_opacity=1, stroke_width=0)
+        s3 = SurroundingRectangle(decnum2,color=BLACK, fill_color=BLACK ,fill_opacity=1, stroke_width=0)
 
         c1.add_updater(lambda mob: mob.move_to(p1))
         div_tex.add_updater(lambda mob: mob.next_to(c1,UP))
         s1.add_updater(lambda mob: mob.move_to(div_tex))
         s2.add_updater(lambda mob: mob.move_to(decnum))
+        s3.add_updater(lambda mob: mob.move_to(decnum2))
         decnum.add_updater(lambda mob: mob.next_to(c1,UP).shift(RIGHT*1.5).set_value(curlField1(c1.get_x(),c1.get_y())))
         decnum2.add_updater(lambda mob: mob.next_to(c1,UP).shift(RIGHT*1.5).set_value(curlField2(c1.get_x(),c1.get_y())))
 
@@ -2852,20 +3017,27 @@ class FaradayCurl(Scene):
         c2 = Circle(color=WHITE,radius=0.3)
         magnetIn = VGroup(p2,c2)
 
-        self.play(Create(vector_field1), Write(magnetIn))
+        self.wait()
+        self.play(Write(magnetIn))
+        self.wait()
+        self.play(Write(vector_field1))
         self.add(stream)
         stream.start_animation(flow_speed=0.7)
-        self.wait(3)
+        self.wait(3,frozen_frame=False)
 
 
         #show curl change
         self.add(p1,s1,s2,decnum,c1,div_tex)
+        self.play(p1.animate.move_to([1,0,0]), run_time=3)
+        self.wait(frozen_frame=False)
         self.play(p1.animate.move_to([2,0,0]), run_time=3)
-        self.wait(3)
-        self.play(p1.animate.move_to([0,2.5,0]), decnum.animate.set_value(-1), run_time=3)
-        self.wait(4)
-        self.play(p1.animate.move_to([-2,0,0]), decnum.animate.set_value(-1), run_time=3)
-        self.wait(4)
+        self.wait(frozen_frame=False)
+        self.play(p1.animate.move_to([3,1,0]), run_time=3)
+        self.wait(frozen_frame=False)
+        self.play(p1.animate.move_to([-3,-2,0]), run_time=6)
+        self.wait(2,frozen_frame=False)
+        self.play(p1.animate.move_to([0,0,0]), run_time=3)
+        self.wait(4,frozen_frame=False)
 
         #reverse curl
         vecField1Func2 = lambda pos: vecField2(pos=pos)
@@ -2883,15 +3055,16 @@ class FaradayCurl(Scene):
         self.play(vector_field1.animate.become(vector_field2))
         self.add(stream2)
         stream2.start_animation(flow_speed=0.7)
-        self.wait(4)
+        self.wait(4,frozen_frame=False)
 
-        self.remove(decnum)
-        self.add(decnum2)
+        self.remove(decnum,s2)
+        self.add(s3,decnum2)
 
-        self.play(p1.animate.move_to([2,0,0]), run_time=3)
-        self.wait()
-        self.play(p1.animate.move_to([-1,2.5,0]), decnum.animate.set_value(-1), run_time=3)
-
+        self.play(p1.animate.move_to([-2,0,0]), run_time=3)
+        self.wait(frozen_frame=False)
+        self.play(p1.animate.move_to([-1,-1,0]), run_time=3)
+        self.wait(frozen_frame=False)
+#fr
 class FaradayDiffForm(ThreeDScene):
     def construct(self):
 
@@ -2927,16 +3100,28 @@ class FaradayDiffForm(ThreeDScene):
         #setup
         differential_form = MathTex(r" \nabla \times \vec{E}=-\frac{\partial \vec{B}}{\partial t}").to_edge(UP)
         b1 = SurroundingRectangle(differential_form,color=BLACK,fill_color=BLACK,fill_opacity=0.7, stroke_opacity=0).move_to(differential_form)
+        self.wait()
         self.add_fixed_in_frame_mobjects(b1,differential_form)
         self.play(Write(differential_form))
+        self.play(differential_form.animate.to_corner(UR))
 
         north_pole = Prism(dimensions=[2,1,1], fill_color=BLUE, fill_opacity=1).move_to([1,0,0])
         south_pole = Prism(dimensions=[2,1,1], fill_color=RED, fill_opacity=1).move_to([-1,0,0])
         func1 = lambda pos: vecField1(pos=pos)
-        stream = StreamLines(func1, stroke_width=1, max_anchors_per_line=300, virtual_time=1, n_repeats=1).set_z_index(-1)
+                #Bfield
+        stream = SVGMobject("Magnetfield.svg", use_svg_cache=False).set_fill(opacity=0).scale(8).set_z_index(-1)
+        center = stream.get_center() 
+        paths = stream.family_members_with_points()
+        distances = [np.linalg.norm(path.get_center() - center) for path in paths]
+        max_distance = max(distances)
+        for path, dist in zip(paths, distances):
+            t = dist / max_distance  # 0 = center, 1 = farthest
+            color = color_gradient([BLUE, RED, BLACK], 100)[int(t*99)]
+            path.set_stroke(color=color, width=1.1)
+        stream = VGroup(*paths).set_z_index(-1)
         magnet = VGroup(north_pole, south_pole, stream).set_z_index(1)
 
-
+        self.wait(5)
         self.move_camera(phi=60*DEGREES, theta=-45*DEGREES)
         self.play(FadeIn(magnet))
 
@@ -2948,22 +3133,36 @@ class FaradayDiffForm(ThreeDScene):
         vector_field2 = ArrowVectorField(vecField1Func2, max_color_scheme_value=3.2,min_color_scheme_value=0.8, colors=colors1, x_range=[-6,6], y_range=[-6,6]).rotate(PI/2, UP)
 
         #move magnet
-        self.play(magnet.animate.move_to([-4,0,0]))
+        self.play(magnet.animate.move_to([-4,0,0]), run_time=1.5)
         vector_field1.add_updater(lambda mob, dt: mob.rotate(0.3*dt*currentFlow(magnet.get_x()), RIGHT))
         vector_field2.add_updater(lambda mob, dt: mob.rotate(0.3*dt*currentFlow(magnet.get_x()), RIGHT))
 
+        #move magnet
         self.add(vector_field1)
-        self.play(magnet.animate.move_to([0,0,0]), rate_func=linear, run_time=3)
+        self.play(magnet.animate.move_to([0,0,0]), rate_func=linear, run_time=6)
         self.add(vector_field2)
         self.remove(vector_field1)
-        self.play(magnet.animate.move_to([4,0,0]), rate_func=linear, run_time=3)
+        self.play(magnet.animate.move_to([4,0,0]), rate_func=linear, run_time=6)
         self.remove(vector_field2)
+
+        self.wait(2)
+        self.play(magnet.animate.move_to([-4,0,0]),run_time=2.5)
         self.add(vector_field1)
-        self.play(magnet.animate.move_to([0,0,0]), rate_func=linear, run_time=3)
+        self.play(magnet.animate.move_to([0,0,0]), rate_func=linear, run_time=6)
         self.add(vector_field2)
         self.remove(vector_field1)
-        self.play(magnet.animate.move_to([4,0,0]), rate_func=linear, run_time=3)
+        self.play(magnet.animate.move_to([4,0,0]), rate_func=linear, run_time=6)
         self.remove(vector_field2)
+
+        self.wait(2)
+        self.play(magnet.animate.move_to([-4,0,0]),run_time=2.5)
+        self.add(vector_field1)
+        self.play(magnet.animate.move_to([0,0,0]), rate_func=linear, run_time=6)
+        self.add(vector_field2)
+        self.remove(vector_field1)
+        self.play(magnet.animate.move_to([4,0,0]), rate_func=linear, run_time=6)
+        self.remove(vector_field2)
+
         self.play(magnet.animate.move_to([0,0,0]), rate_func=linear, run_time=3)
 
         #camera change in B
@@ -2973,7 +3172,13 @@ class FaradayDiffForm(ThreeDScene):
         self.play(FadeIn(loop))
         self.play(magnet.animate.move_to([3,0,0]), rate_func=linear, run_time=3)
         self.play(magnet.animate.move_to([-3,0,0]), rate_func=linear, run_time=3)
-
+        self.play(magnet.animate.move_to([1,0,0]), rate_func=linear, run_time=3)
+        self.play(magnet.animate.move_to([-1,0,0]), rate_func=linear, run_time=3)
+        self.play(magnet.animate.move_to([1,0,0]), rate_func=linear, run_time=3)
+        self.play(magnet.animate.move_to([-1,0,0]), rate_func=linear, run_time=3)
+        self.play(magnet.animate.move_to([3,0,0]), rate_func=linear, run_time=3)
+        self.wait()
+#fr
 class MagneticFlux(ThreeDScene):
     def construct(self):
 
@@ -2994,15 +3199,20 @@ class MagneticFlux(ThreeDScene):
         #condensator fieldlines
         b_field = MathTex(r"\vec{B}").set_color(YELLOW).next_to(positive_plate,UP)
 
+        self.wait()
         self.play(Write(positive_plate),Write(positive_plate2))
+        self.wait()
         self.play(Write(negativ_plate), Write(negativ_plate2))
-        self.play(AnimationGroup(GrowArrow(fieldLines[0]),GrowArrow(fieldLines[1]),GrowArrow(fieldLines[2]),GrowArrow(fieldLines[3]),GrowArrow(fieldLines[4]),GrowArrow(fieldLines[5]),GrowArrow(fieldLines[6]), lag_ratio=0.7), run_time=1)
+        self.wait()
         self.play(Write(b_field))
+        self.wait()
+        self.play(AnimationGroup(GrowArrow(fieldLines[0]),GrowArrow(fieldLines[1]),GrowArrow(fieldLines[2]),GrowArrow(fieldLines[3]),GrowArrow(fieldLines[4]),GrowArrow(fieldLines[5]),GrowArrow(fieldLines[6]), lag_ratio=0.7), run_time=5)
 
         #introduce surface
         plane_surface = Rectangle(height=4,width=0.25,fill_opacity=1,color=BLUE).set_z_index(1)
         plane_surface2 = Polygon(plane_surface.get_corner(UR),plane_surface.get_corner(DR),plane_surface.get_corner(DR)+[0.2,0.4,0],plane_surface.get_corner(UR)+[0.2,-0.4,0],fill_opacity=1,color=DARK_BLUE).set_z_index(-1)
 
+        self.wait(7)
         self.play(Write(plane_surface),Write(plane_surface2))
 
         #show flux
@@ -3014,13 +3224,14 @@ class MagneticFlux(ThreeDScene):
         self.play(Write(flux_tex))
         self.add(stream)
         stream.start_animation(warm_up=True, flow_speed=5)
-        self.wait(5)
+        self.wait(8)
 
         #equation
         forumla = MathTex(r"\phi _{B}=\int_{A}^{}\vec{B}\cdot d\vec{A}").shift(UP*3)
 
         self.play(FadeOut(flux_tex))
         self.play(Write(forumla))
+        self.wait(7)
         self.play(stream.animate.set_opacity(0), fieldLines.animate.set_opacity(0.2))
         stream.end_animation()
         self.remove(stream)
@@ -3028,16 +3239,16 @@ class MagneticFlux(ThreeDScene):
         #different surfaces
         self.play(FadeOut(VGroup(plane_surface,plane_surface2)))
         self.move_camera(theta=-140*DEGREES, phi=60*DEGREES)
-        self.begin_ambient_camera_rotation(0.18)
+        self.begin_ambient_camera_rotation(0.09)
 
         circ = Circle(radius=2, color=BLUE, fill_opacity=0.5).rotate(PI/2, UP)
         self.play(Write(circ))
-        self.wait(3)
+        self.wait(6)
         
         loop = Circle(radius=2,color=PURE_GREEN).rotate(PI/2,UP) 
         self.play(Write(loop))
-        self.wait(3)
-
+        self.wait(6)
+#fr
 class LineIntegral(ThreeDScene):
     def construct(self):
 
@@ -3063,37 +3274,49 @@ class LineIntegral(ThreeDScene):
         self.wait(frozen_frame=False)
         self.add_fixed_in_frame_mobjects(b1,curve)
         self.play(Write(VGroup(b1,curve)))
+        self.wait(6)
         self.move_camera(frame_center=[-1,0,0], zoom=2)
         self.play(Write(axis))
-        self.play(DrawBorderThenFill(circ), run_time=3)
+        self.wait()
+        self.play(Write(circ), run_time=6)
+        self.wait(6)
 
         #hats and parameters
         ihat_tex = MathTex(r"\hat{i}").set_color(PURE_RED).move_to([1,-1,0])
         jhat_tex = MathTex(r"\hat{j}").set_color(PURE_GREEN).move_to([1,1,0])
         ihat = Vector([1,0]).set_color(PURE_RED)
         jhat = Vector([0,1]).set_color(PURE_GREEN)
-        self.play(Write(VGroup(ihat_tex,jhat_tex)), GrowArrow(ihat), GrowArrow(jhat))
+        self.play(Write(VGroup(ihat_tex,jhat_tex)), GrowArrow(ihat), GrowArrow(jhat), run_time=2)
+        self.wait(6)
 
         #boundaries
         self.add_fixed_in_frame_mobjects(interval)
         self.play(Write(interval))
+        self.wait(6)
         self.move_camera(frame_center=[0,0,0], zoom=1,phi=60*DEGREES, theta=-45*DEGREES)
-
+        self.wait()
         #show basis vector k
         khat = Vector([0,0,1]).set_color(PURE_BLUE).set_z_index(99)
         khat_tex = MathTex(r"\hat{k}").set_color(PURE_BLUE).move_to([-0.4,0,0.3]).rotate(PI/2,axis=RIGHT).rotate(PI/2,axis=OUT)
 
         self.play(FadeOut(curve[5:]), Unwrite(interval))
+        self.wait()
         self.move_camera(zoom=4)
+        self.wait()
         self.play(Write(khat_tex), GrowArrow(khat))
+        self.wait(6)
 
         #paraboliod
         paraboloid = ParametricFunction(func2, t_range = (0, 8*PI), fill_opacity=0).set_color(WHITE)
 
         self.play(FadeOut(VGroup(ihat_tex,jhat_tex,khat,khat_tex, ihat, jhat)))
+        self.wait(6)
         self.play(axis.animate.set_opacity(0.4))
+        self.wait()
         self.move_camera(zoom=3, frame_center=[0,0,0.5])
-        self.play(DrawBorderThenFill(paraboloid))
+        self.wait()
+        self.play(Write(paraboloid), run_time=3)
+        self.wait(2)
 
         #function
         functPara = MathTex(r"f(x,y)=y^{2}").next_to(curve,DOWN).to_edge(LEFT)
@@ -3105,14 +3328,15 @@ class LineIntegral(ThreeDScene):
         area = MathTex(r"A",r"=?").to_edge(LEFT)
         area[0].set_color(BLUE)
 
-        self.play(Create(surf))
+        self.play(Create(surf), run_time=3)
+        self.wait(17)
         self.add_fixed_in_frame_mobjects(area)
         self.play(Write(area))
-
+        self.wait(4)
         #small rectangles
         surf2 = Surface(func3, u_range=[0, 2*PI], v_range=[0,1], resolution=[10,1], fill_opacity=1, should_make_jagged=True)
-        self.play(ReplacementTransform(surf,surf2))
-
+        self.play(ReplacementTransform(surf,surf2), run_time=2)
+        self.wait(5)
         #f and ds
         dsCurve = ParametricFunction(func, t_range = (7*PI/5, 8*PI/5), fill_opacity=0).set_color(YELLOW)
         ds_tex = MathTex(r"ds").set_color(YELLOW).to_edge(DOWN).scale(1.41).shift(UP*0.6)
@@ -3122,15 +3346,20 @@ class LineIntegral(ThreeDScene):
         self.play(FadeOut(VGroup(b1,curve[0:5],functPara,area)))
         self.move_camera(theta=-PI/2, frame_center=[0,0,0.2])
         self.play(circ.animate.set_color(GRAY_D))
+        self.wait(5)
 
         self.play(DrawBorderThenFill(dsCurve))
 
         self.add_fixed_in_frame_mobjects(ds_tex)
         self.play(Write(ds_tex))
+        self.wait(5)
+
         self.play(Write(fxyLine))
+        self.wait()
 
         self.add_fixed_in_frame_mobjects(fxy_tex)
         self.play(Write(fxy_tex))
+        self.wait(5)
 
         #integral
         line_int = MathTex(r"\int_{C}^{}",r"f(x,y)",r"ds").to_corner(UL)
@@ -3139,11 +3368,24 @@ class LineIntegral(ThreeDScene):
 
         self.add_fixed_in_frame_mobjects(line_int)
         self.play(Write(line_int))
+        self.wait(7)
 
         #final ?
-        surf3 = Surface(func3, u_range=[0, 2*PI], v_range=[0,1], resolution=[200,1], fill_opacity=1)
-        self.play(FadeOut(dsCurve), ReplacementTransform(surf2,surf3))
-
+        surf3 = Surface(func3, u_range=[0, 2*PI], v_range=[0,1], resolution=[40,1], fill_opacity=1)
+        surf4 = Surface(func3, u_range=[0, 2*PI], v_range=[0,1], resolution=[80,1], fill_opacity=1)
+        surf5 = Surface(func3, u_range=[0, 2*PI], v_range=[0,1], resolution=[150,1], fill_opacity=1)
+        surf6 = Surface(func3, u_range=[0, 2*PI], v_range=[0,1], resolution=[200,1], fill_opacity=1)
+        self.play(FadeOut(dsCurve), FadeOut(fxyLine), ReplacementTransform(surf2,surf3))
+        self.wait()
+        self.play(ReplacementTransform(surf2,surf3))
+        self.wait()
+        self.play(ReplacementTransform(surf3,surf4))
+        self.wait()
+        self.play(ReplacementTransform(surf4,surf5))
+        self.wait()
+        self.play(ReplacementTransform(surf5,surf6))
+        self.wait()
+#fr
 class FaradayLineIntegral(ThreeDScene):
     def construct(self):
 
@@ -3163,8 +3405,10 @@ class FaradayLineIntegral(ThreeDScene):
 
         #loop
         loop = Circle(radius=2,color=PURE_GREEN, fill_color=PURE_BLUE, fill_opacity=0.4).rotate(PI/2,UP) 
+
+        self.wait()
         self.play(DrawBorderThenFill(loop))
-        self.move_camera(phi=60*DEGREES, theta=-45*DEGREES)
+        self.move_camera(phi=90*DEGREES, theta=0*DEGREES, run_time=3)
 
         #line integral
         lineInt = MathTex(r"\oint_{\partial A}^{}\vec{E}\cdot d\vec{l}").to_corner(UL)
@@ -3173,22 +3417,26 @@ class FaradayLineIntegral(ThreeDScene):
         b1 = SurroundingRectangle(lineInt,color=BLACK,fill_color=BLACK,fill_opacity=0.9, stroke_opacity=0).move_to(lineInt)
         self.add_fixed_in_frame_mobjects(b1,lineInt)
         self.play(Write(VGroup(b1,lineInt)))
+        self.wait(12)
 
         #vec T
         time = ValueTracker(PI/2)
-        rotate_time = 6
-        t_vec = Vector([0,-1], color=RED).move_to([0,0,2])
+        rotate_time = 12
+        t_vec = Vector([0,-1], color=RED).move_to([0,0,2]).rotate(PI/2, UP)
         t_tex = MathTex(r"\vec{T}").set_color(RED)
-        t_tex.add_updater(lambda mob: mob.next_to(t_vec,RIGHT))
+        t_tex.add_updater(lambda mob: mob.next_to(t_vec,OUT, buff=0.5))
         b2 = SurroundingRectangle(t_tex,color=BLACK,fill_color=BLACK,fill_opacity=0.9, stroke_opacity=0).move_to(t_tex)
-        b2.add_updater(lambda mob: mob.move_to(t_tex,RIGHT))
+        b2.add_updater(lambda mob: mob.move_to(t_tex,OUT))
 
         self.play(GrowArrow(t_vec))
+        self.wait(frozen_frame=False)
         self.add_fixed_orientation_mobjects(b2,t_tex)
         self.play(Write(VGroup(b2,t_tex)))
 
         t_vec.add_updater(lambda mob, dt: mob.move_to([0, 2*np.cos(time.get_value()), 2*np.sin(time.get_value())]).rotate(2*PI*dt/rotate_time, RIGHT))
-        
+        t_vec.suspend_updating()
+        self.wait(4,frozen_frame=False)
+        t_vec.resume_updating()
         self.play(time.animate.set_value(2*PI+PI/2), rate_func=linear, run_time=rotate_time)
 
         #dl ds T
@@ -3198,20 +3446,30 @@ class FaradayLineIntegral(ThreeDScene):
         b3 = SurroundingRectangle(dl_equation,color=BLACK,fill_color=BLACK,fill_opacity=0.9, stroke_opacity=0).move_to(dl_equation)
 
         t_vec.suspend_updating()
+
+        self.wait(frozen_frame=False)
         self.add_fixed_in_frame_mobjects(b3,dl_equation)
         self.play(Write(VGroup(b3,dl_equation)))
+        self.wait(5,frozen_frame=False)
 
         # efield
         colors1 = [BLUE, YELLOW, YELLOW, ORANGE, ORANGE, RED]
         vecField1Func1 = lambda pos: vecField2(pos=pos)
-        vector_field1 = ArrowVectorField(vecField1Func1, max_color_scheme_value=3.2,min_color_scheme_value=0.8, colors=colors1, x_range=[-6,6], y_range=[-6,6]).rotate(PI/2, UP)
-        self.add(vector_field1)
+        vector_field1 = ArrowVectorField(vecField1Func1, max_color_scheme_value=3.2,min_color_scheme_value=0.8, colors=colors1, x_range=[-6,6], y_range=[-6,6]).rotate(PI/2, UP).set_z_index(-3)
 
         t_vec.resume_updating()
         self.play(time.animate.set_value(4*PI+PI/2), rate_func=linear, run_time=rotate_time)
-        self.play(Rotate(vector_field1, 1*PI), time.animate.set_value(6*PI+PI/2), rate_func=linear, run_time=rotate_time)
-        self.play(Rotate(vector_field1, 1*PI), time.animate.set_value(8*PI+PI/2), rate_func=linear, run_time=rotate_time)
 
+        t_vec.suspend_updating()
+        self.play(Create(vector_field1))
+        self.wait(2)
+        t_vec.resume_updating()
+
+        self.play(time.animate.set_value(6*PI+PI/2), rate_func=linear, run_time=rotate_time)
+        self.play(time.animate.set_value(8*PI+PI/2), rate_func=linear, run_time=rotate_time)
+        self.play(Rotate(vector_field1, 1*PI), time.animate.set_value(10*PI+PI/2), rate_func=linear, run_time=rotate_time)
+        self.wait()
+#fr
 class LenzsLaw(ThreeDScene):
     def construct(self):
 
@@ -3229,24 +3487,35 @@ class LenzsLaw(ThreeDScene):
             return field[0]*RIGHT + field[1]*UP
 
         def currentFlow(x, b=1, c=10):
-            return -(c * x) / ((x**2 + b**2)**2)
+            return np.abs((c * x) / ((x**2 + b**2)**2)) +0.1
 
         #setup
         north_pole = Prism(dimensions=[2,1,1], fill_color=BLUE, fill_opacity=1).move_to([1,0,0])
         south_pole = Prism(dimensions=[2,1,1], fill_color=RED, fill_opacity=1).move_to([-1,0,0])
-        stream = StreamLines(func1, stroke_width=1, max_anchors_per_line=300, virtual_time=1, n_repeats=1).set_z_index(-1)
+        stream = SVGMobject("Magnetfield.svg", use_svg_cache=False).set_fill(opacity=0).scale(8).set_z_index(-1)
+        center = stream.get_center() 
+        paths = stream.family_members_with_points()
+        distances = [np.linalg.norm(path.get_center() - center) for path in paths]
+        max_distance = max(distances)
+        for path, dist in zip(paths, distances):
+            t = dist / max_distance  # 0 = center, 1 = farthest
+            color = color_gradient([BLUE, RED, BLACK], 100)[int(t*99)]
+            path.set_stroke(color=color, width=0.3)
+        stream = VGroup(*paths).set_z_index(-1)
         magnet = VGroup(north_pole, south_pole, stream).set_z_index(1)
 
         loop = Circle(radius=2,color=GREEN).rotate(PI/2,UP) 
         integral_form = MathTex(r"\oint_{\partial A}^{}\vec{E}\cdot d\vec{l}=-\frac{d}{dt}\int_{A}^{}\vec{B}\cdot d\vec{A}").to_corner(UR)
+        b1 = SurroundingRectangle(integral_form,color=BLACK,fill_color=BLACK,fill_opacity=0.9, stroke_opacity=0).move_to(integral_form)
 
+        self.wait()
         self.play(FadeIn(magnet))
         self.move_camera(phi=60*DEGREES, theta=-45*DEGREES)
         self.play(Write(loop))
         
-        self.play(magnet.animate.move_to([-4,0,0]))
-        self.add_fixed_in_frame_mobjects(integral_form)
-        self.play(Write(integral_form))
+        self.play(magnet.animate.move_to([-4,0,0]), run_time=1.6)
+        self.add_fixed_in_frame_mobjects(b1,integral_form)
+        self.play(Write(integral_form), Write(b1))
 
         #move magnet
         vec1 = Cube(side_length=0.15, fill_color=YELLOW, fill_opacity=1).move_to([0,0,2]).rotate(PI/2,OUT)
@@ -3270,13 +3539,26 @@ class LenzsLaw(ThreeDScene):
         self.add(vecs)
 
         #show induced magnetic field
-        stream2 = StreamLines(func1, stroke_width=1, max_anchors_per_line=300, virtual_time=1, n_repeats=1).set_z_index(-1).rotate(PI,OUT).rotate(PI/2,RIGHT)
+        stream2 = SVGMobject("Magnetfield.svg", use_svg_cache=False).set_fill(opacity=0).scale(6).set_z_index(-1)
+        center = stream2.get_center() 
+        paths = stream2.family_members_with_points()
+        distances = [np.linalg.norm(path.get_center() - center) for path in paths]
+        max_distance = max(distances)
+        for path, dist in zip(paths, distances):
+            t = dist / max_distance  # 0 = center, 1 = farthest
+            color = color_gradient([BLUE, RED, BLACK], 100)[int(t*99)]
+            path.set_stroke(color=color, width=1.1)
+        stream2 = VGroup(*paths).set_z_index(-1).rotate(PI,OUT).rotate(PI/2,RIGHT)
         stream2.add_updater(lambda mob: mob.scale_to_fit_width(currentFlow(magnet.get_x(), b=1.3, c=100)))
         self.add(stream2)
 
-        self.play(magnet.animate.move_to([4,0,0]), rate_func=linear, run_time=3)
-        self.play(magnet.animate.move_to([-4,0,0]), rate_func=linear, run_time=3)
-
+        self.play(magnet.animate.move_to([4,0,0]), rate_func=linear, run_time=6)
+        self.play(magnet.animate.move_to([-4,0,0]), rate_func=linear, run_time=6)
+        self.play(magnet.animate.move_to([4,0,0]), rate_func=linear, run_time=6)
+        self.play(magnet.animate.move_to([-4,0,0]), rate_func=linear, run_time=6)
+        self.play(magnet.animate.move_to([4,0,0]), rate_func=linear, run_time=6)
+        self.play(magnet.animate.move_to([-4,0,0]), rate_func=linear, run_time=6)
+#fr
 class AmpereIntro(ThreeDScene):
     def construct(self):
 
@@ -3303,6 +3585,7 @@ class AmpereIntro(ThreeDScene):
         self.move_camera(phi=60*DEGREES)
         self.begin_ambient_camera_rotation(0.1)
 
+        self.wait()
         self.play(Create(pipe))
         self.play(ReplacementTransform(pipe,pipe2))
 
@@ -3325,17 +3608,21 @@ class AmpereIntro(ThreeDScene):
         equation = MathTex(r"\nabla \times ",r"\vec{B}",r"=\mu_{0}",r"\vec{J}").to_corner(UL)
         law_tex = Tex("Ampèresches Gesetz").to_corner(UR)
 
-        self.add_fixed_in_frame_mobjects(equation)
-        self.play(Write(equation))
         self.add_fixed_in_frame_mobjects(law_tex)
         self.play(Write(law_tex))
 
+        self.add_fixed_in_frame_mobjects(equation)
+        self.play(Write(equation))
+
+        self.wait(14)
+#fr
 class CurrentDensityVector(ThreeDScene):
     def construct(self):
 
         #setup
         surface = Circle(radius=3, color=BLUE, fill_opacity=0.5)
 
+        self.wait()
         self.play(DrawBorderThenFill(surface))
         self.move_camera(phi=60*DEGREES)
 
@@ -3345,12 +3632,13 @@ class CurrentDensityVector(ThreeDScene):
                              y_range=[-2,2], x_range=[-2.2,2.2], color=PURE_GREEN).rotate(PI/2,OUT).rotate(PI/2,RIGHT).move_to(surface)
         self.add(stream)
         stream.start_animation(warm_up=True, flow_speed=1)
-        self.wait(1)
+        self.wait(6)
 
         #intro J
         formula1 = MathTex(r"\vec{J}= \frac{dI}{d \vec{A}}").to_corner(UL)
         self.add_fixed_in_frame_mobjects(formula1)
         self.play(Write(formula1))
+        self.wait(6)
 
         dsurface = Circle(radius=2, color=YELLOW, fill_opacity=0.5)
         dA = MathTex(r"dA").next_to(surface,RIGHT).set_color(YELLOW)
@@ -3358,22 +3646,25 @@ class CurrentDensityVector(ThreeDScene):
         self.play(DrawBorderThenFill(dsurface))
         self.add_fixed_orientation_mobjects(dA)
         self.play(Write(dA))
-        self.play(dsurface.animate.scale(0.1))
+        self.wait(6)
+        self.play(dsurface.animate.scale(0.1),run_time=2)
 
         #nomal
         normal_vec = Vector([0,1], color=RED).rotate(PI/2, RIGHT)
 
         self.play(GrowArrow(normal_vec))
+        self.wait(4)
 
         #I correlation
         formula2 = MathTex(r"dI= \vec{J} \cdot d \vec{A}").to_corner(UL).shift(DOWN*2)
         formula3 = MathTex(r"I= \int \vec{J} \cdot d \vec{A}").to_corner(UL).shift(DOWN*4)
 
         self.add_fixed_in_frame_mobjects(formula2)
-        self.play(ReplacementTransform(formula1.copy(),formula2))
+        self.play(FadeIn(formula2))
         self.add_fixed_in_frame_mobjects(formula3)
-        self.play(ReplacementTransform(formula2.copy(),formula3))
-
+        self.play(FadeIn(formula3))
+        self.wait(7)
+#fr
 class Mu0vsEpsilon0(Scene):
     def construct(self):
         
@@ -3409,13 +3700,16 @@ class Mu0vsEpsilon0(Scene):
 
 
         #comparion vacuum
+        self.wait()
         self.play(Write(electron))
         self.play(Create(vector_field))
         self.play(Write(eps0))
 
+        self.wait(5)
         self.play(Write(magnet))
         self.play(Create(vector_field2))
         self.play(Write(mu0))
+        self.wait(8)
 
         #new comparisons
         self.play(FadeOut(VGroup(electron,magnet,vector_field,vector_field2)))
@@ -3429,15 +3723,24 @@ class Mu0vsEpsilon0(Scene):
         iTo = MathTex(r"I\rightarrow").shift(LEFT*-3+UP*-1)
         bField = Tex("B-Feld").next_to(iTo,RIGHT)
 
+        self.wait()
         self.play(Write(elctrism))
+        self.wait()
         self.play(Write(magnetism))
+        self.wait()
         self.play(Write(chargedensisty))
+        self.wait()
         self.play(Write(currentdensisty))
+        self.wait(3)
         self.play(Write(eTo))
+        self.wait()
         self.play(Write(eField))
+        self.wait()
         self.play(Write(iTo))
+        self.wait()
         self.play(Write(bField))
-
+        self.wait()
+#fr
 class AmpereDiffRecap(ThreeDScene):
     def construct(self):
 
@@ -3464,6 +3767,7 @@ class AmpereDiffRecap(ThreeDScene):
         self.move_camera(phi=60*DEGREES)
         self.begin_ambient_camera_rotation(0.1)
 
+        self.wait()
         self.play(Create(pipe))
         self.play(ReplacementTransform(pipe,pipe2))
 
@@ -3486,8 +3790,8 @@ class AmpereDiffRecap(ThreeDScene):
         vecField1Func1 = lambda pos: vecField1(pos=pos)
         vector_field1 = ArrowVectorField(vecField1Func1, max_color_scheme_value=0.8, min_color_scheme_value=0.2, colors=colors1, x_range=[-6,6], y_range=[-6,6])
         self.play(FadeIn(vector_field1))
-        self.wait(4)
-
+        self.wait(20)
+#fr
 class AmpereCapacitor(ThreeDScene):
     def construct(self):
 
@@ -3518,16 +3822,19 @@ class AmpereCapacitor(ThreeDScene):
         self.move_camera(phi=60*DEGREES)
         self.begin_ambient_camera_rotation(0.1)
 
+        self.wait()
         self.play(Create(pipe))
         self.play(Create(plate1))
         self.play(Create(plate2))
         self.play(Create(pipe2))
+        self.wait(6)
 
         #law
         equation = MathTex(r"\nabla \times ",r"\vec{B}",r"=\mu_{0}",r"\vec{J}").to_corner(UL)
 
         self.add_fixed_in_frame_mobjects(equation)
         self.play(Write(equation))
+        self.wait(3)
 
         # bfield
         colors1 = [BLUE, YELLOW, YELLOW, ORANGE, ORANGE, RED]
@@ -3540,13 +3847,28 @@ class AmpereCapacitor(ThreeDScene):
         self.play(plate1.animate.set_fill_color(GREEN),plate2.animate.set_fill_color(RED),FadeIn(vector_field1), rate_func=linear, run_time=3)
         self.remove(vector_field1)
         self.add(vector_field2)
-        self.play(plate1.animate.set_fill_color(WHITE),plate2.animate.set_fill_color(WHITE),FadeOut(vector_field2), rate_func=linear, run_time=3)
+        self.play(plate1.animate.set_fill_color(WHITE),plate2.animate.set_fill_color(WHITE),FadeOut(vector_field2), rate_func=linear, run_time=5)
+
+        self.play(plate1.animate.set_fill_color(GREEN),plate2.animate.set_fill_color(RED),FadeIn(vector_field1), rate_func=linear, run_time=3)
+        self.remove(vector_field1)
+        self.add(vector_field2)
+        self.play(plate1.animate.set_fill_color(WHITE),plate2.animate.set_fill_color(WHITE),FadeOut(vector_field2), rate_func=linear, run_time=5)
+
+        self.play(plate1.animate.set_fill_color(GREEN),plate2.animate.set_fill_color(RED),FadeIn(vector_field1), rate_func=linear, run_time=3)
+        self.remove(vector_field1)
+        self.add(vector_field2)
+        self.play(plate1.animate.set_fill_color(WHITE),plate2.animate.set_fill_color(WHITE),FadeOut(vector_field2), rate_func=linear, run_time=5)
+
+        self.play(plate1.animate.set_fill_color(GREEN),plate2.animate.set_fill_color(RED),FadeIn(vector_field1), rate_func=linear, run_time=3)
+        self.remove(vector_field1)
+        self.add(vector_field2)
+        self.play(plate1.animate.set_fill_color(WHITE),plate2.animate.set_fill_color(WHITE),FadeOut(vector_field2), rate_func=linear, run_time=5)
 
         #newlaw
         equation2 = MathTex(r"\nabla \times ",r"\vec{B}",r"=\mu_{0}",r"\vec{J} + \mu_{0} \varepsilon_{0} \frac{\partial \vec{E}}{\partial t}").to_corner(UL)
 
         self.add_fixed_in_frame_mobjects(equation2)
-        self.play(ReplacementTransform(equation, equation2))
+        self.play(FadeOut(equation), FadeIn(equation2))
 
         #charge discharge
         self.play(plate1.animate.set_fill_color(GREEN),plate2.animate.set_fill_color(RED),FadeIn(vector_field1), rate_func=linear, run_time=3)
@@ -3554,6 +3876,21 @@ class AmpereCapacitor(ThreeDScene):
         self.add(vector_field2)
         self.play(plate1.animate.set_fill_color(WHITE),plate2.animate.set_fill_color(WHITE),FadeOut(vector_field2), rate_func=linear, run_time=3)
 
+        self.play(plate1.animate.set_fill_color(GREEN),plate2.animate.set_fill_color(RED),FadeIn(vector_field1), rate_func=linear, run_time=3)
+        self.remove(vector_field1)
+        self.add(vector_field2)
+        self.play(plate1.animate.set_fill_color(WHITE),plate2.animate.set_fill_color(WHITE),FadeOut(vector_field2), rate_func=linear, run_time=3)
+
+        self.play(plate1.animate.set_fill_color(GREEN),plate2.animate.set_fill_color(RED),FadeIn(vector_field1), rate_func=linear, run_time=3)
+        self.remove(vector_field1)
+        self.add(vector_field2)
+        self.play(plate1.animate.set_fill_color(WHITE),plate2.animate.set_fill_color(WHITE),FadeOut(vector_field2), rate_func=linear, run_time=3)
+
+        self.play(plate1.animate.set_fill_color(GREEN),plate2.animate.set_fill_color(RED),FadeIn(vector_field1), rate_func=linear, run_time=3)
+        self.remove(vector_field1)
+        self.add(vector_field2)
+        self.play(plate1.animate.set_fill_color(WHITE),plate2.animate.set_fill_color(WHITE),FadeOut(vector_field2), rate_func=linear, run_time=3)
+#f
 class AmpereIntegralForm(ThreeDScene):
     def construct(self):
 
@@ -3593,6 +3930,7 @@ class AmpereIntegralForm(ThreeDScene):
         self.move_camera(phi=60*DEGREES)
         self.begin_ambient_camera_rotation(0.1)
 
+        self.wait()
         self.play(Create(pipe))
 
         #current
@@ -3601,7 +3939,7 @@ class AmpereIntegralForm(ThreeDScene):
                              y_range=[-0.1,0.1], x_range=[-2.2,2.2]).rotate(PI/2,OUT).rotate(PI/2,RIGHT).move_to(pipe)
         self.add(stream)
         stream.start_animation(warm_up=True, flow_speed=1)
-        self.wait(1)
+        self.wait()
 
         #init
         colors1 = [BLUE, YELLOW, YELLOW, ORANGE, ORANGE, RED]
@@ -3609,12 +3947,14 @@ class AmpereIntegralForm(ThreeDScene):
         vector_field1 = ArrowVectorField(vecField1Func1, max_color_scheme_value=0.8, min_color_scheme_value=0.2, colors=colors1, x_range=[-6,6], y_range=[-6,6])
 
         self.play(Write(square))
+        self.wait(8)
         self.play(FadeIn(vector_field1))
+        self.wait(3)
 
         #field stretch
         self.play(
             square.animate.apply_function(flow_function),
-            run_time=7,
+            run_time=15,
             rate_func=linear
         )
 
@@ -3623,9 +3963,11 @@ class AmpereIntegralForm(ThreeDScene):
 
         self.add_fixed_in_frame_mobjects(formula[0])
         self.play(Write(formula[0]))
+        self.wait(13)
         self.add_fixed_in_frame_mobjects(formula[1])
         self.play(Write(formula[1]))
-
+        self.wait(13)
+#f
 class AmpereSymbolSheet(Scene):
     def construct(self):
 
@@ -3646,7 +3988,26 @@ class AmpereSymbolSheet(Scene):
         self.add(formula)
         self.add(integral,partial,lineelement,deriv,flux)
         self.add(integral_tex,partial_tex,lineelement_tex,deirv_tex,flux_tex)
+#f
+class GausSymbolSheet(Scene):
+    def construct(self):
 
+        formula = MathTex(r" \oint_{\partial V} \vec{B} \cdot d \vec{A} = 0").scale(1).to_corner(UL)
+
+        integral = MathTex(r"\oint=").to_corner(UL).shift(DOWN*3)
+        partial = MathTex(r"\partial=").to_corner(UL).shift(DOWN*6)
+        lineelement = MathTex(r"d\vec{A}=").to_corner(UR).shift(DOWN*0+LEFT*5)
+        deriv = MathTex(r"\vec{B}=").to_corner(UR).shift(DOWN*3+LEFT*5)
+
+        integral_tex = Tex("geschlossenes Integral").next_to(integral,RIGHT)
+        partial_tex = Tex("Rand von").next_to(partial,RIGHT)
+        lineelement_tex = Tex("Oberflächenelement").next_to(lineelement,RIGHT)
+        deirv_tex = Tex("magnetisches Feld").next_to(deriv,RIGHT)
+
+        self.add(formula)
+        self.add(integral,partial,lineelement,deriv)
+        self.add(integral_tex,partial_tex,lineelement_tex,deirv_tex)
+#f
 class OverviewEnd(ThreeDScene):
     def construct(self):   
 
@@ -3663,12 +4024,12 @@ class OverviewEnd(ThreeDScene):
         equation4 = MathTex(r" \nabla \times \vec{B}=\mu_{0}(\vec{J}+\varepsilon _{0}\frac{\partial \vec{E}}{\partial t})").shift(UP*-3).next_to(forth,RIGHT)
 
         #overview
+        self.add_sound("OverviewEnd.wav", time_offset=1)
+        self.wait()
         self.add_fixed_in_frame_mobjects(header)
-        self.play(Write(header))
+        self.play(FadeIn(header))
         self.play(header.animate.to_edge(UP))
-        self.add_fixed_in_frame_mobjects(maxwell)
-        self.play(FadeIn(maxwell))
-        self.play(maxwell.animate.shift(RIGHT*4))
+
         self.add_fixed_in_frame_mobjects(first,equation1)
         self.play(FadeIn(VGroup(first,equation1)))
         self.add_fixed_in_frame_mobjects(second,equation2)
@@ -3736,7 +4097,6 @@ class OverviewEnd(ThreeDScene):
         # setup view
         # 
 
-        self.play(FadeOut(maxwell))
 
         self.play(VGroup(second,first,forth,equation2,equation1,equation4).animate.set_opacity(0.4), VGroup(third,equation3).animate.scale(1.2).to_edge(LEFT))
 
@@ -3747,13 +4107,10 @@ class OverviewEnd(ThreeDScene):
 
         #magnet
         self.add(vecs)
-        self.play(magnet.animate.move_to([4,0,0]), rate_func=linear, run_time=1)
-
-
+        self.play(magnet.animate.move_to([4,0,0]), rate_func=linear, run_time=6)
 
         #reset
         self.play(FadeOut(VGroup(magnet,loop,vecs)))
-
 
         # short look at 2
         self.play(VGroup(third,equation3).animate.set_opacity(0.4).scale(1/1.2).to_edge(LEFT), VGroup(forth,equation4).animate.scale(1.2).to_edge(LEFT).set_opacity(1))
@@ -3796,11 +4153,11 @@ class OverviewEnd(ThreeDScene):
         vector_field1 = ArrowVectorField(vecField1Func1, max_color_scheme_value=0.8, min_color_scheme_value=0.2, colors=colors1, x_range=[-6,6], y_range=[-6,6])
         self.play(FadeIn(vector_field1))
         self.wait(2)
-
+#fr
 class Ending(Scene):
     def construct(self):
 
-        self.add_sound(sound_file="MusicEnding.wav",time_offset=0)
+        self.add_sound(sound_file="Ending.wav",time_offset=0)
 
         banner = ManimBanner().scale(0.5)
         bannertxt = Tex("https://www.manim.community/")
@@ -3810,7 +4167,7 @@ class Ending(Scene):
         page1 = VGroup(banner,bannertxt,musicimgtxt)
 
         download = Tex("Download zum Vortrag, Skript, Code:").set_z_index(1)
-        download2 = Tex("https://github.com/Namitera/Physik-Maxwell-Gleichungen-19.01.2026").scale(0.85).shift(DOWN).set_z_index(1)
+        download2 = Tex("https://github.com/Namitera/Physik-Maxwell-Gleichungen-23.01.2026").scale(0.85).shift(DOWN).set_z_index(1)
         link1 = Tex("https://www.youtube.com/watch?v=rB83DpBJQsE")
         link2 = Text("https://www.youtube.com/watch?v=AIxiYG-gZ00").scale(0.7)
         link3 = Text("&list=PLHXZ9OQGMqxfW0GMqeUE1bLKaYor6kbHa").scale(0.7)
@@ -3821,7 +4178,7 @@ class Ending(Scene):
         link8 = Text("https://www.youtube.com/watch?v=QwUq8xM_8bY").scale(0.7)
         link9 = Tex("https://www.youtube.com/watch?v=q1eor6oIuUo")
         link10 = Tex("https://www.youtube.com/watch?v=hJD8ywGrXks")
-        links = VGroup(link1,link2,link3,link4,link5,link6,link7,link8,link9).arrange_in_grid(10,1,cell_alignment=LEFT, buff=1).shift(DOWN*9).set_z_index(-1)
+        links = VGroup(link1,link2,link3,link4,link5,link6,link7,link8,link9,link10).arrange_in_grid(10,1,cell_alignment=LEFT, buff=1).shift(DOWN*9).set_z_index(-1)
         links.to_edge(LEFT)
 
         self.wait()
@@ -3849,11 +4206,11 @@ class Ending(Scene):
         self.play(download2.animate.to_corner(UL).shift(DOWN*6.5+LEFT*-0))
         self.play(FadeIn(rec))
         self.add(links)
-        self.play(links.animate.shift(UP*20), rate_func=linear, run_time=10)
+        self.play(links.animate.shift(UP*20), rate_func=linear, run_time=20)
 
         self.wait(1)
         self.play(FadeOut(page2))
-
+#fr
 class Zusammenfassung(Scene):
     def construct(self):
 
@@ -3876,3 +4233,63 @@ class Zusammenfassung(Scene):
         int_tex = Tex("Integrale Form:").shift(UP*3.5).to_edge(RIGHT)
 
         self.add(first,second,third,forth,equation1,equation2,equation3,equation4,equation5,equation6,equation7,equation8,dif_tex,int_tex)
+
+class ImgTest(ThreeDScene):
+    def construct(self):
+
+        s1 = FullScreenRectangle(color=PURE_RED)
+        s2 = FullScreenRectangle(color=PURE_GREEN).scale(0.99)
+        s3 = FullScreenRectangle(color=PURE_RED).scale(0.98)
+        s4 = FullScreenRectangle(color=PURE_GREEN).scale(0.97)
+        s5 = FullScreenRectangle(color=PURE_RED).scale(0.96)
+        s6 = FullScreenRectangle(color=PURE_GREEN).scale(0.95)
+
+        j = 0
+        h = 1
+        iu = "atojmahcuyia"
+        for i in iu:
+            u = Tex(f"{i}")
+            j += 0.3
+            h -= 0.06
+            self.add(u.scale(h).shift(RIGHT*j))
+
+        for i in range(1,41):
+            l = Line(start=[0,0,0],end=[0,0.01*i,0]).shift(RIGHT*0.1*i+UP)
+            self.add(l)
+
+        for i in range(1,27):
+            r = Square(color=BLUE).set_opacity(np.floor(i)/80).shift(LEFT*4+DOWN*3+ UP*0.2*i)
+            self.add(r)
+
+        for i in range(1,27):
+            r = Square(color=WHITE).set_opacity(np.floor(i)/80).shift(LEFT*2.1+DOWN*3+ UP*0.2*i)
+            self.add(r)
+
+        r2 = Square(color=PURE_BLUE).shift(LEFT*5)
+        r3 = Square(color=BLUE).shift(LEFT*5+UP)
+        t2 = MathTex(r"0_{0}").shift(UP*2)
+        t1 = Tex("Tex").shift(DOWN*2)
+        #aiyu cham jota
+        #atoj mahc uyia
+
+        axes = Axes(
+            x_range=[0, 5, 1],
+            y_range=[0, 3, 1],
+            x_length=12,
+            y_length=6,
+        ).shift(UP*0.7)
+        def f(x):
+            return 0.25*x**3 - 1.3*x**2 + 1.4*x + 1.1
+        graph = axes.plot(f, x_range=[0, 5], color=BLUE)
+        finer_rects = axes.get_riemann_rectangles(
+            graph,
+            x_range=[4, 5],
+            dx=0.01,
+            input_sample_type="left",
+            fill_opacity=1,
+        ).to_corner(DR)
+
+        sph = Sphere().move_to([3,3,0])
+
+        self.add_fixed_in_frame_mobjects(finer_rects,sph)
+        self.add_fixed_in_frame_mobjects(s1,s2,s3,s4,s5,s6,t1,t2,r2,r3)
